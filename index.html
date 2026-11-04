@@ -389,7 +389,7 @@ function layout() {
       const a = clamp(d, -1, 1);
       el.style.transform = `translate3d(${a * CG + (d - a) * SG}px,${ry}px,${rz - Math.abs(a) * DEPTH}px) rotateY(${-a * ANG}deg)`;
       el.style.zIndex = 1000 - Math.round(ard * 400) - Math.round(ad * 20);
-      el._sh.style.opacity = Math.min(.8, Math.min(.62, ad * .5) + Math.min(1, ard) * .32).toFixed(3);
+      el._sh.style.opacity = Math.min(.62, Math.min(.5, ad * .4) + Math.min(1, ard) * .08).toFixed(3);
     }
     if (row.label) {
       row.label.style.display = rowHide ? 'none' : '';
@@ -425,7 +425,7 @@ stage.addEventListener('pointerdown', e => {
   if (!rows.length) return;
   dragging = true; moved = 0; axis = ''; sx = lastX = e.clientX; sy = lastY = e.clientY; lastT = e.timeStamp; vel = vy = 0;
   dragRow = rows[ri]; spos = dragRow.pos; srp = rpos;
-  tapEl = e.target.closest('.cv');
+  tapEl = (document.elementsFromPoint(e.clientX, e.clientY).find(n => n.classList && n.classList.contains('cv') && n.style.display !== 'none')) || e.target.closest('.cv');
   if (raf) { cancelAnimationFrame(raf); raf = 0; }
   rows.forEach(r => { r.target = r.pos; }); rtarget = rpos;
   stage.setPointerCapture(e.pointerId); stage.style.cursor = 'grabbing';
