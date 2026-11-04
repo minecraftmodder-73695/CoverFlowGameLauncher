@@ -54,6 +54,8 @@ button{font:inherit;color:inherit}
 #caption .l2{font-weight:600;font-size:14px;color:#e8e8e8}
 #caption .l3{font-size:13px;color:#cfcfd1}
 
+.rlabel{position:absolute;left:50%;top:var(--cy);margin-top:calc(var(--ch)/-2 - 30px);width:260px;margin-left:-130px;text-align:center;font-weight:700;font-size:15px;text-shadow:0 1px 3px #000;pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;will-change:transform}
+.rlabel small{opacity:.7;font-weight:600}
 #empty{position:absolute;left:0;right:0;top:34%;text-align:center;padding:0 30px;text-shadow:0 1px 2px #000}
 #empty h2{margin:0 0 6px;font-size:22px}
 #empty p{margin:0 0 16px;color:#eee}
@@ -150,7 +152,6 @@ button{font:inherit;color:inherit}
   <button class="rb hs" id="btnSet" aria-label="Settings"><svg viewBox="0 0 24 24"><path d="M19.4 13a7.5 7.5 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 0 0-1.7-1L15 3.3h-4l-.4 2.6a7.4 7.4 0 0 0-1.7 1l-2.5-1-2 3.5L6.600 11a7.500 7.500 0 0 0 0 2l-2.100 1.600 2 3.500 2.500-1a7.400 7.400 0 0 0 1.700 1l.4 2.600h4l.4-2.600a7.400 7.400 0 0 0 1.700-1l2.500 1 2-3.500zM13 15.500a3.500 3.500 0 1 1 0-7 3.500 3.500 0 0 1 0 7z" transform="translate(-1 0)"/></svg></button>
 </div>
 
-<div id="shelves" class="hidden"></div>
 <button class="rb" id="btnPlay" aria-label="Launch"><svg viewBox="0 0 24 24"><path d="M7 4.500v15l13-7.500z"/></svg></button>
 <div id="caption"><div class="l1"></div><div class="l2"></div><div class="l3"></div></div>
 <button class="rb" id="btnInfo" aria-label="Details">i</button>
@@ -233,7 +234,7 @@ button{font:inherit;color:inherit}
     <label>RetroAchievements web API key<input id="sRaK" type="password" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
     <label>CORS proxy (see cors-worker.js)<input id="sProxy" type="url" placeholder="https://your-worker.workers.dev/?url=" autocapitalize="off" autocorrect="off" spellcheck="false"></label>
     <p class="help">Keys are stored only in this browser. Browsers block direct calls to these APIs, so most setups need the proxy. Covers you pick are saved on the device as 2:3 images when the source allows it.</p>
-    <p class="help"><b>Controller:</b> D-pad or left stick browses, LB/RB switch shelves (or skip five when shelves are off), A launches, B goes back, Y shows details, X edits, Start opens settings. Inside a web game, hold Select + Start to exit. Press any button once so Safari detects the controller.</p>
+    <p class="help"><b>Controller:</b> D-pad or left stick browses, Up/down or LB/RB switch shelves (LB/RB skip five when shelves are off), A launches, B goes back, Y shows details, X edits, Start opens settings. Inside a web game, hold Select + Start to exit. Press any button once so Safari detects the controller.</p>
     <div class="row"><button class="btn" id="sRaImport">Import RetroAchievements library</button></div>
     <div class="row"><button class="btn" id="sExport">Export library</button><button class="btn" id="sImport">Import library</button><input type="file" id="sFile" accept="application/json,.json" hidden></div>
     <div class="row"><span class="sp"></span><button class="btn pri" id="sDone">Done</button></div>
@@ -328,23 +329,34 @@ function closeWeb() {
 }
 $('#webClose').onclick = closeWeb;
 
-/* ================= cover flow engine ================= */
+/* ================= cover flow engine (stacked shelves) ================= */
 const stage = $('#stage'), track = $('#track');
-let view = [], els = [], pos = 0, target = 0, cur = -1;
+let rows = [], view = [], rpos = 0, rtarget = 0, ri = -1, cur = -1, shelvesOn = false;
 let cw = 200, ch = 300, px = 64;
-
-function elOf(i) { return els[i]; }
+const rowMem = {};
+const elOf = i => rows[ri] && rows[ri].els[i];
+const allEls = () => rows.flatMap(r => r.els);
+const tgt = () => rows[ri] ? rows[ri].target : 0;
+const shelvesVisible = () => shelvesOn;
 
 function build() {
-  track.innerHTML = ''; els = [];
-  view.forEach((g, i) => {
-    const el = document.createElement('div');
-    el.className = 'cv'; el.dataset.i = i;
-    const img = document.createElement('img'); img.alt = ''; img.draggable = false;
-    img.onerror = () => { if (img.dataset.fb !== '1') { img.dataset.fb = '1'; img.src = placeholder(g); } };
-    const sh = document.createElement('div'); sh.className = 'shade';
-    el.append(img, sh); el._img = img; el._sh = sh; el._loaded = false; el.style.display = 'none';
-    track.appendChild(el); els.push(el);
+  track.innerHTML = '';
+  rows.forEach((row, r) => {
+    row.els = []; row.label = null;
+    row.items.forEach((g, i) => {
+      const el = document.createElement('div');
+      el.className = 'cv'; el.dataset.i = i; el.dataset.r = r;
+      const img = document.createElement('img'); img.alt = ''; img.draggable = false;
+      img.onerror = () => { if (img.dataset.fb !== '1') { img.dataset.fb = '1'; img.src = placeholder(g); } };
+      const sh = document.createElement('div'); sh.className = 'shade';
+      el.append(img, sh); el._img = img; el._sh = sh; el._loaded = false; el.style.display = 'none';
+      track.appendChild(el); row.els.push(el);
+    });
+    if (shelvesOn) {
+            const l = document.createElement('div'); l.className = 'rlabel'; l.style.display = 'none';
+      l.innerHTML = esc(row.name) + ' <small>' + row.items.length + '</small>';
+      track.appendChild(l); row.label = l;
+    }
   });
 }
 
@@ -352,7 +364,7 @@ function metrics() {
   const vw = stage.clientWidth || innerWidth, vh = stage.clientHeight || innerHeight;
   if (!vw || !vh) { requestAnimationFrame(metrics); return; }  // iOS can report 0 size at first load
   const land = vw > vh, sh = shelvesVisible();
-  ch = Math.round(Math.min(vh * (land ? .74 : .6), vw * .66 * 1.5) * (sh ? (land ? .82 : .92) : 1));
+  ch = Math.round(Math.min(vh * (land ? .74 : .6), vw * .66 * 1.5) * (sh ? (land ? .8 : .86) : 1));
   cw = Math.round(ch * 2 / 3); px = cw * .32;
   const r = document.documentElement.style;
   r.setProperty('--cw', cw + 'px'); r.setProperty('--ch', ch + 'px'); r.setProperty('--cy', (land ? 46 + (sh ? 7 : 0) : 41 + (sh ? 3 : 0)) + '%');
@@ -364,61 +376,87 @@ function kick() { // WebKit can leave 3D + reflected layers unpainted until some
   requestAnimationFrame(() => { track.style.visibility = 'hidden'; void track.offsetHeight; track.style.visibility = ''; layout(); });
 }
 function layout() {
-  const CG = cw * .58, SG = cw * .19, ANG = 64, DEPTH = cw * .55;
-  for (let i = 0; i < els.length; i++) {
-    const el = els[i], d = i - pos, ad = Math.abs(d);
-    if (ad > 9) { if (el.style.display !== 'none') el.style.display = 'none'; continue; }
-    if (el.style.display === 'none') el.style.display = '';
-    if (!el._loaded && ad <= 12) { el._loaded = true; el._img.src = coverSrc(view[i]); }
-    const a = clamp(d, -1, 1);
-    el.style.transform = `translate3d(${a * CG + (d - a) * SG}px,0,${-Math.abs(a) * DEPTH}px) rotateY(${-a * ANG}deg)`;
-    el.style.zIndex = 1000 - Math.round(ad * 20);
-    el._sh.style.opacity = Math.min(.62, ad * .5).toFixed(3);
+  const CG = cw * .58, SG = cw * .19, ANG = 64, DEPTH = cw * .55, RZ = cw * 3, PITCH = ch * 1.5;
+  for (let r = 0; r < rows.length; r++) {
+    const row = rows[r], rd = r - rpos, ard = Math.abs(rd), ra = clamp(rd, -1, 1);
+    const ry = ra * PITCH + (rd - ra) * PITCH * .9, rz = -Math.abs(ra) * RZ;
+    const rowHide = ard > 1.6, lim = ard < .5 ? 9 : 5;
+    for (let i = 0; i < row.els.length; i++) {
+      const el = row.els[i], d = i - row.pos, ad = Math.abs(d);
+      if (rowHide || ad > lim) { if (el.style.display !== 'none') el.style.display = 'none'; continue; }
+      if (el.style.display === 'none') el.style.display = '';
+      if (!el._loaded) { el._loaded = true; el._img.src = coverSrc(row.items[i]); }
+      const a = clamp(d, -1, 1);
+      el.style.transform = `translate3d(${a * CG + (d - a) * SG}px,${ry}px,${rz - Math.abs(a) * DEPTH}px) rotateY(${-a * ANG}deg)`;
+      el.style.zIndex = 1000 - Math.round(ard * 400) - Math.round(ad * 20);
+      el._sh.style.opacity = Math.min(.8, Math.min(.62, ad * .5) + Math.min(1, ard) * .32).toFixed(3);
+    }
+    if (row.label) {
+      row.label.style.display = rowHide ? 'none' : '';
+      if (!rowHide) {
+        row.label.style.transform = `translate3d(0,${ry}px,${rz}px)`;
+        row.label.style.zIndex = 1500 - Math.round(ard * 400);
+        row.label.style.opacity = (1 - Math.min(1, ard) * .5).toFixed(2);
+      }
+    }
   }
-  const c = clamp(Math.round(pos), 0, Math.max(0, view.length - 1));
-  if (c !== cur) { cur = c; onCurrent(); }
+  const nri = clamp(Math.round(rpos), 0, Math.max(0, rows.length - 1)), nrow = rows[nri];
+  const nc = nrow ? clamp(Math.round(nrow.pos), 0, Math.max(0, nrow.items.length - 1)) : 0;
+  if (nri !== ri || nc !== cur) { ri = nri; view = nrow ? nrow.items : []; cur = nc; onCurrent(); }
 }
 
 let raf = 0, lastTs = 0;
 function step(ts) {
   const dt = Math.min(50, ts - lastTs); lastTs = ts;
-  const d = target - pos;
-  if (Math.abs(d) < .0008) { pos = target; layout(); raf = 0; return; }
-  pos += d * (1 - Math.exp(-dt / 85)); layout(); raf = requestAnimationFrame(step);
+  const k = 1 - Math.exp(-dt / 85); let busy = false;
+  rows.forEach(r => { const d = r.target - r.pos; if (Math.abs(d) < .0008) r.pos = r.target; else { r.pos += d * k; busy = true; } });
+  const d = rtarget - rpos; if (Math.abs(d) < .0008) rpos = rtarget; else { rpos += d * k; busy = true; }
+  layout(); raf = busy ? requestAnimationFrame(step) : 0;
 }
-function go(t) {
-  target = clamp(Math.round(t), 0, Math.max(0, view.length - 1));
-  if (!raf) { lastTs = performance.now(); raf = requestAnimationFrame(step); }
-}
+function run() { if (!raf) { lastTs = performance.now(); raf = requestAnimationFrame(step); } }
+function goIn(row, t) { if (!row) return; row.target = clamp(Math.round(t), 0, Math.max(0, row.items.length - 1)); run(); }
+function go(t) { goIn(rows[ri], t); }
+function goRow(t) { if (!rows.length) return; rtarget = clamp(Math.round(t), 0, rows.length - 1); run(); }
 
-/* ---- touch / mouse ---- */
-let dragging = false, sx = 0, spos = 0, lastX = 0, lastT = 0, vel = 0, moved = 0, tapEl = null;
+/* ---- touch / mouse: horizontal moves along a shelf, vertical changes shelf ---- */
+let dragging = false, sx = 0, sy = 0, spos = 0, srp = 0, lastX = 0, lastY = 0, lastT = 0, vel = 0, vy = 0, moved = 0, tapEl = null, axis = '', dragRow = null;
 stage.addEventListener('pointerdown', e => {
   if (e.target.closest('#back')) return;
-  if (!view.length) return;
-  dragging = true; moved = 0; sx = lastX = e.clientX; spos = pos; lastT = e.timeStamp; vel = 0;
+  if (!rows.length) return;
+  dragging = true; moved = 0; axis = ''; sx = lastX = e.clientX; sy = lastY = e.clientY; lastT = e.timeStamp; vel = vy = 0;
+  dragRow = rows[ri]; spos = dragRow.pos; srp = rpos;
   tapEl = e.target.closest('.cv');
   if (raf) { cancelAnimationFrame(raf); raf = 0; }
+  rows.forEach(r => { r.target = r.pos; }); rtarget = rpos;
   stage.setPointerCapture(e.pointerId); stage.style.cursor = 'grabbing';
 });
 stage.addEventListener('pointermove', e => {
   if (!dragging) return;
-  const dx = e.clientX - sx; moved = Math.max(moved, Math.abs(dx));
-  if (moved > 6) {
-    pos = clamp(spos - dx / px, -.35, view.length - 1 + .35);
-    const dt = e.timeStamp - lastT;
+  const dx = e.clientX - sx, dy = e.clientY - sy; moved = Math.max(moved, Math.abs(dx), Math.abs(dy));
+  if (!axis && moved > 8) axis = (shelvesOn && Math.abs(dy) > Math.abs(dx) * 1.1) ? 'y' : 'x';
+  const dt = e.timeStamp - lastT;
+  if (axis === 'x') {
+    dragRow.pos = clamp(spos - dx / px, -.35, dragRow.items.length - 1 + .35);
     if (dt > 0) vel = .75 * vel + .25 * (-(e.clientX - lastX) / px / dt);
-    lastX = e.clientX; lastT = e.timeStamp; layout();
+    layout();
+  } else if (axis === 'y') {
+    rpos = clamp(srp - dy / (ch * .75), -.3, rows.length - 1 + .3);
+    if (dt > 0) vy = .75 * vy + .25 * (-(e.clientY - lastY) / (ch * .75) / dt);
+    layout();
   }
+  lastX = e.clientX; lastY = e.clientY; lastT = e.timeStamp;
 });
 const endDrag = e => {
   if (!dragging) return; dragging = false; stage.style.cursor = 'grab';
-  if (moved < 8 && tapEl && e.type === 'pointerup') {
-    const i = +tapEl.dataset.i;
-    if (i === cur && Math.abs(pos - cur) < .15) launch(view[i]); else go(i);
-  } else {
-    go(pos + clamp(vel * 240, -6, 6));
-  }
+  if (!axis && tapEl && e.type === 'pointerup') {
+    const r = +tapEl.dataset.r, i = +tapEl.dataset.i;
+    if (r === ri) { if (i === cur && Math.abs(dragRow.pos - cur) < .15) launch(view[i]); else goIn(dragRow, i); }
+    else if (rows[r]) { rows[r].target = i; goRow(r); }
+  } else if (axis === 'y') {
+    goRow(rpos + clamp(vy * 200, -1.5, 1.5));
+  } else if (axis === 'x') {
+    goIn(dragRow, dragRow.pos + clamp(vel * 240, -6, 6));
+  } else { goIn(dragRow, dragRow.pos); }
   tapEl = null;
 };
 stage.addEventListener('pointerup', endDrag);
@@ -426,13 +464,16 @@ stage.addEventListener('pointercancel', endDrag);
 let wheelT = 0;
 stage.addEventListener('wheel', e => {
   e.preventDefault(); const now = Date.now(); if (now - wheelT < 90) return; wheelT = now;
-  const d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY; if (d) go(target + Math.sign(d));
+  if (shelvesOn && Math.abs(e.deltaY) > Math.abs(e.deltaX)) { if (e.deltaY) goRow(rtarget + Math.sign(e.deltaY)); return; }
+  const d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY; if (d) go(tgt() + Math.sign(d));
 }, { passive: false });
 addEventListener('keydown', e => {
   if (webOpen) { if (e.key === 'Escape') closeWeb(); return; }
   if (/INPUT|TEXTAREA/.test(document.activeElement.tagName) || $('#veil').classList.contains('on')) { if (e.key === 'Escape') closeSheet(); return; }
-  if (e.key === 'ArrowLeft') go(target - 1);
-  else if (e.key === 'ArrowRight') go(target + 1);
+  if (e.key === 'ArrowLeft') go(tgt() - 1);
+  else if (e.key === 'ArrowRight') go(tgt() + 1);
+  else if (e.key === 'ArrowUp') goRow(rtarget - 1);
+  else if (e.key === 'ArrowDown') goRow(rtarget + 1);
   else if (e.key === 'Enter' && view[cur]) launch(view[cur]);
   else if (e.key === 'Escape') closeBack();
 });
@@ -471,7 +512,7 @@ function openBack() {
 }
 function closeBack() {
   if (!backOpen) return; backOpen = false; $('#back').classList.add('hidden');
-  els.forEach(e => e.classList.remove('hide'));
+  allEls().forEach(e => e.classList.remove('hide'));
 }
 $('#back').addEventListener('click', e => {
   const a = e.target.closest('[data-a]')?.dataset.a, g = view[cur];
@@ -483,56 +524,43 @@ $('#btnPlay').onclick = () => view[cur] && launch(view[cur]);
 let q = '';
 /* ---- shelves (optional, never created automatically) ---- */
 const AUTO_OTHER = '__other', NO_SHELF = '__none';
-let shelfSel = ''; try { shelfSel = localStorage.getItem(KEY + '.shelf') || ''; } catch {}
 const sortMode = () => S.set.sortMode || 'none';
 const autoKey = g => (g.platform || '').trim().toLowerCase() || AUTO_OTHER;
-function shelfKey(g) {
+function makeRows(list) {
   const m = sortMode();
-  return m === 'auto' ? autoKey(g) : m === 'custom' ? (S.shelves.some(s => s.id === g.shelf) ? g.shelf : NO_SHELF) : '';
-}
-function shelfList() {
-  const m = sortMode(), out = [];
+  if (!list.length) return [];
   if (m === 'auto') {
     const map = new Map();
-    S.games.forEach(g => { const k = autoKey(g); if (!map.has(k)) map.set(k, { id: k, name: k === AUTO_OTHER ? 'Other' : (g.platform || '').trim(), n: 0 }); map.get(k).n++; });
-    [...map.values()].sort((a, b) => a.id === AUTO_OTHER ? 1 : b.id === AUTO_OTHER ? -1 : a.name.localeCompare(b.name)).forEach(s => out.push(s));
-  } else if (m === 'custom') {
-    S.shelves.forEach(s => out.push({ id: s.id, name: s.name, n: S.games.filter(g => g.shelf === s.id).length }));
-    const loose = S.games.filter(g => shelfKey(g) === NO_SHELF).length;
-    if (S.shelves.length && loose) out.push({ id: NO_SHELF, name: 'Unsorted', n: loose });
+    list.forEach(g => { const k = autoKey(g); if (!map.has(k)) map.set(k, { id: k, name: k === AUTO_OTHER ? 'Other' : (g.platform || '').trim(), items: [] }); map.get(k).items.push(g); });
+    return [...map.values()];
   }
-  return out;
+  if (m === 'custom' && S.shelves.length) {
+    const out = S.shelves.map(s => ({ id: s.id, name: s.name, items: [] })), loose = { id: NO_SHELF, name: 'Unsorted', items: [] };
+    list.forEach(g => { const r = out.find(x => x.id === g.shelf); (r || loose).items.push(g); });
+    if (loose.items.length) out.push(loose);
+    return out.filter(r => r.items.length);
+  }
+  return [{ id: '', name: '', items: list }];
 }
-const shelvesVisible = () => S.games.length > 0 && shelfList().length > 0;
-function renderShelves() {
-  const list = shelfList(), box = $('#shelves');
-  if (shelfSel && !list.some(s => s.id === shelfSel)) shelfSel = '';
-  const show = list.length > 0 && S.games.length > 0;
-  box.classList.toggle('hidden', !show);
-  if (!show) return;
-  box.innerHTML = [{ id: '', name: 'All', n: S.games.length }, ...list].map(s => `<button class="sc${s.id === shelfSel ? ' on' : ''}" data-id="${esc(s.id)}">${esc(s.name)} <small>${s.n}</small></button>`).join('');
-  const on = box.querySelector('.on'); if (on) box.scrollLeft = on.offsetLeft - box.clientWidth / 2 + on.offsetWidth / 2;
-}
-function setShelf(id) { shelfSel = id; try { localStorage.setItem(KEY + '.shelf', id); } catch {} applyView(view[cur]?.id); }
-function stepShelf(d) { const ids = ['', ...shelfList().map(s => s.id)]; const i = Math.max(0, ids.indexOf(shelfSel)); setShelf(ids[(i + d + ids.length) % ids.length]); }
-$('#shelves').onclick = e => { const b = e.target.closest('.sc'); if (b) setShelf(b.dataset.id); };
 
 /* ---- data → view ---- */
 function applyView(keepId) {
+  rows.forEach(r => { rowMem[r.id] = Math.round(r.pos); });
   const f = q.trim().toLowerCase(), m = sortMode();
   let list = S.games.slice();
   if (m === 'auto') {
     list.sort((a, b) => { const ka = autoKey(a), kb = autoKey(b); if (ka !== kb) return ka === AUTO_OTHER ? 1 : kb === AUTO_OTHER ? -1 : ka.localeCompare(kb); return (a.title || '').localeCompare(b.title || ''); });
-  } else if (m === 'custom') {
-    const order = id => { const i = S.shelves.findIndex(s => s.id === id); return i < 0 ? 1e6 : i; };
-    list.sort((a, b) => order(a.shelf) - order(b.shelf));
   }
-  renderShelves();
-  if (shelfSel) list = list.filter(g => shelfKey(g) === shelfSel);
-  view = list.filter(g => !f || ((g.title || '') + ' ' + (g.platform || '')).toLowerCase().includes(f));
-  closeBack(); build();
-  const idx = keepId ? view.findIndex(g => g.id === keepId) : -1;
-  pos = target = idx >= 0 ? idx : 0; cur = -1;
+  list = list.filter(g => !f || ((g.title || '') + ' ' + (g.platform || '')).toLowerCase().includes(f));
+  closeBack();
+  rows = makeRows(list);
+  shelvesOn = rows.length > 0 && (m === 'auto' || (m === 'custom' && S.shelves.length > 0));
+  build();
+  let kr = -1, ki = 0;
+  if (keepId) rows.forEach((r, i) => { const j = r.items.findIndex(g => g.id === keepId); if (j >= 0) { kr = i; ki = j; } });
+  rows.forEach((r, i) => { r.pos = r.target = i === kr ? ki : clamp(rowMem[r.id] || 0, 0, r.items.length - 1); });
+  rpos = rtarget = Math.max(0, kr);
+  ri = -1; cur = -1; view = [];
   metrics(); updateCaption(); kick();
 }
 
@@ -595,7 +623,7 @@ async function cacheCover(u) {
 /* ================= sheets ================= */
 const veil = $('#veil');
 function openSheet(id) { $$('.sheet').forEach(s => s.classList.toggle('open', '#' + s.id === id)); veil.classList.add('on'); }
-function closeSheet() { veil.classList.remove('on'); $$('.sheet').forEach(s => s.classList.remove('open')); }
+function closeSheet() { veil.classList.remove('on'); $$('.sheet').forEach(s => s.classList.remove('open')); kick(); }
 veil.addEventListener('pointerdown', e => { if (e.target === veil) closeSheet(); });
 const msg = (id, t) => { const m = $(id); m.textContent = t || ''; m.classList.toggle('hidden', !t); };
 
@@ -614,9 +642,9 @@ function setType(t) {
   $('#eTarget').placeholder = t === 'shortcut' ? 'e.g. Launch Chrono Trigger' : t === 'scheme' ? 'e.g. provenance://open?title=…' : 'https://…';
 }
 $$('#eType button').forEach(b => b.onclick = () => setType(b.dataset.v));
-const thumb = () => { const v = $('#eCover').value.trim(); $('#eThumb').src = v || placeholder({ title: $('#eTitle').value || '?', platform: $('#ePlat').value }); };
-$('#eCover').addEventListener('input', thumb); $('#eTitle').addEventListener('input', thumb);
-$('#eThumb').onerror = () => { $('#eThumb').src = placeholder({ title: $('#eTitle').value || '?', platform: $('#ePlat').value }); };
+const thumb = () => { const v = eLocalCover || $('#eCover').value.trim(); $('#eThumb').src = v || placeholder({ title: $('#eTitle').value || '?', platform: $('#ePlat').value }); };
+$('#eCover').addEventListener('input', () => { eLocalCover = null; thumb(); }); $('#eTitle').addEventListener('input', thumb);
+$('#eThumb').onerror = () => { $('#eThumb').onerror = null; $('#eThumb').src = placeholder({ title: $('#eTitle').value || '?', platform: $('#ePlat').value }); };
 
 function openEdit(g) {
   editing = g || null; const d = g || {};
@@ -625,7 +653,7 @@ function openEdit(g) {
   $('#eTarget').value = d.target || ''; $('#eInput').value = d.input || '';
   $('#eCover').value = d.cover && !d.cover.startsWith('data:') ? d.cover : '';
   $('#eRa').value = d.ra?.id || ''; eSgdb = d.sgdb || null; eLocalCover = d.cover && d.cover.startsWith('data:') ? d.cover : null;
-  fillShelfSelect(d.shelf || (!g && sortMode() === 'custom' && shelfSel && shelfSel !== NO_SHELF ? shelfSel : ''));
+  fillShelfSelect(d.shelf || (!g && sortMode() === 'custom' && rows[ri] && rows[ri].id && rows[ri].id !== NO_SHELF ? rows[ri].id : ''));
   setType(d.type || 'shortcut'); msg('#eMsg', '');
   $('#eDel').classList.toggle('hidden', !g); thumb();
   if (eLocalCover) $('#eThumb').src = eLocalCover;
@@ -773,8 +801,8 @@ $('#raGo').onclick = async () => {
 /* ---- shelves sheet ---- */
 const MODE_HELP = {
   none: 'All your games in one row, in the order you added them. No shelves.',
-  auto: 'Groups games into shelves by their Platform field (SNES, Switch…). Nothing extra is saved, and shelves update as you edit games.',
-  custom: 'Make your own shelves, then pick one for each game in its Edit screen.'
+  auto: 'Stacks a shelf per Platform (SNES, Switch…). Swipe up or down to change shelf. Nothing extra is saved, and shelves update as you edit games.',
+  custom: 'Make your own shelves, then pick one for each game in its Edit screen. Swipe up or down to change shelf.'
 };
 function renderShelvesSheet() {
   const m = sortMode();
@@ -786,14 +814,14 @@ function renderShelvesSheet() {
     : '<div class="shrow"><span style="color:#8e8e93">No shelves yet. Add one below.</span></div>';
 }
 $('#btnShelves').onclick = () => { renderShelvesSheet(); openSheet('#sShelves'); };
-$$('#shMode button').forEach(b => b.onclick = () => { S.set.sortMode = b.dataset.v; shelfSel = ''; try { localStorage.setItem(KEY + '.shelf', ''); } catch {} save(); renderShelvesSheet(); applyView(view[cur]?.id); });
+$$('#shMode button').forEach(b => b.onclick = () => { S.set.sortMode = b.dataset.v; save(); renderShelvesSheet(); applyView(view[cur]?.id); });
 $('#shList').onclick = e => {
   const a = e.target.closest('[data-a]'); if (!a) return;
   const id = a.closest('.shrow').dataset.id, s = S.shelves.find(x => x.id === id); if (!s) return;
   if (a.dataset.a === 'ren') { const n = (prompt('Rename shelf', s.name) || '').trim(); if (n) { s.name = n; save(); } }
   else if (confirm('Delete the shelf "' + s.name + '"? Your games stay in the library.')) {
     S.shelves = S.shelves.filter(x => x !== s); S.games.forEach(g => { if (g.shelf === id) delete g.shelf; });
-    if (shelfSel === id) shelfSel = ''; save();
+    save();
   }
   renderShelvesSheet(); applyView(view[cur]?.id);
 };
@@ -840,7 +868,7 @@ $('#btnSearch').onclick = () => {
 $('#q').addEventListener('input', e => { q = e.target.value; applyView(view[cur]?.id); });
 
 /* ================= controller support ================= */
-let padRaf = 0, prevBtn = [], lastDir = 0, nextAt = 0, comboAt = 0;
+let padRaf = 0, prevBtn = [], lastDir = 0, lastDirY = 0, nextAt = 0, comboAt = 0;
 function havePad() { return !!(navigator.getGamepads && [...navigator.getGamepads()].some(Boolean)); }
 function padLoop(ts) {
   const pads = [...navigator.getGamepads()].filter(Boolean);
@@ -859,12 +887,16 @@ function padLoop(ts) {
   let ax = 0; pads.forEach(p => { const a = p.axes[0] || 0; if (Math.abs(a) > Math.abs(ax)) ax = a; });
   const dir = (now[14] || ax < -.5) ? -1 : (now[15] || ax > .5) ? 1 : 0;
   if (dir) {
-    if (dir !== lastDir) { go(target + dir); nextAt = ts + 380; }
-    else if (ts >= nextAt) { go(target + dir); nextAt = ts + 120; }
+    if (dir !== lastDir) { go(tgt() + dir); nextAt = ts + 380; }
+    else if (ts >= nextAt) { go(tgt() + dir); nextAt = ts + 120; }
   }
   lastDir = dir;
-  if (edge(5)) { if (shelvesVisible()) stepShelf(1); else go(target + 5); }
-  if (edge(4)) { if (shelvesVisible()) stepShelf(-1); else go(target - 5); }
+  let ay = 0; pads.forEach(p => { const a = p.axes[1] || 0; if (Math.abs(a) > Math.abs(ay)) ay = a; });
+  const dirY = (now[12] || ay < -.5) ? -1 : (now[13] || ay > .5) ? 1 : 0;
+  if (dirY && dirY !== lastDirY && shelvesOn) goRow(rtarget + dirY);
+  lastDirY = dirY;
+  if (edge(5)) { if (shelvesVisible()) goRow(rtarget + 1); else go(tgt() + 5); }
+  if (edge(4)) { if (shelvesVisible()) goRow(rtarget - 1); else go(tgt() - 5); }
   if (edge(0) && view[cur]) launch(view[cur]);
   if (edge(1)) closeBack();
   if (edge(3) && view[cur]) { backOpen ? closeBack() : openBack(); }
