@@ -1,0 +1,906 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="GameFlow">
+<meta name="theme-color" content="#4c4d4f">
+<title>GameFlow</title>
+<style>
+:root{--btn:46px;--cw:200px;--ch:300px;--cy:42%;--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);--sl:env(safe-area-inset-left,0px);--sr:env(safe-area-inset-right,0px)}
+@media (max-width:430px),(max-height:430px){:root{--btn:56px}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0;overflow:hidden;overscroll-behavior:none;background:#828284;
+  font:15px/1.35 -apple-system,BlinkMacSystemFont,"SF Pro Text",Helvetica,Arial,sans-serif;color:#fff;
+  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+body{position:fixed;inset:0;
+  background:#828284 url("data:image/jpeg;base64,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") center/cover no-repeat}
+button{font:inherit;color:inherit}
+.hidden{display:none!important}
+
+/* ---------- cover flow ---------- */
+#stage{position:absolute;inset:0;perspective:1000px;perspective-origin:50% var(--cy);touch-action:none;cursor:grab}
+#track{position:absolute;inset:0;transform-style:preserve-3d}
+.cv{position:absolute;left:50%;top:var(--cy);width:var(--cw);height:var(--ch);margin-left:calc(var(--cw)/-2);margin-top:calc(var(--ch)/-2);
+  background:#222;will-change:transform;box-shadow:0 0 0 1px rgba(0,0,0,.45);
+  -webkit-box-reflect:below 2px linear-gradient(to bottom,transparent 56%,rgba(0,0,0,.4))}
+.cv img{display:block;width:100%;height:100%;object-fit:cover;pointer-events:none;-webkit-user-drag:none}
+.cv .shade{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
+.cv.hide{visibility:hidden}
+.cv.launching img{animation:pop .55s ease-out}
+@keyframes pop{40%{transform:scale(1.07);filter:brightness(1.25)}100%{transform:scale(1)}}
+#floor{position:absolute;left:0;right:0;bottom:0;height:34%;pointer-events:none;background:linear-gradient(transparent,rgba(0,0,0,.5))}
+
+/* ---------- chrome ---------- */
+.rb{width:var(--btn);height:var(--btn);flex:none;border-radius:50%;border:1px solid rgba(255,255,255,.4);padding:0;display:grid;place-items:center;
+  background:linear-gradient(#5d5d60,#2a2a2c 55%,#1c1c1e);box-shadow:0 1px 3px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.28);cursor:pointer}
+.rb:active{filter:brightness(1.4)}
+.rb svg{width:calc(var(--btn)*.46);height:calc(var(--btn)*.46);fill:#fff}
+.rb[disabled]{opacity:.35}
+.bar{position:absolute;left:calc(var(--sl) + 12px);right:calc(var(--sr) + 12px);top:calc(var(--st) + 10px);display:flex;gap:10px;align-items:center}
+.bar .sp{flex:1}
+#q{flex:none;height:var(--btn);border-radius:calc(var(--btn)/2);border:1px solid rgba(255,255,255,.35);background:rgba(20,20,22,.7);color:#fff;padding:0 14px;font-size:16px;min-width:0;width:0;opacity:0;transition:width .25s,opacity .2s;-webkit-user-select:text;user-select:text}
+#q.on{flex:1;width:auto;opacity:1}
+#q:not(.on){padding:0;border-width:0;margin-left:-10px}
+.bar.searching .hs{display:none}
+#btnPlay{position:absolute;left:calc(var(--sl) + 14px);bottom:calc(var(--sb) + 18px)}
+#btnInfo{position:absolute;right:calc(var(--sr) + 14px);bottom:calc(var(--sb) + 18px);font:italic 700 calc(var(--btn)*.56)/1 Georgia,"Times New Roman",serif;padding-bottom:2px}
+#caption{position:absolute;left:0;right:0;bottom:calc(var(--sb) + 14px);text-align:center;padding:0 calc(var(--btn) + 26px);pointer-events:none;text-shadow:0 1px 2px #000,0 0 6px rgba(0,0,0,.6)}
+#caption div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#caption .l1{font-weight:700;font-size:16px}
+#caption .l2{font-weight:600;font-size:14px;color:#e8e8e8}
+#caption .l3{font-size:13px;color:#cfcfd1}
+
+#empty{position:absolute;left:0;right:0;top:34%;text-align:center;padding:0 30px;text-shadow:0 1px 2px #000}
+#empty h2{margin:0 0 6px;font-size:22px}
+#empty p{margin:0 0 16px;color:#eee}
+.btn{border:1px solid rgba(255,255,255,.3);background:rgba(40,40,44,.85);border-radius:10px;min-height:calc(var(--btn) - 2px);padding:8px 16px;cursor:pointer;font-weight:600;font-size:16px}
+.btn.pri{background:#0a84ff;border-color:#0a84ff}
+.btn.danger{color:#ff6961}
+.btn:active{filter:brightness(1.25)}
+
+/* ---------- flip-side details ---------- */
+#back{position:absolute;left:50%;top:var(--cy);width:var(--cw);height:var(--ch);margin-left:calc(var(--cw)/-2);margin-top:calc(var(--ch)/-2);z-index:2000;
+  background:linear-gradient(#2c2c2f,#141416);border:1px solid rgba(255,255,255,.2);padding:12px;display:flex;flex-direction:column;gap:6px;overflow:auto;
+  animation:flip .32s ease-out;box-shadow:0 8px 24px rgba(0,0,0,.5);text-shadow:none}
+@keyframes flip{from{transform:rotateY(-90deg)}to{transform:none}}
+#back h3{margin:0;font-size:16px;line-height:1.2}
+#back .sub{color:#aaa;font-size:13px}
+#back .kv{font-size:12.5px;color:#d8d8da;word-break:break-all}
+#back .bar2{height:6px;border-radius:3px;background:#444;overflow:hidden}
+#back .bar2 i{display:block;height:100%;background:linear-gradient(90deg,#f5a623,#ffd45c)}
+#back .btns{margin-top:auto;display:flex;gap:8px}
+#back .btns .btn{flex:1;padding:8px 6px}
+
+/* ---------- sheets ---------- */
+#veil{position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,.45);display:none;align-items:flex-end;justify-content:center;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+#veil.on{display:flex}
+.sheet{display:none;width:min(560px,100%);max-height:calc(100% - var(--st) - 8px);overflow:auto;-webkit-overflow-scrolling:touch;
+  background:rgba(30,30,33,.97);border-radius:18px 18px 0 0;padding:16px 16px calc(var(--sb) + 16px);touch-action:pan-y;-webkit-user-select:text;user-select:text;animation:up .22s ease-out}
+.sheet.open{display:block}
+@keyframes up{from{transform:translateY(30px);opacity:0}}
+.sheet h2{margin:0 0 12px;font-size:19px}
+.sheet label,.sheet .lbl{display:block;font-size:12.5px;color:#a9a9ae;margin:10px 0 0}
+.sheet input[type=text],.sheet input[type=password],.sheet input:not([type]),.sheet input[type=url],.sheet input[inputmode]{display:block;width:100%;margin-top:4px;height:calc(var(--btn) - 2px);border-radius:10px;border:1px solid #3d3d42;background:#121214;color:#fff;padding:0 12px;font-size:16px}
+.sheet .row{display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap}
+.sheet .row .sp{flex:1}
+.sheet .help{font-size:12px;color:#8e8e93;margin:6px 0 0}
+.seg{display:flex;margin-top:6px;border:1px solid #3d3d42;border-radius:10px;overflow:hidden}
+.seg button{flex:1;padding:0 4px;min-height:calc(var(--btn) - 2px);background:#121214;border:0;border-right:1px solid #3d3d42;cursor:pointer;font-size:14px}
+.seg button:last-child{border-right:0}
+.seg button.on{background:#0a84ff}
+.coverrow{display:flex;gap:12px;margin-top:6px}
+.coverrow .thumb{width:72px;aspect-ratio:2/3;flex:none;background:#121214;border:1px solid #3d3d42;border-radius:4px;overflow:hidden}
+.coverrow .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.coverrow .col{flex:1;min-width:0}
+.coverrow .col .row{margin-top:8px}
+.coverrow .btn{padding:6px 10px;font-size:14px}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:10px 0 4px;-webkit-overflow-scrolling:touch}
+.chip{flex:none;display:inline-flex;align-items:center;min-height:calc(var(--btn) - 8px);padding:0 15px;border-radius:15px;background:#121214;border:1px solid #3d3d42;font-size:14px;cursor:pointer;white-space:nowrap}
+.chip.on{background:#0a84ff;border-color:#0a84ff}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+@media(min-width:520px){.grid{grid-template-columns:repeat(4,1fr)}}
+.grid button{padding:0;border:1px solid #3d3d42;background:#121214;aspect-ratio:2/3;border-radius:4px;overflow:hidden;cursor:pointer}
+.grid img{width:100%;height:100%;object-fit:cover;display:block}
+.msg{color:#ffb4ae;font-size:13px;margin-top:8px}
+.ralist{margin-top:8px;max-height:46vh;overflow:auto;border:1px solid #3d3d42;border-radius:10px}
+.ralist label{display:flex;gap:12px;align-items:center;margin:0;padding:12px;border-bottom:1px solid #2a2a2e;font-size:15px;color:#fff}
+.ralist label:last-child{border:0}
+.ralist small{display:block;color:#8e8e93}
+.ralist input{width:26px;height:26px;flex:none}
+#web{position:fixed;inset:0;z-index:3500;background:#111;display:flex;flex-direction:column}
+#webbar{flex:none;display:flex;align-items:center;gap:10px;padding:calc(var(--st) + 6px) calc(var(--sr) + 12px) 6px calc(var(--sl) + 12px);background:linear-gradient(#505153,#2f3032);border-bottom:1px solid rgba(0,0,0,.55)}
+#webTitle{flex:1;min-width:0;text-align:center;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#webframe{flex:1;min-height:0;width:100%;border:0;background:#fff}
+#shelves{position:absolute;left:0;right:0;top:calc(var(--st) + 10px + var(--btn) + 8px);z-index:5;display:flex;gap:8px;overflow-x:auto;padding:0 calc(var(--sr) + 12px) 4px calc(var(--sl) + 12px);-webkit-overflow-scrolling:touch;scrollbar-width:none}
+#shelves::-webkit-scrollbar{display:none}
+.sc{flex:none;display:inline-flex;align-items:center;gap:6px;min-height:calc(var(--btn) - 12px);padding:0 15px;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:rgba(20,20,22,.74);color:#fff;font-weight:600;font-size:14px;cursor:pointer;text-shadow:none}
+.sc small{opacity:.65;font-size:12px}
+.sc.on{background:#0a84ff;border-color:#0a84ff}
+.sheet select{display:block;width:100%;margin-top:4px;height:calc(var(--btn) - 2px);border-radius:10px;border:1px solid #3d3d42;background:#121214;color:#fff;padding:0 10px;font-size:16px}
+.shrow{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid #2a2a2e;font-size:15px}
+.shrow:last-child{border:0}
+.shrow>span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.shrow small{color:#8e8e93}
+.shrow .btn{min-height:40px;padding:4px 11px;font-size:14px}
+#toast{position:fixed;left:50%;bottom:calc(var(--sb) + 76px);transform:translateX(-50%);z-index:4000;background:rgba(20,20,22,.94);border:1px solid rgba(255,255,255,.2);padding:9px 14px;border-radius:12px;font-size:14px;max-width:86vw;text-align:center;opacity:0;pointer-events:none;transition:opacity .2s}
+#toast.on{opacity:1}
+</style>
+</head>
+<body>
+
+<div id="stage"><div id="track"></div><div id="back" class="hidden"></div></div>
+<div id="floor"></div>
+
+<div id="empty" class="hidden">
+  <h2>No games yet</h2>
+  <p>Add a game with a Shortcut, URL scheme or web link.</p>
+  <button class="btn pri" id="bEmptyAdd">Add a game</button>
+</div>
+
+<div class="bar">
+  <button class="rb" id="btnSearch" aria-label="Search"><svg viewBox="0 0 24 24"><path d="M10 2a8 8 0 1 0 4.9 14.3l5.4 5.4 1.4-1.4-5.4-5.4A8 8 0 0 0 10 2zm0 2a6 6 0 1 1 0 12 6 6 0 0 1 0-12z"/></svg></button>
+  <input id="q" type="search" placeholder="Search games" autocomplete="off" autocapitalize="off">
+  <span class="sp hs"></span>
+  <button class="rb hs" id="btnShelves" aria-label="Shelves"><svg viewBox="0 0 24 24"><path d="M10 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8z"/></svg></button>
+  <button class="rb hs" id="btnAdd" aria-label="Add game"><svg viewBox="0 0 24 24"><path d="M11 4h2v7h7v2h-7v7h-2v-7H4v-2h7z"/></svg></button>
+  <button class="rb hs" id="btnSet" aria-label="Settings"><svg viewBox="0 0 24 24"><path d="M19.4 13a7.5 7.5 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 0 0-1.7-1L15 3.3h-4l-.4 2.6a7.4 7.4 0 0 0-1.7 1l-2.5-1-2 3.5L6.600 11a7.500 7.500 0 0 0 0 2l-2.100 1.600 2 3.500 2.500-1a7.400 7.400 0 0 0 1.700 1l.4 2.600h4l.4-2.600a7.400 7.400 0 0 0 1.700-1l2.500 1 2-3.500zM13 15.500a3.500 3.500 0 1 1 0-7 3.500 3.500 0 0 1 0 7z" transform="translate(-1 0)"/></svg></button>
+</div>
+
+<div id="shelves" class="hidden"></div>
+<button class="rb" id="btnPlay" aria-label="Launch"><svg viewBox="0 0 24 24"><path d="M7 4.500v15l13-7.500z"/></svg></button>
+<div id="caption"><div class="l1"></div><div class="l2"></div><div class="l3"></div></div>
+<button class="rb" id="btnInfo" aria-label="Details">i</button>
+
+<div id="web" class="hidden">
+  <div id="webbar">
+    <button class="rb" id="webClose" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M5.700 4.300 12 10.600l6.300-6.300 1.400 1.400-6.300 6.300 6.300 6.300-1.400 1.400-6.300-6.300-6.300 6.300-1.400-1.400 6.300-6.300-6.300-6.300z"/></svg></button>
+    <div id="webTitle"></div>
+    <button class="rb" id="webExt" aria-label="Open in Safari"><svg viewBox="0 0 24 24"><path d="M14 3h7v7h-2V6.400l-8.300 8.300-1.400-1.400L17.600 5H14zM5 7h6v2H6v9h9v-5h2v7H4V7z"/></svg></button>
+  </div>
+  <iframe id="webframe" title="Web game" allow="autoplay; fullscreen; gamepad; gyroscope; accelerometer; clipboard-write; microphone; camera" allowfullscreen></iframe>
+</div>
+<div id="toast"></div>
+
+<div id="veil">
+  <!-- add / edit -->
+  <div class="sheet" id="sEdit">
+    <h2 id="eHead">Add game</h2>
+    <label>Title<input id="eTitle" autocomplete="off"></label>
+    <label>Platform<input id="ePlat" list="plats" autocomplete="off" placeholder="SNES, Switch, PC, PSP…"></label>
+    <label id="eShelfWrap" class="hidden">Shelf<select id="eShelf"></select></label>
+    <datalist id="plats"><option>NES<option>SNES<option>N64<option>GameCube<option>Wii<option>Switch<option>Game Boy<option>GBA<option>DS<option>3DS<option>Genesis<option>Dreamcast<option>PlayStation<option>PS2<option>PSP<option>PC<option>Arcade</datalist>
+    <div class="lbl">Launch with</div>
+    <div class="seg" id="eType"><button data-v="shortcut">Shortcut</button><button data-v="scheme">URL scheme</button><button data-v="web">Web link</button></div>
+    <label><span id="eTLabel">Shortcut name</span><input id="eTarget" autocapitalize="off" autocorrect="off" spellcheck="false"></label>
+    <label id="eInWrap">Text input for the shortcut (optional)<input id="eInput" autocapitalize="off" autocorrect="off" spellcheck="false"></label>
+    <p class="help" id="eHelp"></p>
+    <div class="lbl">Cover (2:3)</div>
+    <div class="coverrow">
+      <div class="thumb"><img id="eThumb" alt=""></div>
+      <div class="col">
+        <input id="eCover" type="url" placeholder="Image URL" autocapitalize="off" autocorrect="off" spellcheck="false">
+        <div class="row"><button class="btn" id="bSgdb">SteamGridDB</button><button class="btn" id="bRaArt">RetroAch.</button><button class="btn" id="bPhoto">Photo</button></div>
+      </div>
+    </div>
+    <label>RetroAchievements game ID (optional)<input id="eRa" inputmode="numeric" placeholder="the number in retroachievements.org/game/…"></label>
+    <div class="msg hidden" id="eMsg"></div>
+    <div class="row"><button class="btn danger hidden" id="eDel">Delete</button><span class="sp"></span><button class="btn" id="eCancel">Cancel</button><button class="btn pri" id="eSave">Save</button></div>
+    <input type="file" id="file" accept="image/*" hidden>
+  </div>
+
+  <!-- SteamGridDB picker -->
+  <div class="sheet" id="sPick">
+    <h2>SteamGridDB</h2>
+    <div class="row" style="margin-top:0"><input id="pkQ" placeholder="Game name or Steam App ID" autocomplete="off" style="flex:1;margin:0"><button class="btn pri" id="pkGo">Search</button></div>
+    <div class="chips" id="pkChips"></div>
+    <label style="display:flex;gap:8px;align-items:center;margin-top:2px"><input type="checkbox" id="pkStrict" checked style="width:18px;height:18px;margin:0"> Only exact 2:3 (600×900)</label>
+    <div class="msg hidden" id="pkMsg"></div>
+    <div class="grid" id="pkGrid"></div>
+    <div class="row"><button class="btn hidden" id="pkMore">Load more</button><span class="sp"></span><button class="btn" id="pkBack">Back</button></div>
+  </div>
+
+  <!-- RetroAchievements import -->
+  <div class="sheet" id="sRA">
+    <h2>Import from RetroAchievements</h2>
+    <p class="help" style="margin-top:0">Pick games from your RetroAchievements library. Box art and achievement progress come along; set the launch action afterwards.</p>
+    <div class="msg hidden" id="raMsg"></div>
+    <div class="ralist" id="raList"></div>
+    <div class="row"><button class="btn" id="raAll">Select all</button><span class="sp"></span><button class="btn" id="raBack">Back</button><button class="btn pri" id="raGo">Import</button></div>
+  </div>
+
+  <!-- shelves -->
+  <div class="sheet" id="sShelves">
+    <h2>Shelves</h2>
+    <p class="help" style="margin-top:0">Shelves are optional. Nothing is grouped or created unless you turn it on here.</p>
+    <div class="seg" id="shMode"><button data-v="none">No sort</button><button data-v="auto">Auto sort</button><button data-v="custom">My shelves</button></div>
+    <p class="help" id="shHelp"></p>
+    <div id="shCustom" class="hidden">
+      <div class="ralist" id="shList"></div>
+      <div class="row"><input id="shNew" placeholder="New shelf name" autocomplete="off" style="flex:1;margin:0"><button class="btn pri" id="shAdd">Add</button></div>
+    </div>
+    <div class="row"><span class="sp"></span><button class="btn pri" id="shDone">Done</button></div>
+  </div>
+
+  <!-- settings -->
+  <div class="sheet" id="sSet">
+    <h2>Settings</h2>
+    <label>SteamGridDB API key<input id="sKey" type="password" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+    <label>RetroAchievements username<input id="sRaU" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+    <label>RetroAchievements web API key<input id="sRaK" type="password" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+    <label>CORS proxy (see cors-worker.js)<input id="sProxy" type="url" placeholder="https://your-worker.workers.dev/?url=" autocapitalize="off" autocorrect="off" spellcheck="false"></label>
+    <p class="help">Keys are stored only in this browser. Browsers block direct calls to these APIs, so most setups need the proxy. Covers you pick are saved on the device as 2:3 images when the source allows it.</p>
+    <p class="help"><b>Controller:</b> D-pad or left stick browses, LB/RB switch shelves (or skip five when shelves are off), A launches, B goes back, Y shows details, X edits, Start opens settings. Inside a web game, hold Select + Start to exit. Press any button once so Safari detects the controller.</p>
+    <div class="row"><button class="btn" id="sRaImport">Import RetroAchievements library</button></div>
+    <div class="row"><button class="btn" id="sExport">Export library</button><button class="btn" id="sImport">Import library</button><input type="file" id="sFile" accept="application/json,.json" hidden></div>
+    <div class="row"><span class="sp"></span><button class="btn pri" id="sDone">Done</button></div>
+  </div>
+</div>
+
+<script>
+(() => {
+'use strict';
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = () => Math.random().toString(36).slice(2, 9) + Date.now().toString(36);
+const hash = s => { let h = 2166136261; for (const c of String(s)) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; };
+const MEDIA = 'https://media.retroachievements.org';
+
+/* ================= state ================= */
+const KEY = 'gameflow.v1';
+const DEF = { games: [], shelves: [], set: { sgdb: '', raUser: '', raKey: '', proxy: '', sortMode: 'none' } };
+let S;
+try {
+  const raw = JSON.parse(localStorage.getItem(KEY) || '{}');
+  S = { games: Array.isArray(raw.games) ? raw.games : [], shelves: Array.isArray(raw.shelves) ? raw.shelves : [], set: Object.assign({}, DEF.set, raw.set) };
+} catch { S = JSON.parse(JSON.stringify(DEF)); }
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch { toast('Storage is full. Remove a few games with local covers.'); } };
+const getSel = () => { try { return localStorage.getItem(KEY + '.sel'); } catch { return null; } };
+const setSel = id => { try { localStorage.setItem(KEY + '.sel', id || ''); } catch {} };
+
+let toastT;
+function toast(msg, ms = 2600) { const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), ms); }
+
+/* ================= placeholder covers ================= */
+const phCache = {};
+function wrapText(t, n) {
+  const L = []; let c = '';
+  for (const w of t.split(/\s+/)) { if ((c + ' ' + w).trim().length > n && c) { L.push(c); c = w; } else c = (c + ' ' + w).trim(); }
+  if (c) L.push(c); return L.slice(0, 5);
+}
+function placeholder(g) {
+  const k = (g.title || '') + '|' + (g.platform || '');
+  if (phCache[k]) return phCache[k];
+  const h = hash(g.title || '?') % 360, L = wrapText(g.title || 'Untitled', 13);
+  const lines = L.map((l, i) => `<text x="200" y="${290 - (L.length - 1) * 26 + i * 52}" text-anchor="middle" font-size="44" font-weight="800" fill="#fff" font-family="Helvetica,Arial,sans-serif">${esc(l)}</text>`).join('');
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="hsl(${h} 60% 42%)"/><stop offset="1" stop-color="hsl(${(h + 50) % 360} 65% 18%)"/></linearGradient></defs><rect width="400" height="600" fill="url(#g)"/><rect x="14" y="14" width="372" height="572" fill="none" stroke="#fff" stroke-opacity=".25" stroke-width="2"/>${lines}<text x="200" y="560" text-anchor="middle" font-size="26" fill="#fff" fill-opacity=".7" font-family="Helvetica,Arial,sans-serif">${esc((g.platform || '').slice(0, 28))}</text></svg>`;
+  return phCache[k] = 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+}
+const coverSrc = g => g.cover || placeholder(g);
+
+/* ================= launching ================= */
+function launchURL(g) {
+  const t = (g.target || '').trim();
+  if (!t) return null;
+  if (g.type === 'shortcut') {
+    let u = 'shortcuts://run-shortcut?name=' + encodeURIComponent(t);
+    if (g.input) u += '&input=text&text=' + encodeURIComponent(g.input);
+    return u;
+  }
+  if (g.type === 'web' && !/^[a-z][a-z0-9+.-]*:/i.test(t)) return 'https://' + t;
+  return t;
+}
+function launchLabel(g) {
+  if (!g.target) return 'No launch action set';
+  if (g.type === 'shortcut') return 'Shortcut: ' + g.target;
+  if (g.type === 'web') { try { return new URL(launchURL(g)).hostname; } catch { return 'Web link'; } }
+  return 'App link: ' + (g.target.split(':')[0] || 'URL scheme') + '://';
+}
+function launch(g) {
+  const u = launchURL(g);
+  if (!u) { toast('No launch action yet. Tap the i button, then Edit.'); return; }
+  const el = elOf(cur); if (el) { el.classList.add('launching'); setTimeout(() => el.classList.remove('launching'), 1300); }
+  if (g.type === 'web') openWeb(u, g.title); else location.href = u;
+}
+
+/* ---- in-app web view (iframe with a close button) ---- */
+let webOpen = false, webHint = 0;
+function openWeb(u, title) {
+  webOpen = true; $('#webTitle').textContent = title || u;
+  $('#web').classList.remove('hidden'); $('#webframe').src = u;
+  $('#webExt').onclick = () => { window.open(u, '_blank'); };
+  clearTimeout(webHint);
+  toast(havePad() ? 'Tap ✕ or hold Select + Start to exit' : 'Tap ✕ to exit', 3200);
+  let seen = false; try { seen = localStorage.getItem(KEY + '.webhint') === '1'; } catch {}
+  if (!seen) webHint = setTimeout(() => {
+    toast('Page blank? Some sites block embedding. Tap the ↗ button to open it in Safari.', 5000);
+    try { localStorage.setItem(KEY + '.webhint', '1'); } catch {}
+  }, 4500);
+}
+function closeWeb() {
+  if (!webOpen) return; webOpen = false; clearTimeout(webHint);
+  $('#webframe').src = 'about:blank'; $('#web').classList.add('hidden');
+}
+$('#webClose').onclick = closeWeb;
+
+/* ================= cover flow engine ================= */
+const stage = $('#stage'), track = $('#track');
+let view = [], els = [], pos = 0, target = 0, cur = -1;
+let cw = 200, ch = 300, px = 64;
+
+function elOf(i) { return els[i]; }
+
+function build() {
+  track.innerHTML = ''; els = [];
+  view.forEach((g, i) => {
+    const el = document.createElement('div');
+    el.className = 'cv'; el.dataset.i = i;
+    const img = document.createElement('img'); img.alt = ''; img.draggable = false;
+    img.onerror = () => { if (img.dataset.fb !== '1') { img.dataset.fb = '1'; img.src = placeholder(g); } };
+    const sh = document.createElement('div'); sh.className = 'shade';
+    el.append(img, sh); el._img = img; el._sh = sh; el._loaded = false; el.style.display = 'none';
+    track.appendChild(el); els.push(el);
+  });
+}
+
+function metrics() {
+  const vw = stage.clientWidth || innerWidth, vh = stage.clientHeight || innerHeight;
+  if (!vw || !vh) { requestAnimationFrame(metrics); return; }  // iOS can report 0 size at first load
+  const land = vw > vh, sh = shelvesVisible();
+  ch = Math.round(Math.min(vh * (land ? .74 : .6), vw * .66 * 1.5) * (sh ? (land ? .82 : .92) : 1));
+  cw = Math.round(ch * 2 / 3); px = cw * .32;
+  const r = document.documentElement.style;
+  r.setProperty('--cw', cw + 'px'); r.setProperty('--ch', ch + 'px'); r.setProperty('--cy', (land ? 46 + (sh ? 7 : 0) : 41 + (sh ? 3 : 0)) + '%');
+  stage.style.perspective = Math.round(cw * 5) + 'px';
+  layout();
+}
+
+function kick() { // WebKit can leave 3D + reflected layers unpainted until something forces a repaint
+  requestAnimationFrame(() => { track.style.visibility = 'hidden'; void track.offsetHeight; track.style.visibility = ''; layout(); });
+}
+function layout() {
+  const CG = cw * .58, SG = cw * .19, ANG = 64, DEPTH = cw * .55;
+  for (let i = 0; i < els.length; i++) {
+    const el = els[i], d = i - pos, ad = Math.abs(d);
+    if (ad > 9) { if (el.style.display !== 'none') el.style.display = 'none'; continue; }
+    if (el.style.display === 'none') el.style.display = '';
+    if (!el._loaded && ad <= 12) { el._loaded = true; el._img.src = coverSrc(view[i]); }
+    const a = clamp(d, -1, 1);
+    el.style.transform = `translate3d(${a * CG + (d - a) * SG}px,0,${-Math.abs(a) * DEPTH}px) rotateY(${-a * ANG}deg)`;
+    el.style.zIndex = 1000 - Math.round(ad * 20);
+    el._sh.style.opacity = Math.min(.62, ad * .5).toFixed(3);
+  }
+  const c = clamp(Math.round(pos), 0, Math.max(0, view.length - 1));
+  if (c !== cur) { cur = c; onCurrent(); }
+}
+
+let raf = 0, lastTs = 0;
+function step(ts) {
+  const dt = Math.min(50, ts - lastTs); lastTs = ts;
+  const d = target - pos;
+  if (Math.abs(d) < .0008) { pos = target; layout(); raf = 0; return; }
+  pos += d * (1 - Math.exp(-dt / 85)); layout(); raf = requestAnimationFrame(step);
+}
+function go(t) {
+  target = clamp(Math.round(t), 0, Math.max(0, view.length - 1));
+  if (!raf) { lastTs = performance.now(); raf = requestAnimationFrame(step); }
+}
+
+/* ---- touch / mouse ---- */
+let dragging = false, sx = 0, spos = 0, lastX = 0, lastT = 0, vel = 0, moved = 0, tapEl = null;
+stage.addEventListener('pointerdown', e => {
+  if (e.target.closest('#back')) return;
+  if (!view.length) return;
+  dragging = true; moved = 0; sx = lastX = e.clientX; spos = pos; lastT = e.timeStamp; vel = 0;
+  tapEl = e.target.closest('.cv');
+  if (raf) { cancelAnimationFrame(raf); raf = 0; }
+  stage.setPointerCapture(e.pointerId); stage.style.cursor = 'grabbing';
+});
+stage.addEventListener('pointermove', e => {
+  if (!dragging) return;
+  const dx = e.clientX - sx; moved = Math.max(moved, Math.abs(dx));
+  if (moved > 6) {
+    pos = clamp(spos - dx / px, -.35, view.length - 1 + .35);
+    const dt = e.timeStamp - lastT;
+    if (dt > 0) vel = .75 * vel + .25 * (-(e.clientX - lastX) / px / dt);
+    lastX = e.clientX; lastT = e.timeStamp; layout();
+  }
+});
+const endDrag = e => {
+  if (!dragging) return; dragging = false; stage.style.cursor = 'grab';
+  if (moved < 8 && tapEl && e.type === 'pointerup') {
+    const i = +tapEl.dataset.i;
+    if (i === cur && Math.abs(pos - cur) < .15) launch(view[i]); else go(i);
+  } else {
+    go(pos + clamp(vel * 240, -6, 6));
+  }
+  tapEl = null;
+};
+stage.addEventListener('pointerup', endDrag);
+stage.addEventListener('pointercancel', endDrag);
+let wheelT = 0;
+stage.addEventListener('wheel', e => {
+  e.preventDefault(); const now = Date.now(); if (now - wheelT < 90) return; wheelT = now;
+  const d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY; if (d) go(target + Math.sign(d));
+}, { passive: false });
+addEventListener('keydown', e => {
+  if (webOpen) { if (e.key === 'Escape') closeWeb(); return; }
+  if (/INPUT|TEXTAREA/.test(document.activeElement.tagName) || $('#veil').classList.contains('on')) { if (e.key === 'Escape') closeSheet(); return; }
+  if (e.key === 'ArrowLeft') go(target - 1);
+  else if (e.key === 'ArrowRight') go(target + 1);
+  else if (e.key === 'Enter' && view[cur]) launch(view[cur]);
+  else if (e.key === 'Escape') closeBack();
+});
+
+/* ---- caption, details, achievements ---- */
+function raLine(g) { return g.ra && g.ra.total ? `🏆 ${g.ra.earned}/${g.ra.total} achievements (${Math.round(g.ra.earned / g.ra.total * 100)}%)` : ''; }
+function updateCaption() {
+  const g = view[cur], has = !!g;
+  $('#caption').style.visibility = has || S.games.length ? '' : 'hidden';
+  $('#btnPlay').disabled = $('#btnInfo').disabled = !has;
+  $('#empty').classList.toggle('hidden', S.games.length > 0);
+  if (!has) { if (S.games.length) { $('#caption .l1').textContent = 'Nothing here'; $('#caption .l2').textContent = 'No games match this shelf or search'; $('#caption .l3').textContent = ''; } return; }
+  $('#caption .l1').textContent = g.title;
+  $('#caption .l2').textContent = g.platform || '\u00a0';
+  $('#caption .l3').textContent = raLine(g) || launchLabel(g);
+}
+let raT;
+function onCurrent() {
+  closeBack(); updateCaption();
+  const g = view[cur]; if (!g) return;
+  setSel(g.id);
+  clearTimeout(raT); raT = setTimeout(() => refreshRA(g), 600);
+}
+
+let backOpen = false;
+function openBack() {
+  const g = view[cur]; if (!g) return;
+  const pct = g.ra && g.ra.total ? Math.round(g.ra.earned / g.ra.total * 100) : null;
+  const b = $('#back');
+  b.innerHTML = `<h3>${esc(g.title)}</h3><div class="sub">${esc(g.platform || '')}</div>
+    <div class="kv">${esc(launchLabel(g))}</div>
+    ${pct !== null ? `<div class="kv">🏆 ${g.ra.earned}/${g.ra.total}${g.ra.hc ? ` · ${g.ra.hc} hardcore` : ''}</div><div class="bar2"><i style="width:${pct}%"></i></div>` : (g.ra && g.ra.id ? '<div class="kv">RetroAchievements linked. Add your API key to see progress.</div>' : '')}
+    <div class="btns"><button class="btn pri" data-a="launch">Launch</button><button class="btn" data-a="edit">Edit</button></div>`;
+  b.classList.remove('hidden'); backOpen = true;
+  const el = elOf(cur); if (el) el.classList.add('hide');
+}
+function closeBack() {
+  if (!backOpen) return; backOpen = false; $('#back').classList.add('hidden');
+  els.forEach(e => e.classList.remove('hide'));
+}
+$('#back').addEventListener('click', e => {
+  const a = e.target.closest('[data-a]')?.dataset.a, g = view[cur];
+  if (a === 'launch') launch(g); else if (a === 'edit') { closeBack(); openEdit(g); } else closeBack();
+});
+$('#btnInfo').onclick = () => backOpen ? closeBack() : openBack();
+$('#btnPlay').onclick = () => view[cur] && launch(view[cur]);
+
+let q = '';
+/* ---- shelves (optional, never created automatically) ---- */
+const AUTO_OTHER = '__other', NO_SHELF = '__none';
+let shelfSel = ''; try { shelfSel = localStorage.getItem(KEY + '.shelf') || ''; } catch {}
+const sortMode = () => S.set.sortMode || 'none';
+const autoKey = g => (g.platform || '').trim().toLowerCase() || AUTO_OTHER;
+function shelfKey(g) {
+  const m = sortMode();
+  return m === 'auto' ? autoKey(g) : m === 'custom' ? (S.shelves.some(s => s.id === g.shelf) ? g.shelf : NO_SHELF) : '';
+}
+function shelfList() {
+  const m = sortMode(), out = [];
+  if (m === 'auto') {
+    const map = new Map();
+    S.games.forEach(g => { const k = autoKey(g); if (!map.has(k)) map.set(k, { id: k, name: k === AUTO_OTHER ? 'Other' : (g.platform || '').trim(), n: 0 }); map.get(k).n++; });
+    [...map.values()].sort((a, b) => a.id === AUTO_OTHER ? 1 : b.id === AUTO_OTHER ? -1 : a.name.localeCompare(b.name)).forEach(s => out.push(s));
+  } else if (m === 'custom') {
+    S.shelves.forEach(s => out.push({ id: s.id, name: s.name, n: S.games.filter(g => g.shelf === s.id).length }));
+    const loose = S.games.filter(g => shelfKey(g) === NO_SHELF).length;
+    if (S.shelves.length && loose) out.push({ id: NO_SHELF, name: 'Unsorted', n: loose });
+  }
+  return out;
+}
+const shelvesVisible = () => S.games.length > 0 && shelfList().length > 0;
+function renderShelves() {
+  const list = shelfList(), box = $('#shelves');
+  if (shelfSel && !list.some(s => s.id === shelfSel)) shelfSel = '';
+  const show = list.length > 0 && S.games.length > 0;
+  box.classList.toggle('hidden', !show);
+  if (!show) return;
+  box.innerHTML = [{ id: '', name: 'All', n: S.games.length }, ...list].map(s => `<button class="sc${s.id === shelfSel ? ' on' : ''}" data-id="${esc(s.id)}">${esc(s.name)} <small>${s.n}</small></button>`).join('');
+  const on = box.querySelector('.on'); if (on) box.scrollLeft = on.offsetLeft - box.clientWidth / 2 + on.offsetWidth / 2;
+}
+function setShelf(id) { shelfSel = id; try { localStorage.setItem(KEY + '.shelf', id); } catch {} applyView(view[cur]?.id); }
+function stepShelf(d) { const ids = ['', ...shelfList().map(s => s.id)]; const i = Math.max(0, ids.indexOf(shelfSel)); setShelf(ids[(i + d + ids.length) % ids.length]); }
+$('#shelves').onclick = e => { const b = e.target.closest('.sc'); if (b) setShelf(b.dataset.id); };
+
+/* ---- data → view ---- */
+function applyView(keepId) {
+  const f = q.trim().toLowerCase(), m = sortMode();
+  let list = S.games.slice();
+  if (m === 'auto') {
+    list.sort((a, b) => { const ka = autoKey(a), kb = autoKey(b); if (ka !== kb) return ka === AUTO_OTHER ? 1 : kb === AUTO_OTHER ? -1 : ka.localeCompare(kb); return (a.title || '').localeCompare(b.title || ''); });
+  } else if (m === 'custom') {
+    const order = id => { const i = S.shelves.findIndex(s => s.id === id); return i < 0 ? 1e6 : i; };
+    list.sort((a, b) => order(a.shelf) - order(b.shelf));
+  }
+  renderShelves();
+  if (shelfSel) list = list.filter(g => shelfKey(g) === shelfSel);
+  view = list.filter(g => !f || ((g.title || '') + ' ' + (g.platform || '')).toLowerCase().includes(f));
+  closeBack(); build();
+  const idx = keepId ? view.findIndex(g => g.id === keepId) : -1;
+  pos = target = idx >= 0 ? idx : 0; cur = -1;
+  metrics(); updateCaption(); kick();
+}
+
+/* ================= RetroAchievements ================= */
+const fx = (url, opt) => {
+  const p = (S.set.proxy || '').trim();
+  return fetch(p ? p + encodeURIComponent(url) : url, opt);
+};
+function needRA() {
+  if (!S.set.raUser || !S.set.raKey) { toast('Add your RetroAchievements username and API key in Settings.'); return false; }
+  return true;
+}
+async function raGet(ep, params) {
+  const u = new URL('https://retroachievements.org/API/' + ep);
+  u.searchParams.set('z', S.set.raUser); u.searchParams.set('y', S.set.raKey);
+  for (const k in params) u.searchParams.set(k, params[k]);
+  const r = await fx(u.toString());
+  if (!r.ok) throw new Error('RetroAchievements returned ' + r.status);
+  return r.json();
+}
+async function refreshRA(g) {
+  if (!g.ra?.id || !S.set.raUser || !S.set.raKey) return;
+  if (g.ra.t && Date.now() - g.ra.t < 36e5) return;
+  try {
+    const j = await raGet('API_GetGameInfoAndUserProgress.php', { u: S.set.raUser, g: g.ra.id });
+    if (typeof j.NumAchievements !== 'number') return;
+    g.ra = { id: g.ra.id, earned: j.NumAwardedToUser || 0, hc: j.NumAwardedToUserHardcore || 0, total: j.NumAchievements, t: Date.now() };
+    save(); if (view[cur] === g) { updateCaption(); if (backOpen) { closeBack(); openBack(); } }
+  } catch { /* offline or blocked: keep cached numbers */ }
+}
+
+/* ================= SteamGridDB ================= */
+async function sgdb(path) {
+  if (!S.set.sgdb) throw new Error('Add your SteamGridDB API key in Settings first.');
+  let r;
+  try { r = await fx('https://www.steamgriddb.com/api/v2' + path, { headers: { Authorization: 'Bearer ' + S.set.sgdb } }); }
+  catch { throw new Error('Request blocked by the browser (CORS). Set up the proxy from cors-worker.js in Settings.'); }
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok || j.success === false) throw new Error((j.errors && j.errors.join(', ')) || 'SteamGridDB error ' + r.status);
+  return j.data;
+}
+
+/* ================= image helpers ================= */
+async function blobToCover(blob) {
+  const bm = await createImageBitmap(blob);
+  const W = 400, H = 600, c = document.createElement('canvas'); c.width = W; c.height = H;
+  const x = c.getContext('2d'), s = Math.max(W / bm.width, H / bm.height), w = bm.width * s, h = bm.height * s;
+  x.drawImage(bm, (W - w) / 2, (H - h) / 2, w, h);
+  return c.toDataURL('image/jpeg', .86);
+}
+async function cacheCover(u) {
+  if (!u || !/^https?:/i.test(u)) return u;
+  try {
+    const c = new AbortController(), t = setTimeout(() => c.abort(), 8000);
+    const r = await fetch(u, { mode: 'cors', signal: c.signal }); clearTimeout(t);
+    if (!r.ok) throw 0; return await blobToCover(await r.blob());
+  } catch { return u; }
+}
+
+/* ================= sheets ================= */
+const veil = $('#veil');
+function openSheet(id) { $$('.sheet').forEach(s => s.classList.toggle('open', '#' + s.id === id)); veil.classList.add('on'); }
+function closeSheet() { veil.classList.remove('on'); $$('.sheet').forEach(s => s.classList.remove('open')); }
+veil.addEventListener('pointerdown', e => { if (e.target === veil) closeSheet(); });
+const msg = (id, t) => { const m = $(id); m.textContent = t || ''; m.classList.toggle('hidden', !t); };
+
+/* ---- add / edit ---- */
+let editing = null, eType = 'shortcut', eSgdb = null;
+const HINTS = {
+  shortcut: ['Shortcut name', 'Runs shortcuts://run-shortcut?name=… Use the exact name from the Shortcuts app. The shortcut can open any emulator or launcher.'],
+  scheme: ['URL scheme or deep link', 'Any URL an app understands, e.g. provenance://… or ppsspp://… Check your emulator for its game-launch URL format.'],
+  web: ['Web link', 'Opens a web page, e.g. a cloud gaming URL or store page.']
+};
+function setType(t) {
+  eType = t;
+  $$('#eType button').forEach(b => b.classList.toggle('on', b.dataset.v === t));
+  $('#eTLabel').textContent = HINTS[t][0]; $('#eHelp').textContent = HINTS[t][1];
+  $('#eInWrap').classList.toggle('hidden', t !== 'shortcut');
+  $('#eTarget').placeholder = t === 'shortcut' ? 'e.g. Launch Chrono Trigger' : t === 'scheme' ? 'e.g. provenance://open?title=…' : 'https://…';
+}
+$$('#eType button').forEach(b => b.onclick = () => setType(b.dataset.v));
+const thumb = () => { const v = $('#eCover').value.trim(); $('#eThumb').src = v || placeholder({ title: $('#eTitle').value || '?', platform: $('#ePlat').value }); };
+$('#eCover').addEventListener('input', thumb); $('#eTitle').addEventListener('input', thumb);
+$('#eThumb').onerror = () => { $('#eThumb').src = placeholder({ title: $('#eTitle').value || '?', platform: $('#ePlat').value }); };
+
+function openEdit(g) {
+  editing = g || null; const d = g || {};
+  $('#eHead').textContent = g ? 'Edit game' : 'Add game';
+  $('#eTitle').value = d.title || ''; $('#ePlat').value = d.platform || '';
+  $('#eTarget').value = d.target || ''; $('#eInput').value = d.input || '';
+  $('#eCover').value = d.cover && !d.cover.startsWith('data:') ? d.cover : '';
+  $('#eRa').value = d.ra?.id || ''; eSgdb = d.sgdb || null; eLocalCover = d.cover && d.cover.startsWith('data:') ? d.cover : null;
+  fillShelfSelect(d.shelf || (!g && sortMode() === 'custom' && shelfSel && shelfSel !== NO_SHELF ? shelfSel : ''));
+  setType(d.type || 'shortcut'); msg('#eMsg', '');
+  $('#eDel').classList.toggle('hidden', !g); thumb();
+  if (eLocalCover) $('#eThumb').src = eLocalCover;
+  openSheet('#sEdit');
+}
+let eLocalCover = null;
+function fillShelfSelect(val) {
+  $('#eShelfWrap').classList.toggle('hidden', sortMode() !== 'custom');
+  $('#eShelf').innerHTML = '<option value="">No shelf</option>' + S.shelves.map(s => `<option value="${esc(s.id)}">${esc(s.name)}</option>`).join('') + '<option value="__new">+ New shelf…</option>';
+  $('#eShelf').value = S.shelves.some(s => s.id === val) ? val : '';
+}
+$('#eShelf').onchange = e => {
+  if (e.target.value !== '__new') return;
+  const n = (prompt('Name for the new shelf') || '').trim();
+  if (n) { const s = { id: uid(), name: n }; S.shelves.push(s); save(); fillShelfSelect(s.id); } else e.target.value = '';
+};
+$('#eCover').addEventListener('input', () => { eLocalCover = null; });
+$('#eCancel').onclick = closeSheet;
+$('#eDel').onclick = () => {
+  if (!editing || !confirm('Remove "' + editing.title + '" from your library?')) return;
+  S.games = S.games.filter(x => x !== editing); save(); closeSheet(); applyView();
+};
+$('#eSave').onclick = async () => {
+  const title = $('#eTitle').value.trim();
+  if (!title) { msg('#eMsg', 'Give the game a title.'); return; }
+  const btn = $('#eSave'); btn.textContent = 'Saving…'; btn.disabled = true;
+  let cover = eLocalCover || $('#eCover').value.trim();
+  if (cover && !eLocalCover) cover = await cacheCover(cover);
+  const raId = parseInt($('#eRa').value, 10) || null;
+  const g = editing || { id: uid() };
+  Object.assign(g, { title, platform: $('#ePlat').value.trim(), type: eType, target: $('#eTarget').value.trim(), input: $('#eInput').value.trim(), cover, sgdb: eSgdb });
+  if (sortMode() === 'custom') { const v = $('#eShelf').value; if (v) g.shelf = v; else delete g.shelf; }
+  if (raId) { if (!g.ra || g.ra.id !== raId) g.ra = { id: raId, earned: 0, total: 0, t: 0 }; } else delete g.ra;
+  if (!editing) S.games.push(g);
+  save(); btn.textContent = 'Save'; btn.disabled = false; closeSheet(); applyView(g.id);
+};
+
+/* photo */
+$('#bPhoto').onclick = () => $('#file').click();
+$('#file').onchange = async e => {
+  const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+  try { eLocalCover = await blobToCover(f); $('#eCover').value = ''; $('#eThumb').src = eLocalCover; } catch { msg('#eMsg', 'Could not read that image.'); }
+};
+
+/* RA box art */
+$('#bRaArt').onclick = async () => {
+  const id = parseInt($('#eRa').value, 10);
+  if (!id) { msg('#eMsg', 'Enter the RetroAchievements game ID first (the number in the game page URL).'); return; }
+  if (!needRA()) return;
+  msg('#eMsg', 'Fetching…');
+  try {
+    const j = await raGet('API_GetGame.php', { i: id });
+    if (!j || !j.Title) throw new Error('Game not found.');
+    if (j.ImageBoxArt) { $('#eCover').value = MEDIA + j.ImageBoxArt; eLocalCover = null; thumb(); }
+    if (!$('#eTitle').value.trim()) $('#eTitle').value = j.Title;
+    if (!$('#ePlat').value.trim() && j.ConsoleName) $('#ePlat').value = j.ConsoleName;
+    msg('#eMsg', 'Box art found. RetroAchievements art is not always 2:3, so it is cropped to fit.');
+  } catch (e) { msg('#eMsg', e.message || 'RetroAchievements request failed. Check your key and proxy.'); }
+};
+
+/* SGDB picker */
+const pk = { games: [], gid: null, name: '', page: 0 };
+$('#bSgdb').onclick = () => {
+  if (!S.set.sgdb) { toast('Add your SteamGridDB API key in Settings first.'); return; }
+  $('#pkQ').value = $('#eTitle').value.trim(); $('#pkGrid').innerHTML = ''; $('#pkChips').innerHTML = ''; msg('#pkMsg', '');
+  $('#pkMore').classList.add('hidden'); openSheet('#sPick'); if ($('#pkQ').value) pkSearch();
+};
+$('#pkBack').onclick = () => openSheet('#sEdit');
+$('#pkGo').onclick = pkSearch;
+$('#pkQ').addEventListener('keydown', e => { if (e.key === 'Enter') pkSearch(); });
+$('#pkStrict').onchange = () => pk.gid && pkLoad(pk.gid, pk.name, 0);
+async function pkSearch() {
+  const term = $('#pkQ').value.trim(); if (!term) return;
+  msg('#pkMsg', 'Searching…'); $('#pkGrid').innerHTML = ''; $('#pkChips').innerHTML = '';
+  try {
+    let games;
+    if (/^\d+$/.test(term)) games = [await sgdb('/games/steam/' + term)];
+    else games = (await sgdb('/search/autocomplete/' + encodeURIComponent(term))).slice(0, 10);
+    pk.games = games.filter(Boolean);
+    if (!pk.games.length) { msg('#pkMsg', 'No games found.'); return; }
+    $('#pkChips').innerHTML = pk.games.map((g, i) => `<button class="chip" data-i="${i}">${esc(g.name)}</button>`).join('');
+    pkLoad(pk.games[0].id, pk.games[0].name, 0);
+  } catch (e) { msg('#pkMsg', e.message); }
+}
+$('#pkChips').onclick = e => { const b = e.target.closest('.chip'); if (b) { const g = pk.games[+b.dataset.i]; pkLoad(g.id, g.name, 0); } };
+async function pkLoad(gid, name, page) {
+  pk.gid = gid; pk.name = name; pk.page = page;
+  $$('#pkChips .chip').forEach((c, i) => c.classList.toggle('on', pk.games[i]?.id === gid));
+  msg('#pkMsg', 'Loading covers…');
+  if (!page) $('#pkGrid').innerHTML = '';
+  try {
+    const dims = $('#pkStrict').checked ? '600x900' : '600x900,342x482,660x930';
+    const data = await sgdb(`/grids/game/${gid}?dimensions=${dims}&types=static&nsfw=false&humor=false&page=${page}`);
+    msg('#pkMsg', !data.length && !page ? 'No 2:3 covers for this game. Untick the filter or try another match.' : '');
+    const frag = document.createDocumentFragment();
+    data.forEach(it => {
+      const b = document.createElement('button'); const im = document.createElement('img');
+      im.src = it.thumb || it.url; im.loading = 'lazy'; im.alt = ''; b.appendChild(im);
+      b.onclick = () => {
+        $('#eCover').value = it.url; eLocalCover = null; eSgdb = gid; thumb();
+        if (!$('#eTitle').value.trim()) $('#eTitle').value = name;
+        openSheet('#sEdit');
+      };
+      frag.appendChild(b);
+    });
+    $('#pkGrid').appendChild(frag);
+    $('#pkMore').classList.toggle('hidden', data.length < 50);
+  } catch (e) { msg('#pkMsg', e.message); }
+}
+$('#pkMore').onclick = () => pkLoad(pk.gid, pk.name, pk.page + 1);
+
+/* ---- RA import ---- */
+let raRes = [];
+$('#sRaImport').onclick = async () => {
+  if (!needRA()) return;
+  $('#raList').innerHTML = ''; msg('#raMsg', 'Loading your library…'); openSheet('#sRA');
+  try {
+    const j = await raGet('API_GetUserCompletionProgress.php', { u: S.set.raUser, c: 500 });
+    const have = new Set(S.games.map(g => g.ra?.id).filter(Boolean));
+    raRes = (j.Results || []).filter(r => !have.has(r.GameID));
+    msg('#raMsg', raRes.length ? '' : 'Nothing new to import.');
+    $('#raList').innerHTML = raRes.map((r, i) => `<label><input type="checkbox" data-i="${i}"><span>${esc(r.Title)}<small>${esc(r.ConsoleName || '')} · ${r.NumAwarded || 0}/${r.MaxPossible || 0}</small></span></label>`).join('');
+    raCount();
+  } catch (e) { msg('#raMsg', e.message || 'Could not load your library. Check your key and proxy.'); }
+};
+const raChecked = () => $$('#raList input:checked').map(i => raRes[+i.dataset.i]);
+const raCount = () => { $('#raGo').textContent = 'Import' + (raChecked().length ? ' (' + raChecked().length + ')' : ''); };
+$('#raList').onchange = raCount;
+$('#raAll').onclick = () => { const all = $$('#raList input'); const on = all.some(i => !i.checked); all.forEach(i => i.checked = on); raCount(); };
+$('#raBack').onclick = () => openSheet('#sSet');
+$('#raGo').onclick = async () => {
+  const picks = raChecked(); if (!picks.length) return;
+  const btn = $('#raGo'); btn.disabled = true; let n = 0;
+  for (const r of picks) {
+    btn.textContent = `Importing ${++n}/${picks.length}`;
+    let cover = '';
+    try { const j = await raGet('API_GetGame.php', { i: r.GameID }); if (j.ImageBoxArt) cover = MEDIA + j.ImageBoxArt; } catch {}
+    if (!cover && r.ImageIcon) cover = MEDIA + r.ImageIcon;
+    S.games.push({ id: uid(), title: r.Title, platform: r.ConsoleName || '', type: 'scheme', target: '', input: '', cover, ra: { id: r.GameID, earned: r.NumAwarded || 0, hc: r.NumAwardedHardcore || 0, total: r.MaxPossible || 0, t: Date.now() } });
+  }
+  save(); btn.disabled = false; closeSheet(); applyView(getSel());
+  toast(`Imported ${picks.length}. Tap i › Edit to set each launch action.`);
+};
+
+/* ---- shelves sheet ---- */
+const MODE_HELP = {
+  none: 'All your games in one row, in the order you added them. No shelves.',
+  auto: 'Groups games into shelves by their Platform field (SNES, Switch…). Nothing extra is saved, and shelves update as you edit games.',
+  custom: 'Make your own shelves, then pick one for each game in its Edit screen.'
+};
+function renderShelvesSheet() {
+  const m = sortMode();
+  $$('#shMode button').forEach(b => b.classList.toggle('on', b.dataset.v === m));
+  $('#shHelp').textContent = MODE_HELP[m];
+  $('#shCustom').classList.toggle('hidden', m !== 'custom');
+  $('#shList').innerHTML = S.shelves.length
+    ? S.shelves.map(s => `<div class="shrow" data-id="${esc(s.id)}"><span>${esc(s.name)} <small>${S.games.filter(g => g.shelf === s.id).length}</small></span><button class="btn" data-a="ren">Rename</button><button class="btn danger" data-a="del">Delete</button></div>`).join('')
+    : '<div class="shrow"><span style="color:#8e8e93">No shelves yet. Add one below.</span></div>';
+}
+$('#btnShelves').onclick = () => { renderShelvesSheet(); openSheet('#sShelves'); };
+$$('#shMode button').forEach(b => b.onclick = () => { S.set.sortMode = b.dataset.v; shelfSel = ''; try { localStorage.setItem(KEY + '.shelf', ''); } catch {} save(); renderShelvesSheet(); applyView(view[cur]?.id); });
+$('#shList').onclick = e => {
+  const a = e.target.closest('[data-a]'); if (!a) return;
+  const id = a.closest('.shrow').dataset.id, s = S.shelves.find(x => x.id === id); if (!s) return;
+  if (a.dataset.a === 'ren') { const n = (prompt('Rename shelf', s.name) || '').trim(); if (n) { s.name = n; save(); } }
+  else if (confirm('Delete the shelf "' + s.name + '"? Your games stay in the library.')) {
+    S.shelves = S.shelves.filter(x => x !== s); S.games.forEach(g => { if (g.shelf === id) delete g.shelf; });
+    if (shelfSel === id) shelfSel = ''; save();
+  }
+  renderShelvesSheet(); applyView(view[cur]?.id);
+};
+$('#shAdd').onclick = () => {
+  const n = $('#shNew').value.trim(); if (!n) return;
+  S.shelves.push({ id: uid(), name: n }); $('#shNew').value = ''; save(); renderShelvesSheet(); applyView(view[cur]?.id);
+};
+$('#shNew').addEventListener('keydown', e => { if (e.key === 'Enter') $('#shAdd').click(); });
+$('#shDone').onclick = closeSheet;
+
+/* ---- settings ---- */
+function openSettings() {
+  $('#sKey').value = S.set.sgdb; $('#sRaU').value = S.set.raUser; $('#sRaK').value = S.set.raKey; $('#sProxy').value = S.set.proxy; openSheet('#sSet');
+}
+const bindSet = (id, k) => $(id).addEventListener('change', e => { S.set[k] = e.target.value.trim(); save(); });
+bindSet('#sKey', 'sgdb'); bindSet('#sRaU', 'raUser'); bindSet('#sRaK', 'raKey'); bindSet('#sProxy', 'proxy');
+$('#sDone').onclick = () => { ['#sKey', '#sRaU', '#sRaK', '#sProxy'].forEach(i => $(i).dispatchEvent(new Event('change'))); closeSheet(); };
+$('#sExport').onclick = async () => {
+  const json = JSON.stringify({ app: 'gameflow', games: S.games, shelves: S.shelves }, null, 1);
+  const file = new File([json], 'gameflow-library.json', { type: 'application/json' });
+  try {
+    if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file] }); return; }
+  } catch { return; }
+  const a = document.createElement('a'); a.href = URL.createObjectURL(file); a.download = file.name; a.click();
+};
+$('#sImport').onclick = () => $('#sFile').click();
+$('#sFile').onchange = async e => {
+  const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+  try {
+    const j = JSON.parse(await f.text()); (j.shelves || []).forEach(s => { if (s && s.id && s.name && !S.shelves.some(x => x.id === s.id)) S.shelves.push({ id: s.id, name: s.name }); }); const have = new Set(S.games.map(g => g.id)); let n = 0;
+    (j.games || []).forEach(g => { if (g && g.title && !have.has(g.id)) { S.games.push(Object.assign({ id: uid() }, g)); n++; } });
+    save(); closeSheet(); applyView(getSel()); toast(`Imported ${n} game${n === 1 ? '' : 's'}.`);
+  } catch { toast('That file is not a GameFlow library.'); }
+};
+
+/* ---- top bar ---- */
+$('#btnAdd').onclick = () => openEdit(null);
+$('#bEmptyAdd').onclick = () => openEdit(null);
+$('#btnSet').onclick = openSettings;
+$('#btnSearch').onclick = () => {
+  const i = $('#q'); const on = !i.classList.contains('on'); i.classList.toggle('on', on); $('.bar').classList.toggle('searching', on);
+  if (on) i.focus(); else { i.value = ''; i.blur(); if (q) { q = ''; applyView(view[cur]?.id); } }
+};
+$('#q').addEventListener('input', e => { q = e.target.value; applyView(view[cur]?.id); });
+
+/* ================= controller support ================= */
+let padRaf = 0, prevBtn = [], lastDir = 0, nextAt = 0, comboAt = 0;
+function havePad() { return !!(navigator.getGamepads && [...navigator.getGamepads()].some(Boolean)); }
+function padLoop(ts) {
+  const pads = [...navigator.getGamepads()].filter(Boolean);
+  if (!pads.length) { padRaf = 0; return; }
+  padRaf = requestAnimationFrame(padLoop);
+  if (document.hidden) return;
+  const now = []; for (let i = 0; i < 17; i++) now[i] = pads.some(p => p.buttons[i] && p.buttons[i].pressed);
+  const edge = i => now[i] && !prevBtn[i];
+  const was = prevBtn; prevBtn = now;
+  if (webOpen) { // the web game needs the controller, so only Select + Start held together exits
+    if (now[8] && now[9]) { if (!comboAt) comboAt = ts; else if (ts - comboAt > 700) { closeWeb(); comboAt = 0; } } else comboAt = 0;
+    return;
+  }
+  comboAt = 0;
+  if (veil.classList.contains('on')) { if (edge(1)) closeSheet(); return; }
+  let ax = 0; pads.forEach(p => { const a = p.axes[0] || 0; if (Math.abs(a) > Math.abs(ax)) ax = a; });
+  const dir = (now[14] || ax < -.5) ? -1 : (now[15] || ax > .5) ? 1 : 0;
+  if (dir) {
+    if (dir !== lastDir) { go(target + dir); nextAt = ts + 380; }
+    else if (ts >= nextAt) { go(target + dir); nextAt = ts + 120; }
+  }
+  lastDir = dir;
+  if (edge(5)) { if (shelvesVisible()) stepShelf(1); else go(target + 5); }
+  if (edge(4)) { if (shelvesVisible()) stepShelf(-1); else go(target - 5); }
+  if (edge(0) && view[cur]) launch(view[cur]);
+  if (edge(1)) closeBack();
+  if (edge(3) && view[cur]) { backOpen ? closeBack() : openBack(); }
+  if (edge(2) && view[cur]) { closeBack(); openEdit(view[cur]); }
+  if (edge(9)) openSettings();
+}
+addEventListener('gamepadconnected', () => {
+  toast('Controller connected: D-pad browse, A launch, Y details, X edit', 3500);
+  if (!padRaf) padRaf = requestAnimationFrame(padLoop);
+});
+if (havePad()) padRaf = requestAnimationFrame(padLoop);
+
+/* ---- home-screen icon + lifecycle ---- */
+(function icon() {
+  const c = document.createElement('canvas'); c.width = c.height = 180; const x = c.getContext('2d');
+  const g = x.createLinearGradient(0, 0, 0, 180); g.addColorStop(0, '#4c4d4f'); g.addColorStop(.5, '#b2b2b2'); g.addColorStop(1, '#828284');
+  x.fillStyle = g; x.fillRect(0, 0, 180, 180);
+  const quad = (p, col) => { x.beginPath(); x.moveTo(...p[0]); p.slice(1).forEach(q => x.lineTo(...q)); x.closePath(); x.fillStyle = col; x.fill(); };
+  quad([[16, 48], [58, 62], [58, 120], [16, 134]], '#27406e'); quad([[164, 48], [122, 62], [122, 120], [164, 134]], '#6e2747');
+  quad([[2, 40], [14, 46], [14, 136], [2, 142]], '#1c1c1e'); quad([[178, 40], [166, 46], [166, 136], [178, 142]], '#1c1c1e');
+  const cg = x.createLinearGradient(0, 36, 0, 120); cg.addColorStop(0, '#ffd45c'); cg.addColorStop(1, '#e0562b');
+  x.fillStyle = cg; x.fillRect(64, 34, 52, 78);
+  const rg = x.createLinearGradient(0, 114, 0, 156); rg.addColorStop(0, 'rgba(0,0,0,.35)'); rg.addColorStop(1, 'rgba(0,0,0,0)');
+  x.fillStyle = rg; x.fillRect(64, 114, 52, 42);
+  const l = document.createElement('link'); l.rel = 'apple-touch-icon'; l.href = c.toDataURL('image/png'); document.head.appendChild(l);
+})();
+addEventListener('resize', metrics);
+if (window.ResizeObserver) new ResizeObserver(metrics).observe(stage);
+addEventListener('pageshow', () => { metrics(); kick(); });
+addEventListener('load', () => { metrics(); kick(); });
+setTimeout(() => { metrics(); kick(); }, 300); setTimeout(() => { metrics(); kick(); }, 1000);
+addEventListener('orientationchange', () => setTimeout(metrics, 200));
+document.addEventListener('visibilitychange', () => { if (!document.hidden) els.forEach(e => e.classList.remove('launching')); });
+
+metrics(); applyView(getSel());
+})();
+</script>
+</body>
+</html>
