@@ -74,6 +74,26 @@ button{font:inherit;color:inherit}
 .wpt{aspect-ratio:1.4;border-radius:10px;border:2px solid #3d3d42;cursor:pointer;color:#fff;font-weight:600;font-size:12px;display:flex;align-items:flex-end;padding:0;overflow:hidden}
 .wpt span{width:100%;padding:3px 6px;background:rgba(0,0,0,.5);text-align:left}
 .wpt.on{border-color:#0a84ff}
+#dlgBack{position:fixed;inset:0;z-index:5000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.45);animation:dfade .15s ease-out}
+@keyframes dfade{from{opacity:0}}
+@keyframes dpop{from{transform:scale(1.12);opacity:0}}
+.dlg{position:relative;width:min(300px,calc(100% - 48px));padding:20px 16px 14px;border-radius:11px;text-align:center;color:#fff;
+  background:linear-gradient(#7585a0,#3c4961 7%,#252e3f 50%,#1a2231);
+  box-shadow:0 0 0 2px rgba(255,255,255,.9),0 0 0 3px rgba(0,0,0,.65),0 14px 34px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.35);
+  animation:dpop .18s ease-out;text-shadow:0 -1px 0 rgba(0,0,0,.6);-webkit-user-select:none;user-select:none}
+.dlg::before{content:"";position:absolute;left:0;right:0;top:0;height:46%;border-radius:11px 11px 55% 55%/11px 11px 16px 16px;background:linear-gradient(rgba(255,255,255,.3),rgba(255,255,255,.04));pointer-events:none}
+.dlg>*{position:relative}
+.dlg h3{margin:0 0 6px;font-size:18px;line-height:1.2}
+.dlg p{margin:0 0 14px;font-size:14px;line-height:1.35;color:#eef1f6}
+.dlg input{display:block;width:100%;height:36px;margin:0 0 14px;border-radius:6px;border:1px solid #0a0e16;padding:0 10px;font-size:16px;color:#1c1f26;text-shadow:none;
+  background:linear-gradient(#cfd5df,#fff 30%);box-shadow:inset 0 2px 4px rgba(0,0,0,.45),0 1px 0 rgba(255,255,255,.35);-webkit-user-select:text;user-select:text}
+.dlg input:focus{outline:2px solid #5aa0ff;outline-offset:1px}
+.dbtns{display:flex;gap:10px}
+.dbtn{flex:1;min-height:44px;border-radius:8px;border:1px solid #070a12;color:#fff;font-weight:700;font-size:16px;cursor:pointer;text-shadow:0 -1px 0 rgba(0,0,0,.55);
+  background:linear-gradient(#9aa3b3,#677185 50%,#4e576a 50%,#444d5f);box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 1px 1px rgba(0,0,0,.5)}
+.dbtn.pri{background:linear-gradient(#8fc0fb,#4b8fe8 50%,#2268d2 50%,#2f7ae3)}
+.dbtn.danger{background:linear-gradient(#f4a09a,#dc5148 50%,#b8281f 50%,#cb3a30)}
+.dbtn:active{filter:brightness(.85)}
 #empty{position:absolute;left:0;right:0;top:34%;text-align:center;padding:0 30px;text-shadow:0 1px 2px #000}
 #empty h2{margin:0 0 6px;font-size:22px}
 #empty p{margin:0 0 16px;color:#eee}
@@ -146,7 +166,7 @@ button{font:inherit;color:inherit}
 .shrow>span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
 .shrow small{color:#8e8e93}
 .shrow .btn{min-height:40px;padding:4px 11px;font-size:14px}
-#toast{position:fixed;left:50%;bottom:calc(var(--sb) + 76px);transform:translateX(-50%);z-index:4000;background:rgba(20,20,22,.94);border:1px solid rgba(255,255,255,.2);padding:9px 14px;border-radius:12px;font-size:14px;max-width:86vw;text-align:center;opacity:0;pointer-events:none;transition:opacity .2s}
+#toast{position:fixed;left:50%;bottom:calc(var(--sb) + 76px);transform:translateX(-50%);z-index:4000;background:linear-gradient(#566379,#252e3f 50%,#1a2231 50%,#252e3f);border:1px solid #070a12;box-shadow:0 0 0 1px rgba(255,255,255,.4),0 6px 16px rgba(0,0,0,.5);text-shadow:0 -1px 0 rgba(0,0,0,.6);padding:9px 14px;border-radius:12px;font-size:14px;max-width:86vw;text-align:center;opacity:0;pointer-events:none;transition:opacity .2s}
 #toast.on{opacity:1}
 </style>
 </head>
@@ -390,7 +410,7 @@ $('#webClose').onclick = closeWeb;
 
 /* ================= cover flow engine (stacked shelves) ================= */
 const stage = $('#stage'), track = $('#track');
-let rows = [], view = [], rpos = 0, rtarget = 0, ri = -1, cur = -1, shelvesOn = false;
+let pitchK = 1.5, rows = [], view = [], rpos = 0, rtarget = 0, ri = -1, cur = -1, shelvesOn = false;
 let cw = 200, ch = 300, px = 64;
 const rowMem = {};
 const elOf = i => rows[ri] && rows[ri].els[i];
@@ -423,10 +443,12 @@ function metrics() {
   const vw = stage.clientWidth || innerWidth, vh = stage.clientHeight || innerHeight;
   if (!vw || !vh) { requestAnimationFrame(metrics); return; }  // iOS can report 0 size at first load
   const land = vw > vh, sh = shelvesVisible();
-  ch = Math.round(Math.min(vh * (land ? .74 : .6), vw * .66 * 1.5) * (sh ? (land ? .8 : .86) : 1));
+  ch = Math.round(Math.min(vh * (land ? .74 : .6), vw * .66 * 1.5) * (sh ? (land ? .66 : .86) : 1));
   cw = Math.round(ch * 2 / 3); px = cw * .32;
   const r = document.documentElement.style;
-  r.setProperty('--cw', cw + 'px'); r.setProperty('--ch', ch + 'px'); r.setProperty('--cy', (land ? 46 + (sh ? 7 : 0) : 41 + (sh ? 3 : 0)) + '%');
+  r.setProperty('--cw', cw + 'px'); r.setProperty('--ch', ch + 'px'); const cyPct = land ? 46 + (sh ? 4 : 0) : 41 + (sh ? 3 : 0); r.setProperty('--cy', cyPct + '%');
+  const cyPx = vh * cyPct / 100, offMax = Math.min(cyPx - .08 * vh, .92 * vh - cyPx);
+  pitchK = sh ? clamp(offMax / (.625 * ch), 1.05, 1.5) : 1.5;
   stage.style.perspective = Math.round(cw * 5) + 'px';
   layout();
 }
@@ -435,7 +457,7 @@ function kick() { // WebKit can leave 3D + reflected layers unpainted until some
   requestAnimationFrame(() => { track.style.visibility = 'hidden'; void track.offsetHeight; track.style.visibility = ''; layout(); });
 }
 function layout() {
-  const CG = cw * .58, SG = cw * .19, ANG = 64, DEPTH = cw * .55, RZ = cw * 3, PITCH = ch * 1.5;
+  const CG = cw * .58, SG = cw * .19, ANG = 64, DEPTH = cw * .55, RZ = cw * 3, PITCH = ch * pitchK;
   for (let r = 0; r < rows.length; r++) {
     const row = rows[r], rd = r - rpos, ard = Math.abs(rd), ra = clamp(rd, -1, 1);
     const ry = ra * PITCH + (rd - ra) * PITCH * .9, rz = -Math.abs(ra) * RZ;
@@ -725,15 +747,15 @@ function fillShelfSelect(val) {
   $('#eShelf').innerHTML = '<option value="">No shelf</option>' + S.shelves.map(s => `<option value="${esc(s.id)}">${esc(s.name)}</option>`).join('') + '<option value="__new">+ New shelf…</option>';
   $('#eShelf').value = S.shelves.some(s => s.id === val) ? val : '';
 }
-$('#eShelf').onchange = e => {
+$('#eShelf').onchange = async e => {
   if (e.target.value !== '__new') return;
-  const n = (prompt('Name for the new shelf') || '').trim();
+  const n = ((await uiPrompt('New Shelf', 'Name for the new shelf', '', 'Shelf name')) || '').trim();
   if (n) { const s = { id: uid(), name: n }; S.shelves.push(s); save(); fillShelfSelect(s.id); } else e.target.value = '';
 };
 $('#eCover').addEventListener('input', () => { eLocalCover = null; });
 $('#eCancel').onclick = closeSheet;
-$('#eDel').onclick = () => {
-  if (!editing || !confirm('Remove "' + editing.title + '" from your library?')) return;
+$('#eDel').onclick = async () => {
+  if (!editing || !(await uiConfirm('Delete Game', 'Remove "' + editing.title + '" from your library?', 'Delete', true))) return;
   S.games = S.games.filter(x => x !== editing); save(); closeSheet(); applyView();
 };
 $('#eSave').onclick = async () => {
@@ -876,11 +898,11 @@ function renderShelvesSheet() {
 }
 $('#btnShelves').onclick = () => { renderShelvesSheet(); openSheet('#sShelves'); };
 $$('#shMode button').forEach(b => b.onclick = () => { S.set.sortMode = b.dataset.v; save(); renderShelvesSheet(); applyView(view[cur]?.id); });
-$('#shList').onclick = e => {
+$('#shList').onclick = async e => {
   const a = e.target.closest('[data-a]'); if (!a) return;
   const id = a.closest('.shrow').dataset.id, s = S.shelves.find(x => x.id === id); if (!s) return;
-  if (a.dataset.a === 'ren') { const n = (prompt('Rename shelf', s.name) || '').trim(); if (n) { s.name = n; save(); } }
-  else if (confirm('Delete the shelf "' + s.name + '"? Your games stay in the library.')) {
+  if (a.dataset.a === 'ren') { const n = ((await uiPrompt('Rename Shelf', '', s.name, 'Shelf name')) || '').trim(); if (n) { s.name = n; save(); } }
+  else if (await uiConfirm('Delete Shelf', 'Delete the shelf "' + s.name + '"? Your games stay in the library.', 'Delete', true)) {
     S.shelves = S.shelves.filter(x => x !== s); S.games.forEach(g => { if (g.shelf === id) delete g.shelf; });
     save();
   }
@@ -1036,7 +1058,7 @@ $('#wpFile').onchange = async e => {
   try { setWall(await blobToWall(f)); } catch { toast('Could not read that image.'); }
 };
 async function wpFromUrl() {
-  const u = (prompt('Wallpaper image URL') || '').trim(); if (!/^https?:/i.test(u)) return;
+  const u = ((await uiPrompt('Wallpaper', 'Paste an image URL', '', 'https://…')) || '').trim(); if (!/^https?:/i.test(u)) return;
   try { const r = await fetch(u, { mode: 'cors' }); if (!r.ok) throw 0; setWall(await blobToWall(await r.blob())); }
   catch { setWall(u); toast('Using the link directly. It may not work offline.'); }
 }
@@ -1078,6 +1100,23 @@ $('#suBody').addEventListener('click', e => {
 $('#suBody').addEventListener('input', e => { const k = e.target.dataset.k; if (k) { S.set[k] = e.target.value.trim(); save(); } });
 $('#sSetupBtn').onclick = openSetup;
 
+/* ================= skeuomorphic alerts ================= */
+function dlg(o) {
+  return new Promise(res => {
+    const back = document.createElement('div'); back.id = 'dlgBack';
+    back.innerHTML = `<div class="dlg" role="alertdialog"><h3>${esc(o.title)}</h3>${o.msg ? `<p>${esc(o.msg)}</p>` : ''}${o.input ? `<input id="dlgIn" autocomplete="off" autocapitalize="off" spellcheck="false" value="${esc(o.value || '')}" placeholder="${esc(o.placeholder || '')}">` : ''}<div class="dbtns"><button class="dbtn" data-r="0">${esc(o.cancel || 'Cancel')}</button><button class="dbtn ${o.danger ? 'danger' : 'pri'}" data-r="1">${esc(o.ok || 'OK')}</button></div></div>`;
+    document.body.appendChild(back);
+    const inp = back.querySelector('#dlgIn');
+    const done = ok => { document.removeEventListener('keydown', key, true); back.remove(); res(ok ? (inp ? inp.value : true) : (inp ? null : false)); };
+    const key = e => { if (e.key === 'Escape') { e.stopPropagation(); e.preventDefault(); done(false); } else if (e.key === 'Enter') { e.stopPropagation(); e.preventDefault(); done(true); } };
+    document.addEventListener('keydown', key, true);
+    back.addEventListener('click', e => { const b = e.target.closest('.dbtn'); if (b) done(b.dataset.r === '1'); });
+    if (inp) { inp.focus(); inp.select(); }
+  });
+}
+const uiConfirm = (title, msg, ok, danger) => dlg({ title, msg, ok, danger });
+const uiPrompt = (title, msg, value, placeholder) => dlg({ title, msg, input: true, value, placeholder, ok: 'Save' });
+
 /* ---- top bar ---- */
 $('#btnAdd').onclick = () => openEdit(null);
 $('#bEmptyAdd').onclick = () => openEdit(null);
@@ -1095,7 +1134,7 @@ function padLoop(ts) {
   const pads = [...navigator.getGamepads()].filter(Boolean);
   if (!pads.length) { padRaf = 0; return; }
   padRaf = requestAnimationFrame(padLoop);
-  if (document.hidden) return;
+  if (document.hidden || $('#dlgBack')) return;
   const now = []; for (let i = 0; i < 17; i++) now[i] = pads.some(p => p.buttons[i] && p.buttons[i].pressed);
   const edge = i => now[i] && !prevBtn[i];
   const was = prevBtn; prevBtn = now;
