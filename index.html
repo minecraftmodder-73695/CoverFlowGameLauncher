@@ -168,6 +168,117 @@ button{font:inherit;color:inherit}
 .shrow .btn{min-height:40px;padding:4px 11px;font-size:14px}
 #toast{position:fixed;left:50%;bottom:calc(var(--sb) + 76px);transform:translateX(-50%);z-index:4000;background:linear-gradient(#566379,#252e3f 50%,#1a2231 50%,#252e3f);border:1px solid #070a12;box-shadow:0 0 0 1px rgba(255,255,255,.4),0 6px 16px rgba(0,0,0,.5);text-shadow:0 -1px 0 rgba(0,0,0,.6);padding:9px 14px;border-radius:12px;font-size:14px;max-width:86vw;text-align:center;opacity:0;pointer-events:none;transition:opacity .2s}
 #toast.on{opacity:1}
+
+/* ================= skeuomorphic pop-ups: sheets, setup, settings, details ================= */
+:root{--steel-hi:#8b9bb4;--ink:#05070c}
+#veil{background:radial-gradient(ellipse at 50% 100%,rgba(0,0,0,.35),rgba(0,0,0,.65))}
+
+/* the sheet: dark blue linen with a white-rimmed bezel, like the system alerts */
+.sheet{
+  background:
+    repeating-linear-gradient(0deg,rgba(255,255,255,.04) 0 1px,transparent 1px 3px),
+    repeating-linear-gradient(90deg,rgba(0,0,0,.14) 0 1px,transparent 1px 3px),
+    linear-gradient(#333c4f,#232a38 40%,#1b212d);
+  border:1px solid var(--ink);border-bottom:0;border-radius:14px 14px 0 0;
+  box-shadow:0 -10px 34px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.35);
+  color:#eef1f6}
+@media (max-width:580px){.sheet{border-radius:14px 14px 0 0;box-shadow:0 -10px 34px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.35)}}
+
+/* glossy title bar */
+.sheet h2{
+  margin:-16px -16px 14px;padding:12px 16px 11px;text-align:center;font-size:18px;line-height:1.2;color:#fff;
+  border-radius:13px 13px 0 0;border-bottom:1px solid var(--ink);position:relative;
+  background:linear-gradient(#93a3bc,#6a7b97 50%,#566784 50%,#4a5a76);
+  text-shadow:0 -1px 0 rgba(0,0,0,.6);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 2px 5px rgba(0,0,0,.5)}
+
+/* embossed labels and help text */
+.sheet label,.sheet .lbl{color:#cdd5e4;font-weight:600;text-shadow:0 -1px 0 rgba(0,0,0,.7)}
+.sheet .lbl{margin-top:14px}
+.sheet .help{color:#a3aec4;text-shadow:0 -1px 0 rgba(0,0,0,.55)}
+.sheet .help b{color:#e3e8f2}
+.sheet .msg{color:#ffd3cf;text-shadow:0 -1px 0 rgba(0,0,0,.6);background:linear-gradient(#7a2a26,#5a1b18);border:1px solid #2a0907;border-radius:8px;padding:7px 10px;box-shadow:inset 0 1px 0 rgba(255,255,255,.2)}
+
+/* inset, recessed text fields */
+.sheet input[type=text],.sheet input[type=password],.sheet input:not([type]),.sheet input[type=url],.sheet input[inputmode],.sheet input[type=search],.sheet select{
+  border-radius:8px;border:1px solid var(--ink);color:#1c1f26;text-shadow:none;font-weight:500;
+  background:linear-gradient(#bfc6d3,#fff 24%,#fff);
+  box-shadow:inset 0 2px 5px rgba(0,0,0,.5),0 1px 0 rgba(255,255,255,.2)}
+.sheet input::placeholder{color:#8a909c}
+.sheet input:focus,.sheet select:focus{outline:none;border-color:#1b4f9e;box-shadow:inset 0 2px 5px rgba(0,0,0,.45),0 0 0 2px #5aa0ff,0 0 8px rgba(90,160,255,.7)}
+.sheet select{-webkit-appearance:none;appearance:none;padding-right:34px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='18' viewBox='0 0 14 18'%3E%3Cpath d='M2 7l5-5 5 5zM2 11l5 5 5-5z' fill='%23444b59'/%3E%3C/svg%3E") right 12px center/14px 18px no-repeat,linear-gradient(#bfc6d3,#fff 24%,#fff)}
+.sheet input[type=checkbox]{accent-color:#2f7ae3}
+
+/* steel push buttons (same family as the alert buttons) */
+.btn{border:1px solid var(--ink);border-radius:9px;color:#fff;font-weight:700;text-shadow:0 -1px 0 rgba(0,0,0,.55);
+  background:linear-gradient(#a3abbb,#6f7a8e 50%,#566074 50%,#4a5367);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 1px 2px rgba(0,0,0,.6)}
+.btn.pri{background:linear-gradient(#8fc0fb,#4b8fe8 50%,#2268d2 50%,#2f7ae3);border-color:#0a2a63}
+.btn.danger{color:#fff;background:linear-gradient(#f4a09a,#dc5148 50%,#b8281f 50%,#cb3a30);border-color:#4a0b07}
+.btn:active{filter:brightness(.82);box-shadow:inset 0 2px 5px rgba(0,0,0,.5)}
+.btn[disabled]{opacity:.45;filter:saturate(.5)}
+
+/* segmented control: the selected segment is pressed in */
+.seg{border:1px solid var(--ink);border-radius:9px;background:var(--ink);box-shadow:0 1px 0 rgba(255,255,255,.22),0 1px 3px rgba(0,0,0,.55)}
+.seg button{border:0;border-right:1px solid var(--ink);color:#fff;font-weight:700;text-shadow:0 -1px 0 rgba(0,0,0,.55);
+  background:linear-gradient(#a3abbb,#6f7a8e 50%,#566074 50%,#4a5367);box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
+.seg button.on{background:linear-gradient(#1b4a98,#2a63c2 50%,#2563c4 50%,#3c86e8);box-shadow:inset 0 3px 6px rgba(0,0,0,.6)}
+.seg button:active{filter:brightness(.88)}
+
+/* chips as glossy pills */
+.chip{border:1px solid var(--ink);color:#fff;font-weight:600;text-shadow:0 -1px 0 rgba(0,0,0,.55);
+  background:linear-gradient(#a3abbb,#6f7a8e 50%,#566074 50%,#4a5367);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 1px 2px rgba(0,0,0,.5)}
+.chip.on{border-color:#0a2a63;background:linear-gradient(#8fc0fb,#4b8fe8 50%,#2268d2 50%,#2f7ae3)}
+.stkchip{border:1px solid var(--ink);border-radius:9px;background:linear-gradient(#e9ebef,#c2c7d1);box-shadow:inset 0 1px 0 #fff,0 1px 2px rgba(0,0,0,.55)}
+
+/* sliders: recessed groove + chrome knob */
+.sheet input[type=range]{-webkit-appearance:none;appearance:none;background:transparent}
+.sheet input[type=range]::-webkit-slider-runnable-track{height:10px;border-radius:6px;border:1px solid var(--ink);background:linear-gradient(#0d1119,#2b3446);box-shadow:inset 0 2px 3px rgba(0,0,0,.65),0 1px 0 rgba(255,255,255,.16)}
+.sheet input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:28px;height:28px;margin-top:-10px;border-radius:50%;border:1px solid var(--ink);
+  background:radial-gradient(circle at 50% 28%,#fff,#d3d8e1 45%,#8f98a9);box-shadow:0 2px 4px rgba(0,0,0,.65),inset 0 1px 0 #fff}
+.sheet input[type=range]::-moz-range-track{height:10px;border-radius:6px;border:1px solid var(--ink);background:linear-gradient(#0d1119,#2b3446);box-shadow:inset 0 2px 3px rgba(0,0,0,.65)}
+.sheet input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;border:1px solid var(--ink);background:radial-gradient(circle at 50% 28%,#fff,#d3d8e1 45%,#8f98a9);box-shadow:0 2px 4px rgba(0,0,0,.65)}
+.sheet input[type=range]:disabled{opacity:.4}
+
+/* recessed table lists */
+.ralist{border:1px solid var(--ink);border-radius:10px;background:linear-gradient(#10141c,#1a202c);box-shadow:inset 0 2px 6px rgba(0,0,0,.6),0 1px 0 rgba(255,255,255,.18)}
+.ralist label{border-bottom:1px solid #0a0d14;box-shadow:0 1px 0 rgba(255,255,255,.05);text-shadow:0 -1px 0 rgba(0,0,0,.6)}
+.ralist small{color:#8f9bb2}
+.shrow{border-bottom:1px solid #0a0d14;box-shadow:0 1px 0 rgba(255,255,255,.05);text-shadow:0 -1px 0 rgba(0,0,0,.6)}
+.shrow small{color:#8f9bb2}
+
+/* photo-print frames for covers, thumbs and wallpaper tiles */
+.cvprev,.coverrow .thumb,.grid button,.wpt{border:1px solid var(--ink);border-radius:3px;background:#0b0d12;box-shadow:0 4px 8px rgba(0,0,0,.6),inset 0 0 0 1px rgba(255,255,255,.08)}
+.cvprev{margin-top:4px;margin-bottom:4px}
+.coverrow .thumb{margin:3px}
+.grid{gap:10px;padding:2px}
+.wpt{border-radius:6px;border:1px solid var(--ink)}
+.wpt span{background:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.7));text-shadow:0 -1px 0 #000}
+.wpt.on{border-color:#2f7ae3;box-shadow:0 0 0 2px #2f7ae3,0 0 10px 2px rgba(60,140,255,.8)}
+.cvstick{background:linear-gradient(#2b3446,#262e3d)}
+.cvprev img.st.sel{outline-color:#5aa0ff}
+
+/* setup: pager dots like a lit indicator */
+#suStep{display:flex;justify-content:center;gap:9px;margin:14px 0 2px}
+#suStep i{width:9px;height:9px;border-radius:50%;border:1px solid var(--ink);background:radial-gradient(circle at 50% 30%,#4a5367,#161b26);box-shadow:inset 0 1px 2px rgba(0,0,0,.7),0 1px 0 rgba(255,255,255,.2)}
+#suStep i.on{background:radial-gradient(circle at 50% 30%,#d6e8ff,#4b8fe8 55%,#1d56b8);box-shadow:0 0 7px 1px rgba(90,160,255,.85),inset 0 1px 0 rgba(255,255,255,.7)}
+
+/* flip-side details: stitched leather */
+#back{padding:16px;gap:7px;border:1px solid #120b07;
+  background:
+    radial-gradient(circle at 20% 10%,rgba(255,255,255,.09),transparent 55%),
+    repeating-radial-gradient(circle at 30% 40%,rgba(0,0,0,.09) 0 1px,transparent 1px 3px),
+    repeating-radial-gradient(circle at 70% 60%,rgba(255,255,255,.04) 0 1px,transparent 1px 4px),
+    linear-gradient(#6a4a35,#4a3022 55%,#3a2418);
+  box-shadow:0 10px 26px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.25),inset 0 0 22px rgba(0,0,0,.55);
+  outline:1.5px dashed rgba(240,220,175,.7);outline-offset:-6px;border-radius:6px}
+#back h3{color:#f6e8cd;text-shadow:0 -1px 0 rgba(0,0,0,.75),0 1px 0 rgba(255,255,255,.12)}
+#back .sub{color:#d2b78f;text-shadow:0 -1px 0 rgba(0,0,0,.6)}
+#back .kv{color:#ecdcbf;text-shadow:0 -1px 0 rgba(0,0,0,.6)}
+#back .bar2{height:12px;border-radius:6px;border:1px solid #120b07;background:linear-gradient(#150d08,#2c1c12);box-shadow:inset 0 2px 4px rgba(0,0,0,.75),0 1px 0 rgba(255,255,255,.18)}
+#back .bar2 i{border-radius:5px;background:linear-gradient(#ffe9a1,#f5b335 50%,#e08f0f 50%,#f2b13a);box-shadow:inset 0 1px 0 rgba(255,255,255,.7)}
+#back .btns{padding-top:6px}
 </style>
 </head>
 <body>
@@ -1084,7 +1195,8 @@ function renderSetup() {
   const st = SU[suStep];
   $('#suHead').textContent = st.h; $('#suBody').innerHTML = st.b();
   const wb = $('#suBody .wpbox'); if (wb) wpPicker(wb);
-  $('#suStep').textContent = `Step ${suStep + 1} of ${SU.length}`;
+  $('#suStep').innerHTML = SU.map((_, i) => `<i class="${i === suStep ? 'on' : ''}"></i>`).join('');
+  $('#suStep').setAttribute('aria-label', `Step ${suStep + 1} of ${SU.length}`);
   $('#suBack').disabled = suStep === 0; $('#suNext').textContent = suStep === SU.length - 1 ? 'Finish' : 'Next';
 }
 function openSetup() { suStep = 0; markSetup(); renderSetup(); openSheet('#sSetup'); }
