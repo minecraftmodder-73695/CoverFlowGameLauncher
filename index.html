@@ -24,7 +24,7 @@ button{font:inherit;color:inherit}
 /* ---------- cover flow ---------- */
 #stage{position:absolute;inset:0;perspective:1000px;perspective-origin:50% var(--cy);touch-action:none;cursor:grab}
 #track{position:absolute;inset:0;transform-style:preserve-3d}
-.cv{position:absolute;left:50%;top:var(--cy);width:var(--cw);height:var(--ch);margin-left:calc(var(--cw)/-2);margin-top:calc(var(--ch)/-2);
+.cv{overflow:hidden;position:absolute;left:50%;top:var(--cy);width:var(--cw);height:var(--ch);margin-left:calc(var(--cw)/-2);margin-top:calc(var(--ch)/-2);
   background:#222;will-change:transform;box-shadow:0 0 0 1px rgba(0,0,0,.45);
   -webkit-box-reflect:below 2px linear-gradient(to bottom,transparent 56%,rgba(0,0,0,.4))}
 .cv img{display:block;width:100%;height:100%;object-fit:cover;pointer-events:none;-webkit-user-drag:none}
@@ -56,6 +56,24 @@ button{font:inherit;color:inherit}
 
 .rlabel{position:absolute;left:50%;top:var(--cy);margin-top:calc(var(--ch)/-2 - 30px);width:260px;margin-left:-130px;text-align:center;font-weight:700;font-size:15px;text-shadow:0 1px 3px #000;pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;will-change:transform}
 .rlabel small{opacity:.7;font-weight:600}
+#wpdim{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
+.cv img.stl{position:absolute;height:auto;width:30%;object-fit:contain;pointer-events:none;-webkit-user-drag:none}
+.stk{display:flex;gap:12px;margin-top:6px}
+.cvstick{position:sticky;top:-16px;z-index:3;background:#1e1e21;padding:8px 0 12px;margin-top:-8px}
+.cvprev{position:relative;width:min(64vw,250px,max(30vh,130px));aspect-ratio:2/3;margin:0 auto;background:#121214;border:1px solid #3d3d42;border-radius:4px;overflow:hidden;touch-action:none}
+.coverrow .thumb{position:relative}
+.coverrow .thumb img.stl{position:absolute;height:auto;width:30%;object-fit:contain}
+.cvprev img.base{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.cvprev img.st{position:absolute;height:auto;cursor:grab;-webkit-user-drag:none;touch-action:none}
+.cvprev img.st.sel{outline:2px dashed #0a84ff;outline-offset:2px}
+.stk .col{flex:1;min-width:0}
+.stkchip{flex:none;width:46px;height:46px;padding:3px;border-radius:8px;border:1px solid #3d3d42;background:#121214;cursor:pointer}
+.stkchip img{width:100%;height:100%;object-fit:contain;display:block}
+.sheet input[type=range]{display:block;width:100%;margin-top:8px;height:28px}
+.wpgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.wpt{aspect-ratio:1.4;border-radius:10px;border:2px solid #3d3d42;cursor:pointer;color:#fff;font-weight:600;font-size:12px;display:flex;align-items:flex-end;padding:0;overflow:hidden}
+.wpt span{width:100%;padding:3px 6px;background:rgba(0,0,0,.5);text-align:left}
+.wpt.on{border-color:#0a84ff}
 #empty{position:absolute;left:0;right:0;top:34%;text-align:center;padding:0 30px;text-shadow:0 1px 2px #000}
 #empty h2{margin:0 0 6px;font-size:22px}
 #empty p{margin:0 0 16px;color:#eee}
@@ -134,6 +152,7 @@ button{font:inherit;color:inherit}
 </head>
 <body>
 
+<div id="wpdim"></div>
 <div id="stage"><div id="track"></div><div id="back" class="hidden"></div></div>
 <div id="floor"></div>
 
@@ -179,18 +198,42 @@ button{font:inherit;color:inherit}
     <label><span id="eTLabel">Shortcut name</span><input id="eTarget" autocapitalize="off" autocorrect="off" spellcheck="false"></label>
     <label id="eInWrap">Text input for the shortcut (optional)<input id="eInput" autocapitalize="off" autocorrect="off" spellcheck="false"></label>
     <p class="help" id="eHelp"></p>
-    <div class="lbl">Cover (2:3)</div>
+    <div class="lbl">Cover</div>
     <div class="coverrow">
-      <div class="thumb"><img id="eThumb" alt=""></div>
+      <div class="thumb" id="eMini"><img id="eMiniImg" alt=""></div>
       <div class="col">
-        <input id="eCover" type="url" placeholder="Image URL" autocapitalize="off" autocorrect="off" spellcheck="false">
-        <div class="row"><button class="btn" id="bSgdb">SteamGridDB</button><button class="btn" id="bRaArt">RetroAch.</button><button class="btn" id="bPhoto">Photo</button></div>
+        <p class="help" id="eCvInfo" style="margin-top:0"></p>
+        <div class="row"><button class="btn pri" id="bCover">Customize cover…</button></div>
       </div>
     </div>
     <label>RetroAchievements game ID (optional)<input id="eRa" inputmode="numeric" placeholder="the number in retroachievements.org/game/…"></label>
     <div class="msg hidden" id="eMsg"></div>
     <div class="row"><button class="btn danger hidden" id="eDel">Delete</button><span class="sp"></span><button class="btn" id="eCancel">Cancel</button><button class="btn pri" id="eSave">Save</button></div>
     <input type="file" id="file" accept="image/*" hidden>
+    <input type="file" id="wpFile" accept="image/*" hidden>
+  </div>
+
+  <!-- cover: image + stickers -->
+  <div class="sheet" id="sCover">
+    <h2>Customize cover</h2>
+    <div class="cvstick"><div class="cvprev" id="stkPrev"><img class="base" id="stkBase" alt=""></div></div>
+    <img id="eThumb" alt="" hidden>
+    <div class="seg" id="cvTabs"><button data-t="img" class="on">Image</button><button data-t="stk">Stickers</button></div>
+    <div id="cvImg">
+      <label>Image URL<input id="eCover" type="url" placeholder="https://…" autocapitalize="off" autocorrect="off" spellcheck="false"></label>
+      <div class="row"><button class="btn" id="bSgdb">SteamGridDB</button><button class="btn" id="bRaArt">RetroAchievements</button><button class="btn" id="bPhoto">Photo</button></div>
+      <p class="help">Covers are cropped to 2:3. RetroAchievements art needs the game ID set in the editor.</p>
+    </div>
+    <div id="cvStk" class="hidden">
+      <div class="chips" id="stkLib"></div>
+      <div class="row" style="margin-top:4px"><button class="btn" id="stkUp">+ New sticker</button><button class="btn danger" id="stkDel" disabled>Remove</button></div>
+      <label>Size<input type="range" id="stkSize" min="10" max="100" value="35" disabled></label>
+      <label>Rotate<input type="range" id="stkRot" min="-180" max="180" value="0" disabled></label>
+      <p class="help">Tap a sticker to add it, then drag it on the cover above. Up to 12 per cover.</p>
+      <input type="file" id="stkFile" accept="image/*" multiple hidden>
+    </div>
+    <div class="msg hidden" id="cvMsg"></div>
+    <div class="row"><span class="sp"></span><button class="btn pri" id="cvDone">Done</button></div>
   </div>
 
   <!-- SteamGridDB picker -->
@@ -211,6 +254,21 @@ button{font:inherit;color:inherit}
     <div class="msg hidden" id="raMsg"></div>
     <div class="ralist" id="raList"></div>
     <div class="row"><button class="btn" id="raAll">Select all</button><span class="sp"></span><button class="btn" id="raBack">Back</button><button class="btn pri" id="raGo">Import</button></div>
+  </div>
+
+  <!-- wallpaper -->
+  <div class="sheet" id="sWall">
+    <h2>Wallpaper</h2>
+    <div class="wpbox"></div>
+    <div class="row"><span class="sp"></span><button class="btn pri" id="wpDone">Done</button></div>
+  </div>
+
+  <!-- setup -->
+  <div class="sheet" id="sSetup">
+    <h2 id="suHead"></h2>
+    <div id="suBody"></div>
+    <p class="help" id="suStep"></p>
+    <div class="row"><button class="btn" id="suSkip">Skip setup</button><span class="sp"></span><button class="btn" id="suBack">Back</button><button class="btn pri" id="suNext">Next</button></div>
   </div>
 
   <!-- shelves -->
@@ -235,6 +293,7 @@ button{font:inherit;color:inherit}
     <label>CORS proxy (see cors-worker.js)<input id="sProxy" type="url" placeholder="https://your-worker.workers.dev/?url=" autocapitalize="off" autocorrect="off" spellcheck="false"></label>
     <p class="help">Keys are stored only in this browser. Browsers block direct calls to these APIs, so most setups need the proxy. Covers you pick are saved on the device as 2:3 images when the source allows it.</p>
     <p class="help"><b>Controller:</b> D-pad or left stick browses, Up/down or LB/RB switch shelves (LB/RB skip five when shelves are off), A launches, B goes back, Y shows details, X edits, Start opens settings. Inside a web game, hold Select + Start to exit. Press any button once so Safari detects the controller.</p>
+    <div class="row"><button class="btn" id="sWallBtn">Wallpaper…</button><button class="btn" id="sSetupBtn">Run setup</button><button class="btn" id="sStkClean">Clear unused stickers</button></div>
     <div class="row"><button class="btn" id="sRaImport">Import RetroAchievements library</button></div>
     <div class="row"><button class="btn" id="sExport">Export library</button><button class="btn" id="sImport">Import library</button><input type="file" id="sFile" accept="application/json,.json" hidden></div>
     <div class="row"><span class="sp"></span><button class="btn pri" id="sDone">Done</button></div>
@@ -254,11 +313,11 @@ const MEDIA = 'https://media.retroachievements.org';
 
 /* ================= state ================= */
 const KEY = 'gameflow.v1';
-const DEF = { games: [], shelves: [], set: { sgdb: '', raUser: '', raKey: '', proxy: '', sortMode: 'none' } };
+const DEF = { games: [], shelves: [], stickers: [], set: { sgdb: '', raUser: '', raKey: '', proxy: '', sortMode: 'none', wp: 'default', wpDim: 0 } };
 let S;
 try {
   const raw = JSON.parse(localStorage.getItem(KEY) || '{}');
-  S = { games: Array.isArray(raw.games) ? raw.games : [], shelves: Array.isArray(raw.shelves) ? raw.shelves : [], set: Object.assign({}, DEF.set, raw.set) };
+  S = { games: Array.isArray(raw.games) ? raw.games : [], shelves: Array.isArray(raw.shelves) ? raw.shelves : [], stickers: Array.isArray(raw.stickers) ? raw.stickers : [], set: Object.assign({}, DEF.set, raw.set) };
 } catch { S = JSON.parse(JSON.stringify(DEF)); }
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch { toast('Storage is full. Remove a few games with local covers.'); } };
 const getSel = () => { try { return localStorage.getItem(KEY + '.sel'); } catch { return null; } };
@@ -349,7 +408,7 @@ function build() {
       const img = document.createElement('img'); img.alt = ''; img.draggable = false;
       img.onerror = () => { if (img.dataset.fb !== '1') { img.dataset.fb = '1'; img.src = placeholder(g); } };
       const sh = document.createElement('div'); sh.className = 'shade';
-      el.append(img, sh); el._img = img; el._sh = sh; el._loaded = false; el.style.display = 'none';
+      el.append(img); (g.stickers || []).forEach(st => { const src = stickerSrc(st.sid); if (!src) return; const im = document.createElement('img'); im.className = 'stl'; im.alt = ''; im.draggable = false; im.src = src; applyStk(im, st); el.append(im); }); el.append(sh); el._img = img; el._sh = sh; el._loaded = false; el.style.display = 'none';
       track.appendChild(el); row.els.push(el);
     });
     if (shelvesOn) {
@@ -625,7 +684,7 @@ const veil = $('#veil');
 function openSheet(id) { $$('.sheet').forEach(s => s.classList.toggle('open', '#' + s.id === id)); veil.classList.add('on'); }
 function closeSheet() { veil.classList.remove('on'); $$('.sheet').forEach(s => s.classList.remove('open')); kick(); }
 veil.addEventListener('pointerdown', e => { if (e.target === veil) closeSheet(); });
-const msg = (id, t) => { const m = $(id); m.textContent = t || ''; m.classList.toggle('hidden', !t); };
+const msg = (id, t) => { const m = $(id); m.textContent = t || ''; m.classList.toggle('hidden', !t); if (id === '#eMsg') { const c = $('#cvMsg'); if (c) { c.textContent = t || ''; c.classList.toggle('hidden', !t); } } };
 
 /* ---- add / edit ---- */
 let editing = null, eType = 'shortcut', eSgdb = null;
@@ -657,6 +716,7 @@ function openEdit(g) {
   setType(d.type || 'shortcut'); msg('#eMsg', '');
   $('#eDel').classList.toggle('hidden', !g); thumb();
   if (eLocalCover) $('#eThumb').src = eLocalCover;
+  eStk = (d.stickers || []).map(x => Object.assign({}, x)); eSel = -1; stkRender();
   openSheet('#sEdit');
 }
 let eLocalCover = null;
@@ -687,6 +747,7 @@ $('#eSave').onclick = async () => {
   Object.assign(g, { title, platform: $('#ePlat').value.trim(), type: eType, target: $('#eTarget').value.trim(), input: $('#eInput').value.trim(), cover, sgdb: eSgdb });
   if (sortMode() === 'custom') { const v = $('#eShelf').value; if (v) g.shelf = v; else delete g.shelf; }
   if (raId) { if (!g.ra || g.ra.id !== raId) g.ra = { id: raId, earned: 0, total: 0, t: 0 }; } else delete g.ra;
+  if (eStk.length) g.stickers = eStk.map(x => Object.assign({}, x)); else delete g.stickers;
   if (!editing) S.games.push(g);
   save(); btn.textContent = 'Save'; btn.disabled = false; closeSheet(); applyView(g.id);
 };
@@ -721,7 +782,7 @@ $('#bSgdb').onclick = () => {
   $('#pkQ').value = $('#eTitle').value.trim(); $('#pkGrid').innerHTML = ''; $('#pkChips').innerHTML = ''; msg('#pkMsg', '');
   $('#pkMore').classList.add('hidden'); openSheet('#sPick'); if ($('#pkQ').value) pkSearch();
 };
-$('#pkBack').onclick = () => openSheet('#sEdit');
+$('#pkBack').onclick = () => openSheet('#sCover');
 $('#pkGo').onclick = pkSearch;
 $('#pkQ').addEventListener('keydown', e => { if (e.key === 'Enter') pkSearch(); });
 $('#pkStrict').onchange = () => pk.gid && pkLoad(pk.gid, pk.name, 0);
@@ -755,7 +816,7 @@ async function pkLoad(gid, name, page) {
       b.onclick = () => {
         $('#eCover').value = it.url; eLocalCover = null; eSgdb = gid; thumb();
         if (!$('#eTitle').value.trim()) $('#eTitle').value = name;
-        openSheet('#sEdit');
+        openSheet('#sCover');
       };
       frag.appendChild(b);
     });
@@ -840,7 +901,7 @@ const bindSet = (id, k) => $(id).addEventListener('change', e => { S.set[k] = e.
 bindSet('#sKey', 'sgdb'); bindSet('#sRaU', 'raUser'); bindSet('#sRaK', 'raKey'); bindSet('#sProxy', 'proxy');
 $('#sDone').onclick = () => { ['#sKey', '#sRaU', '#sRaK', '#sProxy'].forEach(i => $(i).dispatchEvent(new Event('change'))); closeSheet(); };
 $('#sExport').onclick = async () => {
-  const json = JSON.stringify({ app: 'gameflow', games: S.games, shelves: S.shelves }, null, 1);
+  const json = JSON.stringify({ app: 'gameflow', games: S.games, shelves: S.shelves, stickers: S.stickers }, null, 1);
   const file = new File([json], 'gameflow-library.json', { type: 'application/json' });
   try {
     if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file] }); return; }
@@ -851,11 +912,171 @@ $('#sImport').onclick = () => $('#sFile').click();
 $('#sFile').onchange = async e => {
   const f = e.target.files[0]; e.target.value = ''; if (!f) return;
   try {
-    const j = JSON.parse(await f.text()); (j.shelves || []).forEach(s => { if (s && s.id && s.name && !S.shelves.some(x => x.id === s.id)) S.shelves.push({ id: s.id, name: s.name }); }); const have = new Set(S.games.map(g => g.id)); let n = 0;
+    const j = JSON.parse(await f.text()); (j.shelves || []).forEach(s => { if (s && s.id && s.name && !S.shelves.some(x => x.id === s.id)) S.shelves.push({ id: s.id, name: s.name }); }); (j.stickers || []).forEach(x => { if (x && x.id && x.src && !S.stickers.some(y => y.id === x.id)) S.stickers.push({ id: x.id, src: x.src }); }); const have = new Set(S.games.map(g => g.id)); let n = 0;
     (j.games || []).forEach(g => { if (g && g.title && !have.has(g.id)) { S.games.push(Object.assign({ id: uid() }, g)); n++; } });
     save(); closeSheet(); applyView(getSel()); toast(`Imported ${n} game${n === 1 ? '' : 's'}.`);
   } catch { toast('That file is not a GameFlow library.'); }
 };
+
+/* ================= stickers ================= */
+let eStk = [], eSel = -1, stkDrag = null;
+function stickerSrc(sid) { const t = S.stickers.find(x => x.id === sid); return t ? t.src : ''; }
+function applyStk(el, st) { el.style.left = st.x * 100 + '%'; el.style.top = st.y * 100 + '%'; el.style.width = st.s * 100 + '%'; el.style.transform = `translate(-50%,-50%) rotate(${st.r}deg)`; }
+function stkRender() {
+  const p = $('#stkPrev'); p.querySelectorAll('.st').forEach(n => n.remove());
+  eStk.forEach((st, i) => { const im = document.createElement('img'); im.className = 'st' + (i === eSel ? ' sel' : ''); im.src = stickerSrc(st.sid); im.dataset.i = i; im.draggable = false; applyStk(im, st); p.appendChild(im); });
+  const on = eSel >= 0 && eStk[eSel];
+  $('#stkDel').disabled = $('#stkSize').disabled = $('#stkRot').disabled = !on;
+  if (on) { $('#stkSize').value = Math.round(eStk[eSel].s * 100); $('#stkRot').value = Math.round(eStk[eSel].r); }
+  $('#stkLib').innerHTML = S.stickers.length
+    ? S.stickers.map(t => `<button class="stkchip" data-id="${esc(t.id)}"><img src="${esc(t.src)}" alt=""></button>`).join('')
+    : '<span class="help" style="margin:8px 0 0">No stickers yet. Add an image to start.</span>';
+  if ($('#eThumb').src) { $('#stkBase').src = $('#eThumb').src; $('#eMiniImg').src = $('#eThumb').src; }
+  const m = $('#eMini'); m.querySelectorAll('.stl').forEach(n => n.remove());
+  eStk.forEach(st => { const src = stickerSrc(st.sid); if (!src) return; const im = document.createElement('img'); im.className = 'stl'; im.alt = ''; im.src = src; applyStk(im, st); m.appendChild(im); });
+  $('#eCvInfo').textContent = eStk.length ? eStk.length + ' sticker' + (eStk.length === 1 ? '' : 's') : 'No stickers';
+}
+function stkApplySel() { const n = $('#stkPrev').querySelector('.st[data-i="' + eSel + '"]'); if (n && eStk[eSel]) applyStk(n, eStk[eSel]); const mm = $('#eMini').querySelectorAll('.stl')[eSel]; if (mm && eStk[eSel]) applyStk(mm, eStk[eSel]); }
+$('#eThumb').addEventListener('load', () => { $('#stkBase').src = $('#eThumb').src; $('#eMiniImg').src = $('#eThumb').src; });
+$('#stkLib').onclick = e => {
+  const b = e.target.closest('.stkchip'); if (!b) return;
+  if (eStk.length >= 12) { toast('Up to 12 stickers per cover.'); return; }
+  eStk.push({ sid: b.dataset.id, x: .5, y: .5, s: .35, r: 0 }); eSel = eStk.length - 1; stkRender();
+};
+$('#bCover').onclick = () => { msg('#cvMsg', ''); stkRender(); openSheet('#sCover'); };
+$('#cvDone').onclick = () => { stkRender(); openSheet('#sEdit'); };
+$('#cvTabs').onclick = e => {
+  const b = e.target.closest('button'); if (!b) return;
+  $$('#cvTabs button').forEach(x => x.classList.toggle('on', x === b));
+  $('#cvImg').classList.toggle('hidden', b.dataset.t !== 'img'); $('#cvStk').classList.toggle('hidden', b.dataset.t !== 'stk');
+};
+$('#stkUp').onclick = () => $('#stkFile').click();
+$('#stkFile').onchange = async e => {
+  const files = [...e.target.files]; e.target.value = '';
+  for (const f of files) {
+    try {
+      const src = await blobToSticker(f), sid = uid();
+      S.stickers.push({ id: sid, src });
+      if (eStk.length < 12) { eStk.push({ sid, x: .5, y: .5, s: .35, r: 0 }); eSel = eStk.length - 1; }
+    } catch { toast('Could not read that image.'); }
+  }
+  save(); stkRender();
+};
+$('#stkDel').onclick = () => { if (eSel < 0) return; eStk.splice(eSel, 1); eSel = -1; stkRender(); };
+$('#stkSize').oninput = e => { if (eSel >= 0) { eStk[eSel].s = +e.target.value / 100; stkApplySel(); } };
+$('#stkRot').oninput = e => { if (eSel >= 0) { eStk[eSel].r = +e.target.value; stkApplySel(); } };
+$('#stkPrev').addEventListener('pointerdown', e => {
+  const n = e.target.closest('.st');
+  if (!n) { if (eSel !== -1) { eSel = -1; stkRender(); } return; }
+  eSel = +n.dataset.i; const r = $('#stkPrev').getBoundingClientRect(), st = eStk[eSel];
+  stkDrag = { dx: e.clientX - (r.left + st.x * r.width), dy: e.clientY - (r.top + st.y * r.height), r };
+  stkRender(); $('#stkPrev').setPointerCapture(e.pointerId);
+});
+$('#stkPrev').addEventListener('pointermove', e => {
+  if (!stkDrag || eSel < 0) return; const r = stkDrag.r, st = eStk[eSel];
+  st.x = clamp((e.clientX - stkDrag.dx - r.left) / r.width, 0, 1); st.y = clamp((e.clientY - stkDrag.dy - r.top) / r.height, 0, 1); stkApplySel();
+});
+const stkEnd = () => { stkDrag = null; };
+$('#stkPrev').addEventListener('pointerup', stkEnd); $('#stkPrev').addEventListener('pointercancel', stkEnd);
+async function blobToSticker(blob) {
+  const bm = await createImageBitmap(blob), k = Math.min(1, 200 / Math.max(bm.width, bm.height));
+  const c = document.createElement('canvas'); c.width = Math.max(1, Math.round(bm.width * k)); c.height = Math.max(1, Math.round(bm.height * k));
+  c.getContext('2d').drawImage(bm, 0, 0, c.width, c.height); return c.toDataURL('image/png');
+}
+$('#sStkClean').onclick = () => {
+  const used = new Set(); S.games.forEach(g => (g.stickers || []).forEach(t => used.add(t.sid)));
+  const n = S.stickers.length; S.stickers = S.stickers.filter(t => used.has(t.id)); save();
+  toast(`Removed ${n - S.stickers.length} unused sticker${n - S.stickers.length === 1 ? '' : 's'}.`);
+};
+
+/* ================= wallpaper ================= */
+const WP = {
+  default: { n: 'Default', css: 'linear-gradient(#4c4d4f,#b2b2b2 50%,#828284)' },
+  midnight: { n: 'Midnight', css: 'linear-gradient(#1b2735,#090a0f)' },
+  dusk: { n: 'Dusk', css: 'linear-gradient(160deg,#4b1d52,#1a0b2e 60%,#0b0614)' },
+  ocean: { n: 'Ocean', css: 'linear-gradient(#0f4c75,#1b262c)' },
+  ember: { n: 'Ember', css: 'linear-gradient(#7a2e1d,#1a0a08)' },
+  slate: { n: 'Slate', css: '#2b2c30' },
+  black: { n: 'Black', css: '#000' }
+};
+let wpImg = ''; try { wpImg = localStorage.getItem(KEY + '.wpimg') || ''; } catch {}
+const cssUrl = u => "url('" + String(u).replace(/'/g, '%27') + "')";
+function applyWallpaper() {
+  const b = document.body.style, k = S.set.wp || 'default';
+  if (k === 'custom' && wpImg) b.background = '#000 ' + cssUrl(wpImg) + ' center/cover no-repeat';
+  else if (WP[k] && k !== 'default') b.background = WP[k].css;
+  else b.background = '';
+  $('#wpdim').style.opacity = ((S.set.wpDim || 0) / 100).toFixed(2);
+}
+function wpPicker(box) {
+  const k = S.set.wp || 'default';
+  box.innerHTML = `<div class="wpgrid">${Object.keys(WP).map(id => `<button class="wpt${id === k ? ' on' : ''}" data-id="${id}" style="background:${WP[id].css}"><span>${WP[id].n}</span></button>`).join('')}${wpImg ? `<button class="wpt${k === 'custom' ? ' on' : ''}" data-id="custom" style="background:#000 ${cssUrl(wpImg)} center/cover"><span>Custom</span></button>` : ''}</div>
+    <div class="row"><button class="btn" data-a="photo">Choose photo…</button><button class="btn" data-a="url">From URL…</button></div>
+    <label>Dim wallpaper<input type="range" min="0" max="70" value="${S.set.wpDim || 0}" data-a="dim"></label>`;
+  box.onclick = e => {
+    const t = e.target.closest('.wpt'), a = e.target.closest('[data-a]')?.dataset.a;
+    if (t) { S.set.wp = t.dataset.id; save(); applyWallpaper(); wpPicker(box); }
+    else if (a === 'photo') $('#wpFile').click();
+    else if (a === 'url') wpFromUrl(box);
+  };
+  box.oninput = e => { if (e.target.dataset.a === 'dim') { S.set.wpDim = +e.target.value; save(); applyWallpaper(); } };
+}
+async function blobToWall(blob) {
+  const bm = await createImageBitmap(blob), k = Math.min(1, 1400 / Math.max(bm.width, bm.height));
+  const c = document.createElement('canvas'); c.width = Math.round(bm.width * k); c.height = Math.round(bm.height * k);
+  c.getContext('2d').drawImage(bm, 0, 0, c.width, c.height); return c.toDataURL('image/jpeg', .82);
+}
+function setWall(src) {
+  wpImg = src; S.set.wp = 'custom';
+  try { localStorage.setItem(KEY + '.wpimg', src); } catch { toast('Wallpaper is too big to keep after a reload. Try a smaller image.', 4000); }
+  save(); applyWallpaper(); $$('.wpbox').forEach(wpPicker);
+}
+$('#wpFile').onchange = async e => {
+  const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+  try { setWall(await blobToWall(f)); } catch { toast('Could not read that image.'); }
+};
+async function wpFromUrl() {
+  const u = (prompt('Wallpaper image URL') || '').trim(); if (!/^https?:/i.test(u)) return;
+  try { const r = await fetch(u, { mode: 'cors' }); if (!r.ok) throw 0; setWall(await blobToWall(await r.blob())); }
+  catch { setWall(u); toast('Using the link directly. It may not work offline.'); }
+}
+$('#sWallBtn').onclick = () => { wpPicker($('#sWall .wpbox')); openSheet('#sWall'); };
+$('#wpDone').onclick = () => openSettings();
+
+/* ================= first-run setup ================= */
+const setupSeen = () => { try { return localStorage.getItem(KEY + '.setup') === '1'; } catch { return true; } };
+const markSetup = () => { try { localStorage.setItem(KEY + '.setup', '1'); } catch {} };
+let suStep = 0;
+const SU = [
+  { h: 'Welcome to GameFlow', b: () => `<p class="help" style="margin-top:0;font-size:14px;color:#d8d8da">A cover-flow launcher. Tap a cover to run a Shortcut, open an app's URL scheme or a web link.</p><p class="help">This takes about a minute. Every step is optional and everything can be changed later in Settings.</p>` },
+  { h: 'Wallpaper', b: () => '<div class="wpbox"></div>' },
+  { h: 'Shelves', b: () => `<div class="seg suseg">${[['none', 'No sort'], ['auto', 'Auto sort'], ['custom', 'My shelves']].map(([v, n]) => `<button data-v="${v}" class="${sortMode() === v ? 'on' : ''}">${n}</button>`).join('')}</div><p class="help">${MODE_HELP[sortMode()]}</p>` },
+  { h: 'Artwork and achievements', b: () => `<p class="help" style="margin-top:0">Optional. Only needed for SteamGridDB covers and RetroAchievements progress.</p>
+    <label>SteamGridDB API key<input data-k="sgdb" type="password" value="${esc(S.set.sgdb)}" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+    <label>RetroAchievements username<input data-k="raUser" type="text" value="${esc(S.set.raUser)}" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+    <label>RetroAchievements web API key<input data-k="raKey" type="password" value="${esc(S.set.raKey)}" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+    <label>CORS proxy (see cors-worker.js)<input data-k="proxy" type="url" value="${esc(S.set.proxy)}" placeholder="https://your-worker.workers.dev/?url=" autocapitalize="off" autocorrect="off" spellcheck="false"></label>` },
+  { h: 'Add your first game', b: () => `<p class="help" style="margin-top:0;font-size:14px;color:#d8d8da">Give it a title, a launch action and a cover. In the editor you can also decorate covers with your own stickers.</p><div class="row"><button class="btn pri" id="suAdd">Add a game</button></div>` }
+];
+function renderSetup() {
+  const st = SU[suStep];
+  $('#suHead').textContent = st.h; $('#suBody').innerHTML = st.b();
+  const wb = $('#suBody .wpbox'); if (wb) wpPicker(wb);
+  $('#suStep').textContent = `Step ${suStep + 1} of ${SU.length}`;
+  $('#suBack').disabled = suStep === 0; $('#suNext').textContent = suStep === SU.length - 1 ? 'Finish' : 'Next';
+}
+function openSetup() { suStep = 0; markSetup(); renderSetup(); openSheet('#sSetup'); }
+function finishSetup() { markSetup(); closeSheet(); applyView(getSel()); }
+$('#suNext').onclick = () => { if (suStep >= SU.length - 1) finishSetup(); else { suStep++; renderSetup(); } };
+$('#suBack').onclick = () => { if (suStep > 0) { suStep--; renderSetup(); } };
+$('#suSkip').onclick = finishSetup;
+$('#suBody').addEventListener('click', e => {
+  const b = e.target.closest('.suseg button');
+  if (b) { S.set.sortMode = b.dataset.v; save(); renderSetup(); return; }
+  if (e.target.id === 'suAdd') { finishSetup(); openEdit(null); }
+});
+$('#suBody').addEventListener('input', e => { const k = e.target.dataset.k; if (k) { S.set[k] = e.target.value.trim(); save(); } });
+$('#sSetupBtn').onclick = openSetup;
 
 /* ---- top bar ---- */
 $('#btnAdd').onclick = () => openEdit(null);
@@ -931,7 +1152,8 @@ setTimeout(() => { metrics(); kick(); }, 300); setTimeout(() => { metrics(); kic
 addEventListener('orientationchange', () => setTimeout(metrics, 200));
 document.addEventListener('visibilitychange', () => { if (!document.hidden) els.forEach(e => e.classList.remove('launching')); });
 
-metrics(); applyView(getSel());
+applyWallpaper(); metrics(); applyView(getSel());
+if (!setupSeen() && !S.games.length) setTimeout(openSetup, 400);
 })();
 </script>
 </body>
