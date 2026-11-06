@@ -10,31 +10,46 @@
 <meta name="theme-color" content="#4c4d4f">
 <title>GameFlow</title>
 <style>
-:root{--btn:46px;--cw:200px;--ch:300px;--cy:42%;--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);--sl:env(safe-area-inset-left,0px);--sr:env(safe-area-inset-right,0px)}
+:root{--btn:46px;--cw:200px;--ch:300px;--cy:42%;--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);--sl:env(safe-area-inset-left,0px);--sr:env(safe-area-inset-right,0px);
+  --ink:#05070c;
+  --steel:linear-gradient(#a3abbb,#6f7a8e 50%,#566074 50%,#4a5367);
+  --blue:linear-gradient(#8fc0fb,#4b8fe8 50%,#2268d2 50%,#2f7ae3);
+  --red:linear-gradient(#f4a09a,#dc5148 50%,#b8281f 50%,#cb3a30);
+  --field:linear-gradient(#bfc6d3,#fff 24%,#fff);
+  --groove:linear-gradient(#0d1119,#2b3446);
+  --knob:radial-gradient(circle at 50% 28%,#fff,#d3d8e1 45%,#8f98a9);
+  --frame:0 4px 8px rgba(0,0,0,.6),inset 0 0 0 1px rgba(255,255,255,.08)}
 @media (max-width:430px),(max-height:430px){:root{--btn:56px}}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;margin:0;overflow:hidden;overscroll-behavior:none;background:#828284;
   font:15px/1.35 -apple-system,BlinkMacSystemFont,"SF Pro Text",Helvetica,Arial,sans-serif;color:#fff;
   -webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
-body{position:fixed;inset:0;
-  background:#828284 url("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBAUEBAYFBQUGBgYHCQ4JCQgICRINDQoOFRIWFhUSFBQXGiEcFxgfGRQUHScdHyIjJSUlFhwpLCgkKyEkJST/2wBDAQYGBgkICREJCREkGBQYJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCT/wAARCAJABAADASIAAhEBAxEB/8QAGgABAQEBAQEBAAAAAAAAAAAAAAEDAgQFBv/EACIQAQEBAQADAAMBAQEBAQAAAAAREgECIWETUYFBMQNxkf/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFREBAQAAAAAAAAAAAAAAAAAAABH/2gAMAwEAAhEDEQA/APwACoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAsBBYQEFhAQWEBBYQEFgCAAAACwgILCAgsICCwgILEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFhAQWAIKAgoCCwBBT0CLBQSEKUCEKUCEKUCEFBIQhARfRCAehAHQh7BRFAEpQUEBRPZAKUQFqAC0qALVcqCiewFAAEPYKlQBaIAp6QBVcgOhKUFAAEpQVCoC+hAFPSALCItAClAFAcgAAAAAAAAAAAAAAAAAAAAsBBYQEFhAQWEBBYegQFBFhSgQgUCEKUBUpQUSlBQ9kAT0s4QE/hFhAQ9rAE9o6IDkdQz9BysXJASEdQgIRYAkJxV9Ak4kdQBzkz10A4z0y79nsHOSOokBIRQEhF9LQczq56tASE4oCRI6hAcwdQBzCcdQgOYLCAgsJ8BCKAkJxQEhFICCwnwEhFiwEIvo9A5g6hAckdQ9A5hl16Ac5Muig5hHQCQyoCZ4Z4tKCZSOgHMI6iAmUz10AmemVKCZ4TjogOZwnFICThFAcAAAAAsBBYQEFh6BBfR6BBfQCC/wnQIRYAno9EIBSkJ0ClJ0gIOskBIRYuQQXJASEU9Ak4uV9FBMmVAc5M8dAOckdEBM8WcAAAA9BAEigEABFFgJEjqE6CQWEBIRZ0gILkyCEWE6CQWdJ0EFyuQcjrJOA5HWTIOR1nhOA5I7iTgOYOspkEHWSA5HUIDkdZJwHI6nCA5HUMg5HU4QHMI6ymQQdZIDkWEBBYc8QQdThAci5J0EHUIDkWEBB1CcBzCOskByOiA5HU4QHMI6AcjqE4DkdQnAckdThAcwdZSAg6yQHJFhASEFgOEpOkAosICexQEPawgJ7R3CcByR1OH8BIsU9Agv8QAi+wCE4QgJ6FgBEUBFUgOVWAILOk6CEWEBIQWAhHUIDkdwnAcDvJAcwjoBzCOosBxCO4QHEXLqGQczhOOskBIRYsBzB1FgOIR3lJ0HMI6iwHEJ13CA5hHUIDgdzhAcwz11CA5z0y7gDjKx1EgJlMuosBxDPXZAcZWfHQDjJHZOA4hHU4QHMJ13AHGekdkBzEjsBxCO4QHEI7AcZI7iQHMpHcAcEdRYDiEdRYDiEdQgOYR1CA5I7hAcQy7iQHOTLsBxB2k4DkdRQcLOOoQHMSOyA4hHUJwHMJ11CA5hHUIDmEdThkHEWLCA5HUMgyD2QD0iwBFACEAAWGQQdZMg5HWUyCDrJAcjqcWQHMI6IDmLlYsBzCcdQgOYsdQgOYOoZByO4A4hl3CA5g6nCA5hHcAc5MugHMMuoAkJxYsBzDKxcg5ixcrngOYR1kgOYO8mQcDrJkHJHeSA4g7hAcTq566hAczqRpCA4nTLufCA4yZdwgOcpl3CA4hl3CA5ymXZKDnPDLvJOg4yTjudMg4hHeSdBxCcdwgOMnfF1CA5yTjqEBzky6gDmcJx1PhkHOScdRcg4zwy7wZ6DiE47yQHEI7iQHOTLonQcZ6ZdwBxlcuoSA4yZdwgOMrHeTPQcZ+EdwyEcThl3knQcZJ11CA5yR3CA4yZdQBxCO4uQZ5Wcd56k+A5ymeu4QHGTLvKQHMSO4QHMSO4ZBwO5EgPMOosBwvOOosBzFnFhAScMuueJOg5hHUXIOFjqcIDmEdRYDiGXcAcwjqEBIZdQgOYR1DIOZxVyuQcwdQnwHI7yQHMMuosBxkjuGQcZXLqEBzDLuEBxlY6nSdBzkjqdMg5hHfPFcA4hPjTPDIM8kaTiz4DOdMtIT4DOEaZM/AZwjSfFgMs9I1hkKy543/jrDuEBxkzXcM9Bxji5dZXPwHEJx3kyDjPEzxrkyDPJOf60yZBnnhnjTJkGeeGeNMxIDmcPTrK5/YOJxI0yZBnlcu4ZBxPhPjuLkGeb/iZa5TIOJz9ErTKTgM8GecaT4s+AynCO++PFyDPKx3nhkHBHcM9BxCfHeTIM+8+GfjWfEgOM8/ROfp3lcgzymefppkyDPJGkMgzzxY7yQHA7z0yDOc/Sx3nhkHE+Ed5J8Bxn4k5+mmTIM8GeNMmQZ54Y40yQGeeGWmUz8Bxky7yZBzOJHeTPwHGUy0iZBnnplpkgMu+MI0hPgM4neNZ8SfAeWLFASEdQyDmK6zwyDkdZXIOYR1kgOYR3CA4iz46z8XPQcZWOs9XnIDiLHWb/AIYBzky7yZBxCNMmQZxY7zxZz9AzyRpn4s+Az549XLudIDjJl3zx71cwHGeGeO4uQZ551cz/AB3DIOJ8J8aZMgznVy7zDIOMplrn4ZBnFnHcOeIOIZrSEBnmLHcIDjK5+O4QHE+GXZAcZO+LsgOOc6uXU6QHGTLSdMg4yZd5Mg4hl3lcg4yR3kyDiEd5Mg4hHeTIOIRpkyDOEaZM8BnCNcmfgMsrGmSAzyR3CA4yRplIDiEd5M/AcQjTJnoM4ka5MAzz8MtMmQZRY074kBnCNMkBnmmY0yQGcI0z1M/sGcI0wY+A4iRrkwDOEaZ+GaDKLGmTIM4RpkyDOEaQgM4RplMfAcQjTKYBxCO8rkGcSNcpkHGUnxpkgM4Rpkz8BnCO8mQcTiRpkyDOEd5SfAcZ4ZdwBnkjSJAeOEaZ6ZBxCNM9M/sHEI7z8XIM8mWnPEz0HEXLvPTPQcc8VjvPTnh0HMHeFyDiEac8VyDLPVy0ysBln4ZbQyDLBlrCAzyZaE+Az54rl33nwgOMmWnPGmQcQy7z1eeMBxzx+GXc+LPgOMmWkJwGeSNJ8SA4yZac8VyDLK5aZ4sBlgw1nFgMcGGxOAywZakBnlM/GsIDLHwy2yk6DLK5a5MgzyZaZ6ZBnlcu8rkGeTLTBgGcMtMGAZ54c8eNMGQcZMu80yDjJI0wY+AzI0xTAM5wjTBif4DOEaZ7+lz0GUI1wZBlDLTJn4DiGfjTPwz39AznxI1wYBnCfGmDAMv4e2uUwDOLGmTPQZ5TLWGQZQy1wZBnkjvJkHESNMrkGUI1yYBnPh3jTJkGUI1yZBnDPWmTPQZT4RrnpkGXPFcu8/DPwHE+Ed5Mg4hGmTIMp8J8aZXIM+c+JPjTJkGc+E40yZBnlI0hkGcMtO+CZBnk74tMkBln4ZaZTIM8kaQnAZ5TH6aZJ8B44vONOeK5BnkjSGQcRZx3kyDnPwy7yZBxkzx3leeIOM8WfHeKY/QOIRplcgynxZ3v+NMcXPAZ5TPWuVyDHK562ymfgMsrnn6aZ+LkGWFw1yZBlheeHP8AWnPC/wDVx+gZ54Z5+mmFyDLPww2yZBlmf4RrCAynVx1rnhkGWTNa5XngDHPVz1rmLgoxwYbYMAyxz9HPFthcAxxf8THxvgwDHHwx8bc8PpjgMsplvji88OcB5+eP7dZbY4YBjn4mW2KvPCf4DDPxc/G+DAMM/Fx8bZM9Bhn4ufjbHTAMc9/Rn42wuAYZMfG2DIMs/DPWuVyDHPTPW2TAMcdXDXPwyDLBlrlcgxwY71tn4mfgMsdMdbT4Z+AxwZbZMgxwYa5WAxx0x8bZv+GQY4XDXJn4DLBhrPhn4DHBhtkz8Bjgx1rPi4+Ax54dMdbZM/AY4MNcrkGP4zHW2TIMcdMNsmfgMcLjjWfDPwGODDbPwz8Bhjq462z8Mgxx2r3wawgMcHPDrbvj8MgxwYbZhAY57xM9bwyDDHTHf8bThngMfx9TPW+TPAYd58J8bZMwGM+JG+DPwGOUy3z8TvhQYZO+Lb8Z+MGGTLXv/n9THSjLJlr3x6kBl3xTLXKd8QeXJjrXniToM89M9aReePQZ56Za5MAyyueteeC4Blnpzx7/AI1yueAz549J1rzwXHwGPPHq5bYX8YMcmW2OmAZZ6YbYXnh8Bjky3wZ+Ax54fFw254rgGGPhjv6b/jXIMfx/T8bbHxcgx54cMcbY+GOgxxzp+PjfC88AYfjXHxtgwDHHP0uGuOLgGWTDXC4Blgx8a5XIMcGfjbBgGODLbBgGODDbniuAY5MN8mfgMMGW2fi5Bjgz8bZ+GQZZM/GuFwDHJltgwDLBhrgwDHC4a4MAywYa4MAywYa4XAMcGGuYYoM8mGuDAMsGGuF54AyzEzW2DAMcLhrkzAZZMtc/DIMcGG2PhzxBjgw2yZBllMNsmQZYM8/TXJn4DLHEw2zwwDHBhtgyDHHFy2ymAY5MNsmAY4TDfBgGODDXBgGWDDbHwwDHBhtkzwGODDbHDAMc9MtsGAY5THW+ImAZYMNcLgGGOmOtu+BgGOOpnrfCYBjn4Y+NsGAY5+GfjbHTIMMmW2fhj4DHJlrn9meAyyZa98EyDLJPjTJkGOTLbDnMBnlMNM/CAyynfBrCA8eV5xth1zwgMc/Fx39NsLzxgMMfFx1tn4vPHv6BjzwX8bbPTAMef+fFw2wuQY5MtsGQZZXLXnhxcAx54rltjn6XHwGOTDbJkGXPBcNeeK4+AxwuGufi4+AxyuW2TIMcmPjbK88QY4Of+bfHFz8BhhcNs/DIMcGG+emOgwx1cNs94d8QY4MfG3PFcgxwYbZMgxwuG3PD4Y+Ayymet8rgGHPFcNsJhBlkw2xwx8UY44mW+Ph+MGOTDbBgGODPxtgx0GWUy3wYQY57+jLfFMKMM9XHf9b8/wDMwDDPTDfB+MGGemW/4/iY4gxyZb44nfDgMcGPrb8ZzwBjlctsfDAMcmW2Phj4DDC4bYXCjDBhvn4mEGODDbHwx8Bjj4fjbZ+GfgMMGG+fhn4DDHxcNsfDHxRjgw2yY+IMcJhvlcCvPgw9GEyqMMQw3yZBhhcfG2TKKwx0w3yZ+KjDBhtkyDHPww3yZRWGDHW+Vwo8+DDfBkGGOpl6O+BhB58mO8b4M/BGGemet8/DArDJn42wYVGGern42xTAMM/DLfCYRWOfhltg74AwyZ42xUwqMeePw74NcGQY56mG/fHqZ+Ax74ue+LfvinfEGGU74/G+UwDDvjwy274J3xB58uueLTC4BnzxXLXBzxBln2uWuVzwGOVz8a5+OsfAY5MtsmQZc8F54NcrzwgMsc/4Y43/ABmAY4MNsLz/AMwY4XDbC8/8+d/wGOTHxv8AjXEBhgy2zzpzw4issmW+OHPAGGPi88G+Fx8EY4hhtj4uVGGFw2xxeeKDDK4b54ZgMcftM8b55+jHwGGDHxvlcCsPx/DDfJj4DHnguGuDPRGWDDXnj1cCscLj41wuAY4OeHxtlcCMe+KZb98EyDHJhtg/GDHK4a4MAywZa/jXAMcLhrzwM9oMsnPCtcLzwFY4MN8JgGOUxzrfHDAMcmW2DAjHJONsGAZZ4mW2DArLHwy1wYEZZ+Ea4XAMc/DHP03xwwKwzz9GW2EwDLJn41wYEZZ+GGuDAMsGGuDCjLPwy1wYQZY+GfjXBzwFZZMfG2DIjHPww2wYBjjn6MNcmAZYTHxrnq5Bjgw2yZBjgw2yZBjlc/GuVwDHBhthMgywnfBvg74KMMJhvlMgxwYbd8DCKxwYbZ9GRGOEy2z8MfBWODHxtgwIxyZbYTAMcp3wbZTIMcfEy374pkVj3wTDfKd8QYd8HPfD4374J3wBhlMN++DnHxUY98eplt3xMgxwZa46654fEGOerlvz/wA1/GowyvPD43x8OeHxBlzw/ZhtheeHAY4Xng3xw54cBh+NeeHxvgwKxx8Xng2wZEZY4uPjXC88AZc8FxxrgwKywYa4MCMsLhrzwXAMcrlrzw7+lx0Vlgw1549XAjHFXFa4MCssL+NrhcAy/GY42/GYEY4THG+EwKywYbc8FyDDHxctscMAxyZ+NsGAY5+LlrgwDLK5a5+Lzx+AxwuWuTPwGWEw3z8TPwGGOrltn4Y+AxyZbY+GPgMcrltjqZ6DLJhrnq46DHBhtjpzx6DLC4a56Z7+gY4Tvg3x1MdBlhMNsGAY4Mt8H4+gxwY+NcdOeAMsGG34zAMcfFy15/59XHsGOVz8a/jPxgyynfH42/GmAY5+GfjbHTAMcfDHxtg/H0GOPhj42/H1Md/QMscMNvxp3w6DLHxcfGvPD2uAY4MNcGAZYMNvx9THQY4+GGuOmOgyx8TDfPUx0GOOGG+OpjoMcLhrnv6M9Blj2Y+Nc9XIMcGG2TIMcGG2Tvj6B58GG2fi5+AxwYbZMgwwd8G2TIMM9Mt8/DHAYZ6ZnW2OJgGU+E+Nc/s74gx74JhtjpgGPfBMNsmfgMMJ3w+N8ue+IMO+PUjfvi574KMu+PEw174mKgw74OcvR3wc98fio4w654NMOueCKyz8XPxrleePBGOVw1yvPAGXPBfxtcLgVlzwXPGvPDpgGWPhj1/xtzxXIMMrltgnwGOF54ts/DAM8rhrnpgGODDb8a8/8wY88Fy2/Gv4+AxyZb44c8eAxz8Mt88Mgwz39GevRn4Z+Awx1eeHW2fhkGWDDbJgGP4z8TbK5Bj+M/G2yZBl+M/G2yZBjj4fj5+m2TAMcH4+NsGAY4XnjGuVyDLPDLXBkGWUw254GQZYMtsmAY5XLTJkGeTPxphcgyyY+NcmQY5Xnj6a5MgyyZbZTAMs/DPxr3xMAyz0y2yYBjlZ8a4TAM58M/GuEwDPKZa5MAynxctMHPEGeaZa5MgyyZa98UyDLNXLTnivfEGWDLXJkGWTH/xrmGQY5Mtsp3xBllctMrzxoMsmWuTIMspn42ynfEGWfhhrzwXAMcfFy1yYBjn4Za4XAMcmfjXC4Bh3xMxtgyDLJlrhMAziZrbBkGODLbJgGOTLXBgGWUy2ymfgMsmWuDPwGWU74NcmQZfj4n422SAw/Gd8OtsmQefPTvj39N8p3xB5+8TLfHxO/wDmDHHOue+Dfv8A5p3w7wGHfBO+LbvHPfAGPUa98E74AZXng154d/Tr8YMsmWv43X4/gMeeC88W3PDi88OAxz39Lhtlcgxx1fxtcmQZfjX8fxrleeIMueHDHG2fhkGWOGW2TIMc/Fz8bYMfAZZXLXJkGWVy0yuQZZXLTJkGeVy0yQGeDLXJkGeDDXJkGeTDTJkGeTLXKZBnky1yZBlFjTJzxBnFy0yZBlky1yZBlky1yZBnkjTJkGefRzxaZXIM8mWmTIMsmWuTIMs/DLWGQZQy1hkGWTLWfCAzz0z1pCAz54GWkWAyyZa5TIM8mWuTIMsmWmTIM8mWmTIM8plrkz8Bnky0zz9GQZZMNcmQZ5MtIQGeTLTJkGeTLTJAZ5MtMmQZ5Tvg1yZBlCNcmQZZphrkz8Bnky0yZBnky0yZBlCNcmQZQjXJkGUXLTJkGeUjXJAZxMtYQGWTLXJkGWTLXJkGWTLTJkGWTLTJAZ5TLSEBnn4mWkIDPKZaRO+IM++KZaQgMsmWvecc98QZd4neVrhMgx74JjjXvikgMe+HXPfGN+8qZB1zx+Llplc8BnlctM8WAyyuWk+E6DjJl3zx6uQcZ4ZaZMgzi84754rkHE+E+O8rkHPOGXeVgM8rl3CA4yZdkBzCfHcIDjJHcIDjK5d5Mg5hHeTIOIsdZ+GfgOYR1CA5nCO4QHEI7hAcQjuLAZwjSEBxOk7+ncIDifCO8mQczpHUJ0HM6R3Okv8AgOIR3npkHESNMmQZzpGmemeg4hl3knQcZMtIQHGSNM9TPQcZMu89Mg4yZd5IDjJl3lMg5yZd5Mg4yZd88VyDPJlpgwDPJlpkyDPJlpkyDPJlpkyDPJlplMg4yZd56ZBxky7yuQZ5TLTPTHQZ5XLTPTIMsmWmemegzyuXeSdBnky7z0nQcZMu89J0HGTLvPSdBxky7nf0T4DiGXc+LAZ5J13CfAcZ6Z67nwnwHESd/TuEBxEjTJkGcI0ymQZwjTP3hkGcTPxpnid4DjJ3xdzqQGfeJlpCdBnnid8WkIDLvHPedbZc94DLvinfFr3jnviDLvinfFrP0kBpky1wZBnleeLTJAcZ6ZaZ6Z6DjJlpkyDjPwjTBgGcWO8rkGeVy0z8M9/QM8mWmOrgGeTLTH0wDOLlpjhngM4sac8Sc5/gM8/Fz39O+KDPnj0z1pCA4yZdzhOA4wuHSg4yZ46UHGeEdgOJz9GfjsoOckdfwBxPix0A5hHS+gcQjr2ewcwjoBzCddk+g4nSO4egcTqx0voGcWO4kBxCO8mQcTpOu8mQczqTruEBxOrOuoQHOemXUIDnPTLqEBzky6hAcwjqEBzFWE4CEWEBzCOoQHMI6hOA5hHU4QHMI6gDnJHU4QHMI6hAcwdThAcwjqEBzCOoQHMSO4ZBxCO50n0HEWOp9M9/YOIR3npn6DmJHefpPoOIR0A5hHXsneg5h2Op1Mg5HUh/AcpHc+LOAzhl3Ez9Bzjid8Hc/SToOJEjSdScBnDLSJOAzk/wjvJ3xBlE7yNO8cwHHf8A45nGneVO+P7Bn3iZaRO8Brnpnv6aZXPP2DOdWd67zxQZ88ernv6drOg4z39GXc6QHOSR3CA59HHSz4Dj3+iddzp/QczpOup9IDnK5+rFBzCd/TqAJOmXUQEhn66hngJnhOLOHoEzwjr1+j0DnJHV+F5+gcxYv8KCQk/xaewSE+L7PYJCLeqDnJlSgmTLoBzkyoCZMrAEyZUBMmXQDnK5WH9Bzkz11CfQSdSOoQHP9X2sICUqwnARZwnCAThOfsz9IBOJ6WEAh6WEBJwnFn1IBOGeEWAmTKz6ToJkyTq+wTJlU9gZM8J0gJOLOdIsBM8M8M/SATiTizpkDPEzx1lMgmTKzpO/sEyZ4sICTiR1D+A5nTPXUAc56Z66ICZ6k66gDmdMugHOfpHUQEhOr7ASJ11AHI6AckX+FBzCOgHKOpwnAcpHU6kBIkdd51Ac/wBTtdwzzgM50nHXUgOe+Lnvi7h0GfeOe8adTviDfJniz4v8BznizqrAczpHUICQysWA5hHQCTpnqqDnPSKf/oGfpCLAScUAApQIQpQIQpfgLD0nv9HsF9CT6QFPSQgKekhAUqQnAWlScIC3heJFgF4UiQFvCk70gF4UnSAVKsICUvFhOgl4vpIT4CgAHtQEvS9WAJe/pL10gJel66AS9NdFgJU0sANHPL4RYCUvVhASlWcICCz4T4CXpVnCAVKsIBUqwgJSkWAlL8WEBLwqwgJeCwnASlWEAvEvFQClAClIT4BQgAUgAAAEIB6CJAWpT0dAVz7/AGe/2CiAKIAvUh7J9A9IF6BO/wCHs0UCcRagHXMdRAROxfaewTqR16/1Og57z9uf/jtOg3Paw70E9qlKCwiUoKqVKDr1+iuaoLSpAFpUnT+AtL1PYB/1T3+lnQQiwgJOkWdJ0E9ntZ09/oE/qk7w/oBD+p/QdRD+p/QUT0vIAQ9F4BCF4gL6WOf6f0HUIn9P6Cwie/2n9B1D059/s/oKrmfT+g6hE/p/QITv7Pf7PYLD05KDr0Xn6c0oOr8LxzooOvR6c6XQLOLOOdFBZwn1KUFn1Y5pQdJClBYRzT+g6HIDorkB0Oedi3oKkKUCEKaAiz450UFixzooOoRzQFX+OaUHQl6UFiTpSgewoBCHooAl4X6DpE0l6DqDm9+nsHSQ9gATh6ARfRQJ0nSlBIRamgJ/Q0l6C+xKUAL0BIkXoDkWEBAQFTp1KAFqd/8AoDnvOOqnQbKF4AHogAQAVIoCpUoOhzSg6HNKDoc0oOqneoAtKnAF0unCgtKiUHSVKUHVE51aBUpUoLSpSgtKlKC0qVQUqU70ClSlB1UqUBaUAClUClTqA6pXIDql4hwF/ixAAoACQgL/AA9IAs4ekUD+gAHtKoHsgAe/2TotBJ0nVpQQ9gB7PZSgewAPYp6BPZ7VAPZOqgE6exQT2RQE/pPolBZ9PSUoL6PSUoKekUCgAUogLSoAUqFBaIAoiAtVEBaVFAqKgAIC6KiUHXpPSUBfR2pUoLBKUBCp3oHUq/8AeJQb96JTnl3gKc7EpQdUc6KDormlBRKUFCp3oCpSgolKC1ClBeHUpQBKAolKCiVaC8VxV9gvUEBRKA69DkBV45KDsc0oKJS0FnSJZ/pQdQc1aCiUoL1C9S9AClBVTnSgtKlKC0qVbwClSqAABSh6ApQApQBaVAFpUAUQBRAFSAAqALSoApUAUQBRD2CiAKIAd9IvUgKJ/wAUClPR6ApUpQWlSlBUhSgQhUoOhyAt4JSgqe0pQUT2ev2CpT0UCiUoCU6gLUEoKIQCh6ToKlEBalJ0/wCA1vCpSgtKXiegdUrn0A6oiA6o5KDoT0egWiek9A6K59HoFpUKC0qUoLSpSgtKVKC+z2hQdcPaf0oKJQDtE6UF9ntKUFEpQW9X25poF9r/AFzzvtQU9pQHXtL1OdKC+y9SrQO9iU0UClSrQWrXOuLeAtLxKAtKgCiegFEAVa5/oCiez2CiewFEvT2C1a5pQdUrmlB1SuatBaac0oOqXrml4Dqlc0oOqVzSg6pXNKDql65peg6pXNWgtK5vS9B1UqXqToOqJwBSoAtP6nooFClApUpQWntKUFEpQW8P45pQdVKlKC0SpQWlQBaVCgdQqd6CpUpQdUTnsAoJQUSpQVOlAaX6IAtKgClQBaVKUFvwqFBRD/oKvtAFSgAIAtKgC0qAKVAF4rk4DqlT0egWlT0AUS+wClSlBatc+gFpUWgvOrXNOdB1Sp6PQLSp6AWlTqUFvsQBaIApUAdc6rjnVoKIA6HNKDoc0oOqVx3pQd3hXFWguipUoO+dK5q0HVSpSgtKlKC1bHPpLwHXemuuaA60XjhaDupXNAdVazdUFquSgtKlKC0SlBaX65pQWlc1aC1a5qUHY4q0HSIAtKgC0qHQWpUKC1KnooOudHNKDoc0oOvRXNAWiQBalE70FqJSgCUoLV05AXvSuQHVHNWgCVO9BrSkQFpUAdU05PYOqlT2ewWlT2AtOdQ4DqlQBaJ/QCid/wCgKIgLSgBSgBV51DnQdVKUAq1KUE70p3qAtKVKC0qVaBSoAtOdSrQWlSrQKUSwF71KU9AUqKBVqIC1XIDqlRAd86Vz/QHVK5vT2DqpUAWlSlBaVKUF9HpKUHRXNKDqlc0oOqtcUoOr9HNKDocqCiAKOSg6HNKDqq4pQdjilB3eftHNKDormlB16HNKDqpUpQWlQB1SuTnQdUrmgLeFQApUUCgAexKUFEqA6quAHVK5v0oLUqALQAIBQQKUEpRO9BalInrgHvq85+0pQbUqIC0qALSuaUHVKn9AWlQBavOuF53vAdUqALRADvUqdKC0qALS/UAWlQBaVAHXOlcgOqVyAtEPX7BaJSgpUpQUqUoKVAFpUAUqUBaVAFpUoC1XNKDqntzQHXscgOqVyegdUqUoLSpSg6P+OaUHVK5pQdXg4q86DpCpQWql4egFS8L9BYRL9NA6HF+lB3eHpxfpfoO/SObf9L9B0JT+gB/U5AX0Ho9ALxzeLeAsP+JpL7B2OKUHaOaUFpU/p7BaIAoiAtKkX1wF9H8SlBSue9KDoc0oLIhSgBeHO8ADvUvQUSpr6DorjReg671KlSgtO96l6UFq2OKUHWqlQ9AVF9J2A2paigBTvQBKgOiuaUHVHNWgpUUCreJQClSlBRKaBalSpQdUrnvklB3Sub0vQd+hz7L0HV4Ofaewdjj+lB13pXNL8B1Sub39Jeg60ac950nQdaWuJ1Z39A6pXHtb0HVK5vS9B1S8c3qUHd4acVfX7B1Subw0Dqp/xNGuA6vS9c6Wgt6VKXgOqVz6AdUvHPovOAve/SpeFBSpSgo5KDoc0oOqVzVoLelQBaVKUFon9L9BRKn9B1SuT2Dqlc+1oOqac0oOtGnIDq0rkB13qVKAtKlSg6vSuaUHRXNO9B1Vril+g7pXFKDulcU0Dqlc1KDupXNL0HVK5vT2DqpU9p7B1SoUF50qXqUFvwvUpQUTvUB1SuQFpUoC9QT0AqVP6Dr0neolB1en/wBcaO+QPT/Un1zo0C/0/qaSg6v0v1zSg6/qc/8AqUoOr9PX7c0oOud5xbxxSg65FvHF6UHd4XjigOqlQBaVyA6pXIDqlcgLSpQFpUAdVKhQWlQBaunNSg6q1yA6pXP+gOqVyA6pXP8AQHXorkB1fhpz/QHVK5Sg6pfjmlB1fhfjmlB1eFc0oOqt5+3FNA7/AKVxo0DulcU0DqntzpdAt6XqaS9B3U51L1L0Hd7+kvUvTXQdXpeub0vQdXpXN6aB1el65p/v/AdUrm9L8B1Sub0oOqac3pegul05q6+Auk0muGufoHWjTnS6BdGk0l4DrRpNJoFvf84vtzo0DpKmjQLVvHOuF4Dr+n9c3heAv9EpQdcheOKtB1UrnRoHVo50aB1epeuaUHV6Oaa6Dr2e0qX6Dr2OdF6DocXpeg6NccAOtGuubw1AW9HOk10HdTvXNSg6pXOupQdVO9Sp3v76D0+xNGgUS9S9B0Vz7AdUrlQUcnsHR7c+19gol6l6Doc3pQdDml4DqpUvC8BRzSg6pXNLwHR1zTQOrxKlSg7peONFB1VvHFNA60a71zovQdXv6L1zo0DqlcaNA7pXGjXwHdK42aB3fpfrjRoHVo50aB1SuaX6Dqlc36ev2Dqji/Sg7pXN+pQd0rjnVoOqVzo0Dqlc3v6NdB1SuaaB1SudGgdUv1zooOv6X65pQdXv7K4q0HVK5v0v0HV+l7+3N+lB1S9/bm/S/QdUvXN6UHV+l65pQdXv7W9cUoO6Vxo0Dul640aB3SuNf/TQOqtcaNA7pXGjQOqVzfhoHV+L6caNA6quNGgd3heOKX6Dq8K5pfoOrw0573n7TXAd6NONcNcB3pNONGvgO9FcX4a+A719Nc/bioDvXDTilB1o11xS3/Qd66l65vOF5+lHV+pUvE0g6qf1zs75A6K411KDvXE04vDQOr1K575JaD2aXTilB1VrilB1fpXNL0HWiuL1b0HVK5pQd0rilB0VzSg6pXNL0HV4VxTQO6lc2lB1pNJUoOqVzQHV6Xrk/wCKOqVzS8B1Urm8Lz9g7K41z9muIO6lc64aB1SudJoHd6l650d8gdXpeuL9KDu9L2uKaB3el640aB3epfrnSaB3efsrjXS9B3eF4z0t6DS8/aacUoO9GnFSg00a6zpQaaNs6UGmzbilB3s2zpQabNs6UGuvqa5+2dNc/YNNG2ejQNNcN8/bPRQd7XfGWl0DTZr6z0UGmvpr6zpQa88vpr6y0UGujTKlBro0ypoGujXGVKDXXDfGWjQNeefw75s6lBrs558ZaLAa98uf4bZUoNdm2ek70GuzfGWjQNdm2VKDXRplr6X6DTS6ZUv0GmjTOl4DTRr4zv019BppO+TjRQd66aZ6KDvX0040XoO9GmdKDTSVxefs0o6pXOk0g7qVzUoO6lc1KDqlc6Tvko6pWejVQd6Tvk4pQe7+l+s9FBof1nTQNP6l+uKUHa3jOwoNKXjOmgaVK4q66DulZ98upeg1pWdL9B3TvXFO9+g70mnF4UHeqacVNA72d8q40aB1SuNGuA7vCuKUHd4l45qUHeuGuOKUHejTimgd6NOKmgaX6aZ64aB33yNccW/6UHd4lc3hQdaNfXPpKDu//C/WdWg719TTmlB1o04q0HW10zpeqO70vXGum+oO9GmeurzyB3SuNJpRpSuNJpBpS/XGjSjSl+s9JUGl6e/2z0ulHf8AS/XFTX1BrpK419NA7pWdNfVGmlv1lpaDu8K4ppB3SuNfTQO6VxSg0qXn7caNfQd0tcUoO6v/AOM6UGl78L34zpQd1azpQaUrOlBpRxeJoGneppzooOtFcVdA652/8L3rjRQd3qdc0oOi/XF+lB3SuL9NcB3SuKaB3TTPRvgNKlcaNKO6Vxrqa7+waUrPXUv0GmjbOlB3viacUoO9dSuO+RoHVSuamgd0rjSd8kHek75OL1FHuv0rPRroNaXjPRpBpo0z0tB1eLeM6tB3pNObw0DvRpnVoOtLpxTQOtHfJxo0DupeudGgdXpXOk0o7qf1zpNA0p/WejX0HdKz0aBpSs9JoGtSs9GgaUrPSaBrUrPS6B3orPRroNLw0z0aB33pXGkv0GmjTjRUHevpWejQNL9NfWejQO6acaNcB1ornRrgOu9NRzpNA70acVKDTRr6zpoGmvqa+s6UGmvppnSqNNLWVKDS/V0ypQa0rKmvoNb9TX1nrpoGlW/WWjYNdfTTLRsGuisd9XYNb9NMtfTQNL9W/WWjYNdfTX1lo30Gt+l+stmga36X6y0aBrr6a+stmga6+mvrLRoGtKy11dA0ppnooNNLplSg00arOlBpo0z0aQaaNMqaUa6NdZ6TQNe+Rpns0Du/S/We12DS/U/7/rPZpB2OO+RpR3Ss9FBpTTOlB3o0zKg00nfNxT0o61TTm8Sg7qVzr7xO+fOf6DupWff/AETvmDS8TTPXeppBp3zc983HfJO+Sj6FNcZ6Wg70acU0DvXTTilBpo75M6UHel04pQd6TTilB3V11xrhoHVK50mgdVb9cVNINO9+pXFKDulZ6NKNP6lcaNA7p3rjvklB3SuO96VB3orip7BppNODoNNGmXtQd98jX1mVR33yNOKVB3TXWejSjvX00475JoGlKz19NINKVnr6bUd0rPa6+g7pWe02DWlZ7TvmDWmmWzvn0GujTHZsG2isdGwa64t4x0a+g21xO+XGWjQNdcLxjV10Gt4VjSg2vE3xlooNdGmVKDXRrjLRQa64umOjXQa6NMqaBro0ypoGuuGmWjQNdcNcZaO9BtpNMtLQa6NMqmga6NMtLQa64aZUoNNcXXGVKDXvkaZaXXAd6Ns9fSg00aZ6OeXQaaNM9HfPoNNGme+mug00aZd8unPLoNdHPJlvproNdGmWk0g22bY6NA22b4x0aUa7TbPSaBrs2y0aBptN96z0aBprqa640nfIGmkrjX1z3yBppNOKd70Hek04peA6qVz3yTQPfSs+efV2DSrWezaDS/S9Z7i7B3elcc8zYO9FcaXQOqacaNQHdK40bB3SuNJr6DSjPZ3yBoM9psGn/wCF4z2bUaXheMtGug0ppntNA10m2ekoNdJtnooNNm2VKDTZvrOmgab6mmffLhsGm0041xNA0100z0UHeiuNJoHd6X640aB3SuKmgd0rjRQd6TTmpQaaNM6UHejTjvUoNNJpxSg70umZQad8k0zpoGmjTPRoGmjTPvka6DTRplpaDTXTbKmga6NMtfTQNNG2ezQNdm2Wig119Ns7075A02aZahr6g10aZc8jajTS6ZaNURrr6aZaNCtdmvrLRoGuu/s0y0ugaaNM9HfIGuk0z0aBpo0z0aEaa+mmWl55cFaa+mmejQNNHfL6z0aBpr6aZ6NA00aZ65w19Bpo0z0aBpo0y0aBrUrPRsGmis9JsGtO9ZbNfQaUrPX01f8AQaaSs9JoGtS/Wek0DXXE1xnr6lBrtzpxriaEabTvl1n3yTvkDTSaZ6TvkD//2Q==") center/cover no-repeat}
+body{position:fixed;inset:0;background:linear-gradient(#4c4d4f,#b2b2b2 50%,#828284)}
 button{font:inherit;color:inherit}
+button:focus-visible,.stkchip:focus-visible,.cvprev:focus-visible,.ralist input:focus-visible,#q:focus-visible{outline:3px solid #5aa0ff;outline-offset:2px}
+.seg button:focus-visible,.dbtn:focus-visible{outline-offset:-3px}
 .hidden{display:none!important}
 
-/* ---------- cover flow ---------- */
-#stage{position:absolute;inset:0;perspective:1000px;perspective-origin:50% var(--cy);touch-action:none;cursor:grab}
-#track{position:absolute;inset:0;transform-style:preserve-3d}
-.cv{overflow:hidden;position:absolute;left:50%;top:var(--cy);width:var(--cw);height:var(--ch);margin-left:calc(var(--cw)/-2);margin-top:calc(var(--ch)/-2);
+/* cover flow */
+#stage{position:absolute;inset:0;-webkit-perspective:1000px;perspective:1000px;-webkit-perspective-origin:50% var(--cy);perspective-origin:50% var(--cy);touch-action:none;cursor:grab}
+#track{position:absolute;inset:0;-webkit-transform-style:preserve-3d;transform-style:preserve-3d}
+.cv{overflow:hidden;position:absolute;left:50%;top:var(--cy);width:var(--cw);height:var(--ch);margin:calc(var(--ch)/-2) 0 0 calc(var(--cw)/-2);
   background:#222;will-change:transform;box-shadow:0 0 0 1px rgba(0,0,0,.45);
-  -webkit-box-reflect:below 2px linear-gradient(to bottom,transparent 56%,rgba(0,0,0,.4))}
+  -webkit-backface-visibility:hidden;backface-visibility:hidden}
+/* iOS WebKit flattens 3D transforms on layers that use box-reflect, so only use the reflection with a mouse */
+@media (hover:hover) and (pointer:fine){.cv{-webkit-box-reflect:below 2px linear-gradient(to bottom,transparent 56%,rgba(0,0,0,.4))}}
 .cv img{display:block;width:100%;height:100%;object-fit:cover;pointer-events:none;-webkit-user-drag:none}
+.cv img.stl,.thumb img.stl{position:absolute;height:auto;width:30%;object-fit:contain}
 .cv .shade{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
 .cv.hide{visibility:hidden}
 .cv.launching img{animation:pop .55s ease-out}
 @keyframes pop{40%{transform:scale(1.07);filter:brightness(1.25)}100%{transform:scale(1)}}
 #floor{position:absolute;left:0;right:0;bottom:0;height:34%;pointer-events:none;background:linear-gradient(transparent,rgba(0,0,0,.5))}
+#wpdim{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
+.rlabel{position:absolute;left:50%;top:var(--cy);margin:calc(var(--ch)/-2 - 30px) 0 0 -130px;width:260px;text-align:center;font-weight:700;font-size:15px;text-shadow:0 1px 3px #000;pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;will-change:transform}
+.rlabel small{opacity:.7;font-weight:600}
 
-/* ---------- chrome ---------- */
+/* chrome */
 .rb{width:var(--btn);height:var(--btn);flex:none;border-radius:50%;border:1px solid rgba(255,255,255,.4);padding:0;display:grid;place-items:center;
   background:linear-gradient(#5d5d60,#2a2a2c 55%,#1c1c1e);box-shadow:0 1px 3px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.28);cursor:pointer}
 .rb:active{filter:brightness(1.4)}
@@ -47,40 +62,28 @@ button{font:inherit;color:inherit}
 #q:not(.on){padding:0;border-width:0;margin-left:-10px}
 .bar.searching .hs{display:none}
 #btnPlay{position:absolute;left:calc(var(--sl) + 14px);bottom:calc(var(--sb) + 18px)}
+#btnShuffle{position:absolute;left:calc(var(--sl) + 24px + var(--btn));bottom:calc(var(--sb) + 18px)}
 #btnInfo{position:absolute;right:calc(var(--sr) + 14px);bottom:calc(var(--sb) + 18px);font:italic 700 calc(var(--btn)*.56)/1 Georgia,"Times New Roman",serif;padding-bottom:2px}
-#caption{position:absolute;left:0;right:0;bottom:calc(var(--sb) + 14px);text-align:center;padding:0 calc(var(--btn) + 26px);pointer-events:none;text-shadow:0 1px 2px #000,0 0 6px rgba(0,0,0,.6)}
+#caption{position:absolute;left:0;right:0;bottom:calc(var(--sb) + 14px);text-align:center;padding:0 calc(var(--btn)*2 + 38px);pointer-events:none;text-shadow:0 1px 2px #000,0 0 6px rgba(0,0,0,.6)}
 #caption div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #caption .l1{font-weight:700;font-size:16px}
 #caption .l2{font-weight:600;font-size:14px;color:#e8e8e8}
 #caption .l3{font-size:13px;color:#cfcfd1}
+#empty{position:absolute;left:0;right:0;top:34%;text-align:center;padding:0 30px;text-shadow:0 1px 2px #000}
+#empty h2{margin:0 0 6px;font-size:22px}
+#empty p{margin:0 0 16px;color:#eee}
+#shelves{display:none}
+#toast{position:fixed;left:50%;bottom:calc(var(--sb) + 76px);transform:translateX(-50%);z-index:4000;background:linear-gradient(#566379,#252e3f 50%,#1a2231 50%,#252e3f);border:1px solid #070a12;box-shadow:0 0 0 1px rgba(255,255,255,.4),0 6px 16px rgba(0,0,0,.5);text-shadow:0 -1px 0 rgba(0,0,0,.6);padding:9px 14px;border-radius:12px;font-size:14px;max-width:86vw;text-align:center;opacity:0;pointer-events:none;transition:opacity .2s}
+#toast.on{opacity:1}
 
-.rlabel{position:absolute;left:50%;top:var(--cy);margin-top:calc(var(--ch)/-2 - 30px);width:260px;margin-left:-130px;text-align:center;font-weight:700;font-size:15px;text-shadow:0 1px 3px #000;pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;will-change:transform}
-.rlabel small{opacity:.7;font-weight:600}
-#wpdim{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
-.cv img.stl{position:absolute;height:auto;width:30%;object-fit:contain;pointer-events:none;-webkit-user-drag:none}
-.stk{display:flex;gap:12px;margin-top:6px}
-.cvstick{position:sticky;top:-16px;z-index:3;background:#1e1e21;padding:8px 0 12px;margin-top:-8px}
-.cvprev{position:relative;width:min(64vw,250px,max(30vh,130px));aspect-ratio:2/3;margin:0 auto;background:#121214;border:1px solid #3d3d42;border-radius:4px;overflow:hidden;touch-action:none}
-.coverrow .thumb{position:relative}
-.coverrow .thumb img.stl{position:absolute;height:auto;width:30%;object-fit:contain}
-.cvprev img.base{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
-.cvprev img.st{position:absolute;height:auto;cursor:grab;-webkit-user-drag:none;touch-action:none}
-.cvprev img.st.sel{outline:2px dashed #0a84ff;outline-offset:2px}
-.stk .col{flex:1;min-width:0}
-.stkchip{flex:none;width:46px;height:46px;padding:3px;border-radius:8px;border:1px solid #3d3d42;background:#121214;cursor:pointer}
-.stkchip img{width:100%;height:100%;object-fit:contain;display:block}
-.sheet input[type=range]{display:block;width:100%;margin-top:8px;height:28px}
-.wpgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
-.wpt{aspect-ratio:1.4;border-radius:10px;border:2px solid #3d3d42;cursor:pointer;color:#fff;font-weight:600;font-size:12px;display:flex;align-items:flex-end;padding:0;overflow:hidden}
-.wpt span{width:100%;padding:3px 6px;background:rgba(0,0,0,.5);text-align:left}
-.wpt.on{border-color:#0a84ff}
+/* alerts */
 #dlgBack{position:fixed;inset:0;z-index:5000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.45);animation:dfade .15s ease-out}
 @keyframes dfade{from{opacity:0}}
 @keyframes dpop{from{transform:scale(1.12);opacity:0}}
 .dlg{position:relative;width:min(300px,calc(100% - 48px));padding:20px 16px 14px;border-radius:11px;text-align:center;color:#fff;
   background:linear-gradient(#7585a0,#3c4961 7%,#252e3f 50%,#1a2231);
   box-shadow:0 0 0 2px rgba(255,255,255,.9),0 0 0 3px rgba(0,0,0,.65),0 14px 34px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.35);
-  animation:dpop .18s ease-out;text-shadow:0 -1px 0 rgba(0,0,0,.6);-webkit-user-select:none;user-select:none}
+  animation:dpop .18s ease-out;text-shadow:0 -1px 0 rgba(0,0,0,.6)}
 .dlg::before{content:"";position:absolute;left:0;right:0;top:0;height:46%;border-radius:11px 11px 55% 55%/11px 11px 16px 16px;background:linear-gradient(rgba(255,255,255,.3),rgba(255,255,255,.04));pointer-events:none}
 .dlg>*{position:relative}
 .dlg h3{margin:0 0 6px;font-size:18px;line-height:1.2}
@@ -90,195 +93,118 @@ button{font:inherit;color:inherit}
 .dlg input:focus{outline:2px solid #5aa0ff;outline-offset:1px}
 .dbtns{display:flex;gap:10px}
 .dbtn{flex:1;min-height:44px;border-radius:8px;border:1px solid #070a12;color:#fff;font-weight:700;font-size:16px;cursor:pointer;text-shadow:0 -1px 0 rgba(0,0,0,.55);
-  background:linear-gradient(#9aa3b3,#677185 50%,#4e576a 50%,#444d5f);box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 1px 1px rgba(0,0,0,.5)}
-.dbtn.pri{background:linear-gradient(#8fc0fb,#4b8fe8 50%,#2268d2 50%,#2f7ae3)}
-.dbtn.danger{background:linear-gradient(#f4a09a,#dc5148 50%,#b8281f 50%,#cb3a30)}
+  background:var(--steel);box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 1px 1px rgba(0,0,0,.5)}
+.dbtn.pri{background:var(--blue)}
+.dbtn.danger{background:var(--red)}
 .dbtn:active{filter:brightness(.85)}
-#empty{position:absolute;left:0;right:0;top:34%;text-align:center;padding:0 30px;text-shadow:0 1px 2px #000}
-#empty h2{margin:0 0 6px;font-size:22px}
-#empty p{margin:0 0 16px;color:#eee}
-.btn{border:1px solid rgba(255,255,255,.3);background:rgba(40,40,44,.85);border-radius:10px;min-height:calc(var(--btn) - 2px);padding:8px 16px;cursor:pointer;font-weight:600;font-size:16px}
-.btn.pri{background:#0a84ff;border-color:#0a84ff}
-.btn.danger{color:#ff6961}
-.btn:active{filter:brightness(1.25)}
 
-/* ---------- flip-side details ---------- */
-#back{position:absolute;left:50%;top:var(--cy);width:var(--cw);height:var(--ch);margin-left:calc(var(--cw)/-2);margin-top:calc(var(--ch)/-2);z-index:2000;
-  background:linear-gradient(#2c2c2f,#141416);border:1px solid rgba(255,255,255,.2);padding:12px;display:flex;flex-direction:column;gap:6px;overflow:auto;
-  animation:flip .32s ease-out;box-shadow:0 8px 24px rgba(0,0,0,.5);text-shadow:none}
+/* buttons, segments, chips */
+.btn{border:1px solid var(--ink);border-radius:9px;min-height:calc(var(--btn) - 2px);padding:8px 16px;cursor:pointer;font-weight:700;font-size:16px;color:#fff;text-shadow:0 -1px 0 rgba(0,0,0,.55);
+  background:var(--steel);box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 1px 2px rgba(0,0,0,.6)}
+.btn.pri{background:var(--blue);border-color:#0a2a63}
+.btn.danger{background:var(--red);border-color:#4a0b07}
+.btn:active{filter:brightness(.82);box-shadow:inset 0 2px 5px rgba(0,0,0,.5)}
+.btn[disabled]{opacity:.45;filter:saturate(.5)}
+.seg{display:flex;margin-top:6px;border:1px solid var(--ink);border-radius:9px;overflow:hidden;background:var(--ink);box-shadow:0 1px 0 rgba(255,255,255,.22),0 1px 3px rgba(0,0,0,.55)}
+.seg button{flex:1;padding:0 4px;min-height:calc(var(--btn) - 2px);border:0;border-right:1px solid var(--ink);cursor:pointer;font-size:14px;font-weight:700;text-shadow:0 -1px 0 rgba(0,0,0,.55);background:var(--steel);box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
+.seg button:last-child{border-right:0}
+.seg button.on{background:linear-gradient(#1b4a98,#2a63c2 50%,#2563c4 50%,#3c86e8);box-shadow:inset 0 3px 6px rgba(0,0,0,.6)}
+.seg button:active{filter:brightness(.88)}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:10px 0 4px;-webkit-overflow-scrolling:touch}
+.chip{flex:none;display:inline-flex;align-items:center;min-height:calc(var(--btn) - 8px);padding:0 15px;border-radius:15px;border:1px solid var(--ink);font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;color:#fff;text-shadow:0 -1px 0 rgba(0,0,0,.55);background:var(--steel);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 1px 2px rgba(0,0,0,.5)}
+.chip.on{border-color:#0a2a63;background:var(--blue)}
+
+/* flip-side details */
+#back{position:absolute;left:50%;top:var(--cy);width:var(--cw);height:var(--ch);margin:calc(var(--ch)/-2) 0 0 calc(var(--cw)/-2);z-index:2000;
+  padding:16px;display:flex;flex-direction:column;gap:7px;overflow:auto;animation:flip .32s ease-out;text-shadow:none;border:1px solid #120b07;border-radius:6px;
+  background:radial-gradient(circle at 20% 10%,rgba(255,255,255,.09),transparent 55%),repeating-radial-gradient(circle at 30% 40%,rgba(0,0,0,.09) 0 1px,transparent 1px 3px),repeating-radial-gradient(circle at 70% 60%,rgba(255,255,255,.04) 0 1px,transparent 1px 4px),linear-gradient(#6a4a35,#4a3022 55%,#3a2418);
+  box-shadow:0 10px 26px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.25),inset 0 0 22px rgba(0,0,0,.55);outline:1.5px dashed rgba(240,220,175,.7);outline-offset:-6px}
 @keyframes flip{from{transform:rotateY(-90deg)}to{transform:none}}
-#back h3{margin:0;font-size:16px;line-height:1.2}
-#back .sub{color:#aaa;font-size:13px}
-#back .kv{font-size:12.5px;color:#d8d8da;word-break:break-all}
-#back .bar2{height:6px;border-radius:3px;background:#444;overflow:hidden}
-#back .bar2 i{display:block;height:100%;background:linear-gradient(90deg,#f5a623,#ffd45c)}
-#back .btns{margin-top:auto;display:flex;gap:8px}
+#back h3{margin:0;font-size:16px;line-height:1.2;color:#f6e8cd;text-shadow:0 -1px 0 rgba(0,0,0,.75),0 1px 0 rgba(255,255,255,.12)}
+#back .sub{color:#d2b78f;font-size:13px;text-shadow:0 -1px 0 rgba(0,0,0,.6)}
+#back .kv{font-size:12.5px;color:#ecdcbf;word-break:break-all;text-shadow:0 -1px 0 rgba(0,0,0,.6)}
+#back .bar2{height:12px;border-radius:6px;border:1px solid #120b07;overflow:hidden;background:linear-gradient(#150d08,#2c1c12);box-shadow:inset 0 2px 4px rgba(0,0,0,.75),0 1px 0 rgba(255,255,255,.18)}
+#back .bar2 i{display:block;height:100%;border-radius:5px;background:linear-gradient(#ffe9a1,#f5b335 50%,#e08f0f 50%,#f2b13a);box-shadow:inset 0 1px 0 rgba(255,255,255,.7)}
+#back .btns{margin-top:auto;padding-top:6px;display:flex;gap:8px}
 #back .btns .btn{flex:1;padding:8px 6px}
 
-/* ---------- sheets ---------- */
-#veil{position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,.45);display:none;align-items:flex-end;justify-content:center;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+/* sheets */
+#veil{position:fixed;inset:0;z-index:3000;background:radial-gradient(ellipse at 50% 100%,rgba(0,0,0,.35),rgba(0,0,0,.65));display:none;align-items:flex-end;justify-content:center;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
 #veil.on{display:flex}
-.sheet{display:none;width:min(560px,100%);max-height:calc(100% - var(--st) - 8px);overflow:auto;-webkit-overflow-scrolling:touch;
-  background:rgba(30,30,33,.97);border-radius:18px 18px 0 0;padding:16px 16px calc(var(--sb) + 16px);touch-action:pan-y;-webkit-user-select:text;user-select:text;animation:up .22s ease-out}
+.sheet{display:none;width:min(560px,100%);max-height:calc(100% - var(--st) - 8px);overflow:auto;-webkit-overflow-scrolling:touch;padding:16px 16px calc(var(--sb) + 16px);touch-action:pan-y;-webkit-user-select:text;user-select:text;animation:up .22s ease-out;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.04) 0 1px,transparent 1px 3px),repeating-linear-gradient(90deg,rgba(0,0,0,.14) 0 1px,transparent 1px 3px),linear-gradient(#333c4f,#232a38 40%,#1b212d);
+  border:1px solid var(--ink);border-bottom:0;border-radius:14px 14px 0 0;box-shadow:0 -10px 34px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.35);color:#eef1f6}
 .sheet.open{display:block}
 @keyframes up{from{transform:translateY(30px);opacity:0}}
-.sheet h2{margin:0 0 12px;font-size:19px}
-.sheet label,.sheet .lbl{display:block;font-size:12.5px;color:#a9a9ae;margin:10px 0 0}
-.sheet input[type=text],.sheet input[type=password],.sheet input:not([type]),.sheet input[type=url],.sheet input[inputmode]{display:block;width:100%;margin-top:4px;height:calc(var(--btn) - 2px);border-radius:10px;border:1px solid #3d3d42;background:#121214;color:#fff;padding:0 12px;font-size:16px}
+.sheet h2{margin:-16px -16px 14px;padding:12px 16px 11px;text-align:center;font-size:18px;line-height:1.2;color:#fff;border-radius:13px 13px 0 0;border-bottom:1px solid var(--ink);position:relative;
+  background:linear-gradient(#93a3bc,#6a7b97 50%,#566784 50%,#4a5a76);text-shadow:0 -1px 0 rgba(0,0,0,.6);box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 2px 5px rgba(0,0,0,.5)}
+.sheet label,.sheet .lbl{display:block;font-size:12.5px;color:#cdd5e4;font-weight:600;margin:10px 0 0;text-shadow:0 -1px 0 rgba(0,0,0,.7)}
+.sheet .lbl{margin-top:14px}
 .sheet .row{display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap}
 .sheet .row .sp{flex:1}
-.sheet .help{font-size:12px;color:#8e8e93;margin:6px 0 0}
-.seg{display:flex;margin-top:6px;border:1px solid #3d3d42;border-radius:10px;overflow:hidden}
-.seg button{flex:1;padding:0 4px;min-height:calc(var(--btn) - 2px);background:#121214;border:0;border-right:1px solid #3d3d42;cursor:pointer;font-size:14px}
-.seg button:last-child{border-right:0}
-.seg button.on{background:#0a84ff}
+.sheet .help{font-size:12px;color:#a3aec4;margin:6px 0 0;text-shadow:0 -1px 0 rgba(0,0,0,.55)}
+.sheet .help b{color:#e3e8f2}
+.msg{font-size:13px;margin-top:8px;color:#ffd3cf;text-shadow:0 -1px 0 rgba(0,0,0,.6);background:linear-gradient(#7a2a26,#5a1b18);border:1px solid #2a0907;border-radius:8px;padding:7px 10px;box-shadow:inset 0 1px 0 rgba(255,255,255,.2)}
+.sheet :is(input:not([type=checkbox],[type=range],[type=file]),select){display:block;width:100%;margin-top:4px;height:calc(var(--btn) - 2px);padding:0 12px;font-size:16px;font-weight:500;
+  border-radius:8px;border:1px solid var(--ink);color:#1c1f26;text-shadow:none;background:var(--field);box-shadow:inset 0 2px 5px rgba(0,0,0,.5),0 1px 0 rgba(255,255,255,.2)}
+.sheet input::placeholder{color:#8a909c}
+.sheet :is(input,select):focus{outline:none;border-color:#1b4f9e;box-shadow:inset 0 2px 5px rgba(0,0,0,.45),0 0 0 2px #5aa0ff,0 0 8px rgba(90,160,255,.7)}
+.sheet select{-webkit-appearance:none;appearance:none;padding-right:34px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='18' viewBox='0 0 14 18'%3E%3Cpath d='M2 7l5-5 5 5zM2 11l5 5 5-5z' fill='%23444b59'/%3E%3C/svg%3E") right 12px center/14px 18px no-repeat,var(--field)}
+.sheet input[type=checkbox]{accent-color:#2f7ae3}
+.sheet input[type=range]{-webkit-appearance:none;appearance:none;background:transparent;display:block;width:100%;margin-top:8px;height:28px}
+.sheet input[type=range]::-webkit-slider-runnable-track{height:10px;border-radius:6px;border:1px solid var(--ink);background:var(--groove);box-shadow:inset 0 2px 3px rgba(0,0,0,.65),0 1px 0 rgba(255,255,255,.16)}
+.sheet input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:28px;height:28px;margin-top:-10px;border-radius:50%;border:1px solid var(--ink);background:var(--knob);box-shadow:0 2px 4px rgba(0,0,0,.65),inset 0 1px 0 #fff}
+.sheet input[type=range]::-moz-range-track{height:10px;border-radius:6px;border:1px solid var(--ink);background:var(--groove);box-shadow:inset 0 2px 3px rgba(0,0,0,.65)}
+.sheet input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;border:1px solid var(--ink);background:var(--knob);box-shadow:0 2px 4px rgba(0,0,0,.65)}
+.sheet input[type=range]:disabled{opacity:.4}
+
+/* lists */
+.ralist{margin-top:8px;max-height:46vh;overflow:auto;border:1px solid var(--ink);border-radius:10px;background:linear-gradient(#10141c,#1a202c);box-shadow:inset 0 2px 6px rgba(0,0,0,.6),0 1px 0 rgba(255,255,255,.18)}
+.ralist label{display:flex;gap:12px;align-items:center;margin:0;padding:12px;font-size:15px;color:#fff}
+.ralist input{width:26px;height:26px;flex:none}
+.ralist small,.shrow small{color:#8f9bb2}
+.ralist small{display:block}
+.ralist label,.shrow{border-bottom:1px solid #0a0d14;box-shadow:0 1px 0 rgba(255,255,255,.05);text-shadow:0 -1px 0 rgba(0,0,0,.6)}
+.ralist label:last-child,.shrow:last-child{border-bottom:0}
+.shrow{display:flex;align-items:center;gap:8px;padding:10px 12px;font-size:15px}
+.shrow>span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.shrow .btn{min-height:40px;padding:4px 11px;font-size:14px}
+
+/* cover editor, grids, wallpaper */
 .coverrow{display:flex;gap:12px;margin-top:6px}
-.coverrow .thumb{width:72px;aspect-ratio:2/3;flex:none;background:#121214;border:1px solid #3d3d42;border-radius:4px;overflow:hidden}
-.coverrow .thumb img{width:100%;height:100%;object-fit:cover;display:block}
 .coverrow .col{flex:1;min-width:0}
 .coverrow .col .row{margin-top:8px}
 .coverrow .btn{padding:6px 10px;font-size:14px}
-.chips{display:flex;gap:6px;overflow-x:auto;padding:10px 0 4px;-webkit-overflow-scrolling:touch}
-.chip{flex:none;display:inline-flex;align-items:center;min-height:calc(var(--btn) - 8px);padding:0 15px;border-radius:15px;background:#121214;border:1px solid #3d3d42;font-size:14px;cursor:pointer;white-space:nowrap}
-.chip.on{background:#0a84ff;border-color:#0a84ff}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.cvprev,.thumb,.grid button,.wpt{border:1px solid var(--ink);border-radius:3px;background:#0b0d12;box-shadow:var(--frame)}
+.thumb{position:relative;width:72px;aspect-ratio:2/3;flex:none;overflow:hidden;margin:3px}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.cvstick{position:sticky;top:-16px;z-index:3;background:linear-gradient(#2b3446,#262e3d);padding:8px 0 12px;margin-top:-8px}
+.cvprev{position:relative;width:min(64vw,250px,max(30vh,130px));aspect-ratio:2/3;margin:4px auto;overflow:hidden;touch-action:none}
+.cvprev img.base{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.cvprev img.st{position:absolute;height:auto;cursor:grab;-webkit-user-drag:none;touch-action:none}
+.cvprev img.st.sel{outline:2px dashed #5aa0ff;outline-offset:2px}
+.stkchip{flex:none;width:46px;height:46px;padding:3px;border-radius:9px;border:1px solid var(--ink);background:linear-gradient(#e9ebef,#c2c7d1);box-shadow:inset 0 1px 0 #fff,0 1px 2px rgba(0,0,0,.55);cursor:pointer}
+.stkchip img{width:100%;height:100%;object-fit:contain;display:block}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px;padding:2px}
 @media(min-width:520px){.grid{grid-template-columns:repeat(4,1fr)}}
-.grid button{padding:0;border:1px solid #3d3d42;background:#121214;aspect-ratio:2/3;border-radius:4px;overflow:hidden;cursor:pointer}
+.grid button{padding:0;aspect-ratio:2/3;overflow:hidden;cursor:pointer}
 .grid img{width:100%;height:100%;object-fit:cover;display:block}
-.msg{color:#ffb4ae;font-size:13px;margin-top:8px}
-.ralist{margin-top:8px;max-height:46vh;overflow:auto;border:1px solid #3d3d42;border-radius:10px}
-.ralist label{display:flex;gap:12px;align-items:center;margin:0;padding:12px;border-bottom:1px solid #2a2a2e;font-size:15px;color:#fff}
-.ralist label:last-child{border:0}
-.ralist small{display:block;color:#8e8e93}
-.ralist input{width:26px;height:26px;flex:none}
+.wpgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.wpt{aspect-ratio:1.4;border-radius:6px;cursor:pointer;color:#fff;font-weight:600;font-size:12px;display:flex;align-items:flex-end;padding:0;overflow:hidden}
+.wpt span{width:100%;padding:3px 6px;background:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.7));text-align:left;text-shadow:0 -1px 0 #000}
+.wpt.on{border-color:#2f7ae3;box-shadow:0 0 0 2px #2f7ae3,0 0 10px 2px rgba(60,140,255,.8)}
+
+/* web view */
 #web{position:fixed;inset:0;z-index:3500;background:#111;display:flex;flex-direction:column}
 #webbar{flex:none;display:flex;align-items:center;gap:10px;padding:calc(var(--st) + 6px) calc(var(--sr) + 12px) 6px calc(var(--sl) + 12px);background:linear-gradient(#505153,#2f3032);border-bottom:1px solid rgba(0,0,0,.55)}
 #webTitle{flex:1;min-width:0;text-align:center;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #webframe{flex:1;min-height:0;width:100%;border:0;background:#fff}
-#shelves{position:absolute;left:0;right:0;top:calc(var(--st) + 10px + var(--btn) + 8px);z-index:5;display:flex;gap:8px;overflow-x:auto;padding:0 calc(var(--sr) + 12px) 4px calc(var(--sl) + 12px);-webkit-overflow-scrolling:touch;scrollbar-width:none}
-#shelves::-webkit-scrollbar{display:none}
-.sc{flex:none;display:inline-flex;align-items:center;gap:6px;min-height:calc(var(--btn) - 12px);padding:0 15px;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:rgba(20,20,22,.74);color:#fff;font-weight:600;font-size:14px;cursor:pointer;text-shadow:none}
-.sc small{opacity:.65;font-size:12px}
-.sc.on{background:#0a84ff;border-color:#0a84ff}
-.sheet select{display:block;width:100%;margin-top:4px;height:calc(var(--btn) - 2px);border-radius:10px;border:1px solid #3d3d42;background:#121214;color:#fff;padding:0 10px;font-size:16px}
-.shrow{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid #2a2a2e;font-size:15px}
-.shrow:last-child{border:0}
-.shrow>span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
-.shrow small{color:#8e8e93}
-.shrow .btn{min-height:40px;padding:4px 11px;font-size:14px}
-#toast{position:fixed;left:50%;bottom:calc(var(--sb) + 76px);transform:translateX(-50%);z-index:4000;background:linear-gradient(#566379,#252e3f 50%,#1a2231 50%,#252e3f);border:1px solid #070a12;box-shadow:0 0 0 1px rgba(255,255,255,.4),0 6px 16px rgba(0,0,0,.5);text-shadow:0 -1px 0 rgba(0,0,0,.6);padding:9px 14px;border-radius:12px;font-size:14px;max-width:86vw;text-align:center;opacity:0;pointer-events:none;transition:opacity .2s}
-#toast.on{opacity:1}
 
-/* ================= skeuomorphic pop-ups: sheets, setup, settings, details ================= */
-:root{--steel-hi:#8b9bb4;--ink:#05070c}
-#veil{background:radial-gradient(ellipse at 50% 100%,rgba(0,0,0,.35),rgba(0,0,0,.65))}
-
-/* the sheet: dark blue linen with a white-rimmed bezel, like the system alerts */
-.sheet{
-  background:
-    repeating-linear-gradient(0deg,rgba(255,255,255,.04) 0 1px,transparent 1px 3px),
-    repeating-linear-gradient(90deg,rgba(0,0,0,.14) 0 1px,transparent 1px 3px),
-    linear-gradient(#333c4f,#232a38 40%,#1b212d);
-  border:1px solid var(--ink);border-bottom:0;border-radius:14px 14px 0 0;
-  box-shadow:0 -10px 34px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.35);
-  color:#eef1f6}
-@media (max-width:580px){.sheet{border-radius:14px 14px 0 0;box-shadow:0 -10px 34px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.35)}}
-
-/* glossy title bar */
-.sheet h2{
-  margin:-16px -16px 14px;padding:12px 16px 11px;text-align:center;font-size:18px;line-height:1.2;color:#fff;
-  border-radius:13px 13px 0 0;border-bottom:1px solid var(--ink);position:relative;
-  background:linear-gradient(#93a3bc,#6a7b97 50%,#566784 50%,#4a5a76);
-  text-shadow:0 -1px 0 rgba(0,0,0,.6);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 2px 5px rgba(0,0,0,.5)}
-
-/* embossed labels and help text */
-.sheet label,.sheet .lbl{color:#cdd5e4;font-weight:600;text-shadow:0 -1px 0 rgba(0,0,0,.7)}
-.sheet .lbl{margin-top:14px}
-.sheet .help{color:#a3aec4;text-shadow:0 -1px 0 rgba(0,0,0,.55)}
-.sheet .help b{color:#e3e8f2}
-.sheet .msg{color:#ffd3cf;text-shadow:0 -1px 0 rgba(0,0,0,.6);background:linear-gradient(#7a2a26,#5a1b18);border:1px solid #2a0907;border-radius:8px;padding:7px 10px;box-shadow:inset 0 1px 0 rgba(255,255,255,.2)}
-
-/* inset, recessed text fields */
-.sheet input[type=text],.sheet input[type=password],.sheet input:not([type]),.sheet input[type=url],.sheet input[inputmode],.sheet input[type=search],.sheet select{
-  border-radius:8px;border:1px solid var(--ink);color:#1c1f26;text-shadow:none;font-weight:500;
-  background:linear-gradient(#bfc6d3,#fff 24%,#fff);
-  box-shadow:inset 0 2px 5px rgba(0,0,0,.5),0 1px 0 rgba(255,255,255,.2)}
-.sheet input::placeholder{color:#8a909c}
-.sheet input:focus,.sheet select:focus{outline:none;border-color:#1b4f9e;box-shadow:inset 0 2px 5px rgba(0,0,0,.45),0 0 0 2px #5aa0ff,0 0 8px rgba(90,160,255,.7)}
-.sheet select{-webkit-appearance:none;appearance:none;padding-right:34px;
-  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='18' viewBox='0 0 14 18'%3E%3Cpath d='M2 7l5-5 5 5zM2 11l5 5 5-5z' fill='%23444b59'/%3E%3C/svg%3E") right 12px center/14px 18px no-repeat,linear-gradient(#bfc6d3,#fff 24%,#fff)}
-.sheet input[type=checkbox]{accent-color:#2f7ae3}
-
-/* steel push buttons (same family as the alert buttons) */
-.btn{border:1px solid var(--ink);border-radius:9px;color:#fff;font-weight:700;text-shadow:0 -1px 0 rgba(0,0,0,.55);
-  background:linear-gradient(#a3abbb,#6f7a8e 50%,#566074 50%,#4a5367);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 1px 2px rgba(0,0,0,.6)}
-.btn.pri{background:linear-gradient(#8fc0fb,#4b8fe8 50%,#2268d2 50%,#2f7ae3);border-color:#0a2a63}
-.btn.danger{color:#fff;background:linear-gradient(#f4a09a,#dc5148 50%,#b8281f 50%,#cb3a30);border-color:#4a0b07}
-.btn:active{filter:brightness(.82);box-shadow:inset 0 2px 5px rgba(0,0,0,.5)}
-.btn[disabled]{opacity:.45;filter:saturate(.5)}
-
-/* segmented control: the selected segment is pressed in */
-.seg{border:1px solid var(--ink);border-radius:9px;background:var(--ink);box-shadow:0 1px 0 rgba(255,255,255,.22),0 1px 3px rgba(0,0,0,.55)}
-.seg button{border:0;border-right:1px solid var(--ink);color:#fff;font-weight:700;text-shadow:0 -1px 0 rgba(0,0,0,.55);
-  background:linear-gradient(#a3abbb,#6f7a8e 50%,#566074 50%,#4a5367);box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
-.seg button.on{background:linear-gradient(#1b4a98,#2a63c2 50%,#2563c4 50%,#3c86e8);box-shadow:inset 0 3px 6px rgba(0,0,0,.6)}
-.seg button:active{filter:brightness(.88)}
-
-/* chips as glossy pills */
-.chip{border:1px solid var(--ink);color:#fff;font-weight:600;text-shadow:0 -1px 0 rgba(0,0,0,.55);
-  background:linear-gradient(#a3abbb,#6f7a8e 50%,#566074 50%,#4a5367);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 1px 2px rgba(0,0,0,.5)}
-.chip.on{border-color:#0a2a63;background:linear-gradient(#8fc0fb,#4b8fe8 50%,#2268d2 50%,#2f7ae3)}
-.stkchip{border:1px solid var(--ink);border-radius:9px;background:linear-gradient(#e9ebef,#c2c7d1);box-shadow:inset 0 1px 0 #fff,0 1px 2px rgba(0,0,0,.55)}
-
-/* sliders: recessed groove + chrome knob */
-.sheet input[type=range]{-webkit-appearance:none;appearance:none;background:transparent}
-.sheet input[type=range]::-webkit-slider-runnable-track{height:10px;border-radius:6px;border:1px solid var(--ink);background:linear-gradient(#0d1119,#2b3446);box-shadow:inset 0 2px 3px rgba(0,0,0,.65),0 1px 0 rgba(255,255,255,.16)}
-.sheet input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:28px;height:28px;margin-top:-10px;border-radius:50%;border:1px solid var(--ink);
-  background:radial-gradient(circle at 50% 28%,#fff,#d3d8e1 45%,#8f98a9);box-shadow:0 2px 4px rgba(0,0,0,.65),inset 0 1px 0 #fff}
-.sheet input[type=range]::-moz-range-track{height:10px;border-radius:6px;border:1px solid var(--ink);background:linear-gradient(#0d1119,#2b3446);box-shadow:inset 0 2px 3px rgba(0,0,0,.65)}
-.sheet input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;border:1px solid var(--ink);background:radial-gradient(circle at 50% 28%,#fff,#d3d8e1 45%,#8f98a9);box-shadow:0 2px 4px rgba(0,0,0,.65)}
-.sheet input[type=range]:disabled{opacity:.4}
-
-/* recessed table lists */
-.ralist{border:1px solid var(--ink);border-radius:10px;background:linear-gradient(#10141c,#1a202c);box-shadow:inset 0 2px 6px rgba(0,0,0,.6),0 1px 0 rgba(255,255,255,.18)}
-.ralist label{border-bottom:1px solid #0a0d14;box-shadow:0 1px 0 rgba(255,255,255,.05);text-shadow:0 -1px 0 rgba(0,0,0,.6)}
-.ralist small{color:#8f9bb2}
-.shrow{border-bottom:1px solid #0a0d14;box-shadow:0 1px 0 rgba(255,255,255,.05);text-shadow:0 -1px 0 rgba(0,0,0,.6)}
-.shrow small{color:#8f9bb2}
-
-/* photo-print frames for covers, thumbs and wallpaper tiles */
-.cvprev,.coverrow .thumb,.grid button,.wpt{border:1px solid var(--ink);border-radius:3px;background:#0b0d12;box-shadow:0 4px 8px rgba(0,0,0,.6),inset 0 0 0 1px rgba(255,255,255,.08)}
-.cvprev{margin-top:4px;margin-bottom:4px}
-.coverrow .thumb{margin:3px}
-.grid{gap:10px;padding:2px}
-.wpt{border-radius:6px;border:1px solid var(--ink)}
-.wpt span{background:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.7));text-shadow:0 -1px 0 #000}
-.wpt.on{border-color:#2f7ae3;box-shadow:0 0 0 2px #2f7ae3,0 0 10px 2px rgba(60,140,255,.8)}
-.cvstick{background:linear-gradient(#2b3446,#262e3d)}
-.cvprev img.st.sel{outline-color:#5aa0ff}
-
-/* setup: pager dots like a lit indicator */
+/* setup pager */
 #suStep{display:flex;justify-content:center;gap:9px;margin:14px 0 2px}
 #suStep i{width:9px;height:9px;border-radius:50%;border:1px solid var(--ink);background:radial-gradient(circle at 50% 30%,#4a5367,#161b26);box-shadow:inset 0 1px 2px rgba(0,0,0,.7),0 1px 0 rgba(255,255,255,.2)}
 #suStep i.on{background:radial-gradient(circle at 50% 30%,#d6e8ff,#4b8fe8 55%,#1d56b8);box-shadow:0 0 7px 1px rgba(90,160,255,.85),inset 0 1px 0 rgba(255,255,255,.7)}
-
-/* flip-side details: stitched leather */
-#back{padding:16px;gap:7px;border:1px solid #120b07;
-  background:
-    radial-gradient(circle at 20% 10%,rgba(255,255,255,.09),transparent 55%),
-    repeating-radial-gradient(circle at 30% 40%,rgba(0,0,0,.09) 0 1px,transparent 1px 3px),
-    repeating-radial-gradient(circle at 70% 60%,rgba(255,255,255,.04) 0 1px,transparent 1px 4px),
-    linear-gradient(#6a4a35,#4a3022 55%,#3a2418);
-  box-shadow:0 10px 26px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.25),inset 0 0 22px rgba(0,0,0,.55);
-  outline:1.5px dashed rgba(240,220,175,.7);outline-offset:-6px;border-radius:6px}
-#back h3{color:#f6e8cd;text-shadow:0 -1px 0 rgba(0,0,0,.75),0 1px 0 rgba(255,255,255,.12)}
-#back .sub{color:#d2b78f;text-shadow:0 -1px 0 rgba(0,0,0,.6)}
-#back .kv{color:#ecdcbf;text-shadow:0 -1px 0 rgba(0,0,0,.6)}
-#back .bar2{height:12px;border-radius:6px;border:1px solid #120b07;background:linear-gradient(#150d08,#2c1c12);box-shadow:inset 0 2px 4px rgba(0,0,0,.75),0 1px 0 rgba(255,255,255,.18)}
-#back .bar2 i{border-radius:5px;background:linear-gradient(#ffe9a1,#f5b335 50%,#e08f0f 50%,#f2b13a);box-shadow:inset 0 1px 0 rgba(255,255,255,.7)}
-#back .btns{padding-top:6px}
 </style>
 </head>
 <body>
@@ -295,22 +221,22 @@ button{font:inherit;color:inherit}
 
 <div class="bar">
   <button class="rb" id="btnSearch" aria-label="Search"><svg viewBox="0 0 24 24"><path d="M10 2a8 8 0 1 0 4.9 14.3l5.4 5.4 1.4-1.4-5.4-5.4A8 8 0 0 0 10 2zm0 2a6 6 0 1 1 0 12 6 6 0 0 1 0-12z"/></svg></button>
-  <input id="q" type="search" placeholder="Search games" autocomplete="off" autocapitalize="off">
+  <input id="q" type="search" placeholder="Search games" autocomplete="off" autocapitalize="off" tabindex="-1" aria-label="Search games">
   <span class="sp hs"></span>
-  <button class="rb hs" id="btnShelves" aria-label="Shelves"><svg viewBox="0 0 24 24"><path d="M10 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8z"/></svg></button>
   <button class="rb hs" id="btnAdd" aria-label="Add game"><svg viewBox="0 0 24 24"><path d="M11 4h2v7h7v2h-7v7h-2v-7H4v-2h7z"/></svg></button>
-  <button class="rb hs" id="btnSet" aria-label="Settings"><svg viewBox="0 0 24 24"><path d="M19.4 13a7.5 7.5 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 0 0-1.7-1L15 3.3h-4l-.4 2.6a7.4 7.4 0 0 0-1.7 1l-2.5-1-2 3.5L6.600 11a7.500 7.500 0 0 0 0 2l-2.100 1.600 2 3.500 2.500-1a7.400 7.400 0 0 0 1.700 1l.4 2.600h4l.4-2.600a7.400 7.400 0 0 0 1.700-1l2.500 1 2-3.500zM13 15.500a3.500 3.500 0 1 1 0-7 3.500 3.500 0 0 1 0 7z" transform="translate(-1 0)"/></svg></button>
+  <button class="rb hs" id="btnSet" aria-label="Settings"><svg viewBox="0 0 24 24"><path d="M19.4 13a7.5 7.5 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 0 0-1.7-1L15 3.3h-4l-.4 2.6a7.4 7.4 0 0 0-1.7 1l-2.5-1-2 3.5L6.6 11a7.5 7.5 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1a7.4 7.4 0 0 0 1.7 1l.4 2.6h4l.4-2.6a7.4 7.4 0 0 0 1.7-1l2.5 1 2-3.5zM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z" transform="translate(-1 0)"/></svg></button>
 </div>
 
-<button class="rb" id="btnPlay" aria-label="Launch"><svg viewBox="0 0 24 24"><path d="M7 4.500v15l13-7.500z"/></svg></button>
+<button class="rb" id="btnPlay" aria-label="Launch"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></button>
+<button class="rb" id="btnShuffle" aria-label="Shuffle" title="Shuffle (R)"><svg viewBox="0 0 24 24"><path d="M10.59 9.17 5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg></button>
 <div id="caption"><div class="l1"></div><div class="l2"></div><div class="l3"></div></div>
 <button class="rb" id="btnInfo" aria-label="Details">i</button>
 
 <div id="web" class="hidden">
   <div id="webbar">
-    <button class="rb" id="webClose" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M5.700 4.300 12 10.600l6.300-6.300 1.400 1.400-6.300 6.300 6.300 6.300-1.400 1.400-6.300-6.300-6.300 6.300-1.400-1.400 6.300-6.300-6.300-6.300z"/></svg></button>
+    <button class="rb" id="webClose" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M5.7 4.3 12 10.6l6.3-6.3 1.4 1.4-6.3 6.3 6.3 6.3-1.4 1.4-6.3-6.3-6.3 6.3-1.4-1.4 6.3-6.3-6.3-6.3z"/></svg></button>
     <div id="webTitle"></div>
-    <button class="rb" id="webExt" aria-label="Open in Safari"><svg viewBox="0 0 24 24"><path d="M14 3h7v7h-2V6.400l-8.300 8.300-1.400-1.400L17.600 5H14zM5 7h6v2H6v9h9v-5h2v7H4V7z"/></svg></button>
+    <button class="rb" id="webExt" aria-label="Open in Safari"><svg viewBox="0 0 24 24"><path d="M14 3h7v7h-2V6.4l-8.3 8.3-1.4-1.4L17.6 5H14zM5 7h6v2H6v9h9v-5h2v7H4V7z"/></svg></button>
   </div>
   <iframe id="webframe" title="Web game" allow="autoplay; fullscreen; gamepad; gyroscope; accelerometer; clipboard-write; microphone; camera" allowfullscreen></iframe>
 </div>
@@ -347,7 +273,7 @@ button{font:inherit;color:inherit}
   <!-- cover: image + stickers -->
   <div class="sheet" id="sCover">
     <h2>Customize cover</h2>
-    <div class="cvstick"><div class="cvprev" id="stkPrev"><img class="base" id="stkBase" alt=""></div></div>
+    <div class="cvstick"><div class="cvprev" id="stkPrev" tabindex="0" role="group" aria-label="Cover preview. Enter selects the next sticker, arrow keys move it, plus and minus resize, brackets rotate, Delete removes."><img class="base" id="stkBase" alt=""></div></div>
     <img id="eThumb" alt="" hidden>
     <div class="seg" id="cvTabs"><button data-t="img" class="on">Image</button><button data-t="stk">Stickers</button></div>
     <div id="cvImg">
@@ -361,6 +287,7 @@ button{font:inherit;color:inherit}
       <label>Size<input type="range" id="stkSize" min="10" max="100" value="35" disabled></label>
       <label>Rotate<input type="range" id="stkRot" min="-180" max="180" value="0" disabled></label>
       <p class="help">Tap a sticker to add it, then drag it on the cover above. Up to 12 per cover.</p>
+      <p class="help"><b>Keyboard:</b> Tab to the cover preview. Enter selects the next sticker, arrows move it (Shift for bigger steps), + / − resize, [ and ] rotate, Delete removes.</p>
       <input type="file" id="stkFile" accept="image/*" multiple hidden>
     </div>
     <div class="msg hidden" id="cvMsg"></div>
@@ -415,6 +342,15 @@ button{font:inherit;color:inherit}
     <div class="row"><span class="sp"></span><button class="btn pri" id="shDone">Done</button></div>
   </div>
 
+  <!-- shuffle exclusions -->
+  <div class="sheet" id="sShuf">
+    <h2>Shuffle</h2>
+    <p class="help" style="margin-top:0">The shuffle button jumps to a random game. Untick any game you want shuffle to skip.</p>
+    <p class="help" id="shufCount"></p>
+    <div class="ralist" id="shufList"></div>
+    <div class="row"><button class="btn" id="shufAll">Include all</button><button class="btn" id="shufNone">Exclude all</button><span class="sp"></span><button class="btn pri" id="shufBack">Back</button></div>
+  </div>
+
   <!-- settings -->
   <div class="sheet" id="sSet">
     <h2>Settings</h2>
@@ -423,7 +359,11 @@ button{font:inherit;color:inherit}
     <label>RetroAchievements web API key<input id="sRaK" type="password" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
     <label>CORS proxy (see cors-worker.js)<input id="sProxy" type="url" placeholder="https://your-worker.workers.dev/?url=" autocapitalize="off" autocorrect="off" spellcheck="false"></label>
     <p class="help">Keys are stored only in this browser. Browsers block direct calls to these APIs, so most setups need the proxy. Covers you pick are saved on the device as 2:3 images when the source allows it.</p>
-    <p class="help"><b>Controller:</b> D-pad or left stick browses, Up/down or LB/RB switch shelves (LB/RB skip five when shelves are off), A launches, B goes back, Y shows details, X edits, Start opens settings. Inside a web game, hold Select + Start to exit. Press any button once so Safari detects the controller.</p>
+    <p class="help"><b>Controller:</b> D-pad or left stick browses, Up/down or LB/RB switch shelves (LB/RB skip five when shelves are off), A launches, B goes back, Y shows details, X edits, RT shuffles, Start opens settings. Inside a web game, hold Select + Start to exit. Press any button once so Safari detects the controller.</p>
+    <p class="help"><b>Keyboard:</b> Left/Right browse (Home, End, PageUp, PageDown jump), Up/Down switch shelves, Enter launches, I details, E edit, N new game, / or F search, R shuffle, S or , settings, Esc goes back. In dialogs, Tab moves between fields and Esc closes. In a web game, Esc exits when the page frame is not focused.</p>
+    <label style="display:flex;gap:10px;align-items:center"><input type="checkbox" id="sSound" style="width:22px;height:22px;margin:0"> Play a sound when moving between covers</label>
+    <label>Sound volume<input type="range" id="sVol" min="0" max="100" step="5"></label>
+    <div class="row"><button class="btn" id="sShelvesBtn">Shelves…</button><button class="btn" id="sShufBtn">Shuffle exclusions…</button></div>
     <div class="row"><button class="btn" id="sWallBtn">Wallpaper…</button><button class="btn" id="sSetupBtn">Run setup</button><button class="btn" id="sStkClean">Clear unused stickers</button></div>
     <div class="row"><button class="btn" id="sRaImport">Import RetroAchievements library</button></div>
     <div class="row"><button class="btn" id="sExport">Export library</button><button class="btn" id="sImport">Import library</button><input type="file" id="sFile" accept="application/json,.json" hidden></div>
@@ -437,22 +377,28 @@ button{font:inherit;color:inherit}
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
-const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ESC = {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'};
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ESC[c]);
 const uid = () => Math.random().toString(36).slice(2, 9) + Date.now().toString(36);
 const hash = s => { let h = 2166136261; for (const c of String(s)) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; };
+const on = (sel, ev, fn) => $(sel).addEventListener(ev, fn);
 const MEDIA = 'https://media.retroachievements.org';
 
 /* ================= state ================= */
 const KEY = 'gameflow.v1';
-const DEF = { games: [], shelves: [], stickers: [], set: { sgdb: '', raUser: '', raKey: '', proxy: '', sortMode: 'none', wp: 'default', wpDim: 0 } };
+const ls = {
+  get: k => { try { return localStorage.getItem(k); } catch { return null; } },
+  set: (k, v) => { try { localStorage.setItem(k, v); return true; } catch { return false; } }
+};
+const DEF_SET = { sgdb: '', raUser: '', raKey: '', proxy: '', sortMode: 'none', wp: 'default', wpDim: 0, sound: true, vol: 50 };
 let S;
 try {
-  const raw = JSON.parse(localStorage.getItem(KEY) || '{}');
-  S = { games: Array.isArray(raw.games) ? raw.games : [], shelves: Array.isArray(raw.shelves) ? raw.shelves : [], stickers: Array.isArray(raw.stickers) ? raw.stickers : [], set: Object.assign({}, DEF.set, raw.set) };
-} catch { S = JSON.parse(JSON.stringify(DEF)); }
-const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch { toast('Storage is full. Remove a few games with local covers.'); } };
-const getSel = () => { try { return localStorage.getItem(KEY + '.sel'); } catch { return null; } };
-const setSel = id => { try { localStorage.setItem(KEY + '.sel', id || ''); } catch {} };
+  const raw = JSON.parse(ls.get(KEY) || '{}'), arr = v => Array.isArray(v) ? v : [];
+  S = { games: arr(raw.games), shelves: arr(raw.shelves), stickers: arr(raw.stickers), set: { ...DEF_SET, ...raw.set } };
+} catch { S = { games: [], shelves: [], stickers: [], set: { ...DEF_SET } }; }
+const save = () => { if (!ls.set(KEY, JSON.stringify(S))) toast('Storage is full. Remove a few games with local covers.'); };
+const getSel = () => ls.get(KEY + '.sel');
+const setSel = id => ls.set(KEY + '.sel', id || '');
 
 let toastT;
 function toast(msg, ms = 2600) { const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), ms); }
@@ -478,13 +424,8 @@ const coverSrc = g => g.cover || placeholder(g);
 function launchURL(g) {
   const t = (g.target || '').trim();
   if (!t) return null;
-  if (g.type === 'shortcut') {
-    let u = 'shortcuts://run-shortcut?name=' + encodeURIComponent(t);
-    if (g.input) u += '&input=text&text=' + encodeURIComponent(g.input);
-    return u;
-  }
-  if (g.type === 'web' && !/^[a-z][a-z0-9+.-]*:/i.test(t)) return 'https://' + t;
-  return t;
+  if (g.type === 'shortcut') return 'shortcuts://run-shortcut?name=' + encodeURIComponent(t) + (g.input ? '&input=text&text=' + encodeURIComponent(g.input) : '');
+  return g.type === 'web' && !/^[a-z][a-z0-9+.-]*:/i.test(t) ? 'https://' + t : t;
 }
 function launchLabel(g) {
   if (!g.target) return 'No launch action set';
@@ -499,35 +440,35 @@ function launch(g) {
   if (g.type === 'web') openWeb(u, g.title); else location.href = u;
 }
 
-/* ---- in-app web view (iframe with a close button) ---- */
-let webOpen = false, webHint = 0;
+/* ---- in-app web view ---- */
+let webOpen = false, webHint = 0, webPrevFocus = null;
 function openWeb(u, title) {
+  if (!webOpen) webPrevFocus = document.activeElement;
   webOpen = true; $('#webTitle').textContent = title || u;
   $('#web').classList.remove('hidden'); $('#webframe').src = u;
-  $('#webExt').onclick = () => { window.open(u, '_blank'); };
+  if (kbd) $('#webClose').focus();
+  $('#webExt').onclick = () => window.open(u, '_blank');
   clearTimeout(webHint);
   toast(havePad() ? 'Tap ✕ or hold Select + Start to exit' : 'Tap ✕ to exit', 3200);
-  let seen = false; try { seen = localStorage.getItem(KEY + '.webhint') === '1'; } catch {}
-  if (!seen) webHint = setTimeout(() => {
+  if (ls.get(KEY + '.webhint') !== '1') webHint = setTimeout(() => {
     toast('Page blank? Some sites block embedding. Tap the ↗ button to open it in Safari.', 5000);
-    try { localStorage.setItem(KEY + '.webhint', '1'); } catch {}
+    ls.set(KEY + '.webhint', '1');
   }, 4500);
 }
 function closeWeb() {
   if (!webOpen) return; webOpen = false; clearTimeout(webHint);
   $('#webframe').src = 'about:blank'; $('#web').classList.add('hidden');
+  if (kbd && webPrevFocus?.isConnected) webPrevFocus.focus();
 }
 $('#webClose').onclick = closeWeb;
 
-/* ================= cover flow engine (stacked shelves) ================= */
-const stage = $('#stage'), track = $('#track');
-let pitchK = 1.5, rows = [], view = [], rpos = 0, rtarget = 0, ri = -1, cur = -1, shelvesOn = false;
-let cw = 200, ch = 300, px = 64;
+/* ================= cover flow engine ================= */
+const stage = $('#stage'), track = $('#track'), veil = $('#veil');
+let pitchK = 1.5, rows = [], view = [], rpos = 0, rtarget = 0, ri = -1, cur = -1, shelvesOn = false, cw = 200, ch = 300, px = 64;
 const rowMem = {};
-const elOf = i => rows[ri] && rows[ri].els[i];
+const elOf = i => rows[ri]?.els[i];
 const allEls = () => rows.flatMap(r => r.els);
 const tgt = () => rows[ri] ? rows[ri].target : 0;
-const shelvesVisible = () => shelvesOn;
 
 function build() {
   track.innerHTML = '';
@@ -535,15 +476,17 @@ function build() {
     row.els = []; row.label = null;
     row.items.forEach((g, i) => {
       const el = document.createElement('div');
-      el.className = 'cv'; el.dataset.i = i; el.dataset.r = r;
-      const img = document.createElement('img'); img.alt = ''; img.draggable = false;
+      el.className = 'cv'; el.dataset.i = i; el.dataset.r = r; el.style.display = 'none';
+      const img = new Image(); img.draggable = false;
       img.onerror = () => { if (img.dataset.fb !== '1') { img.dataset.fb = '1'; img.src = placeholder(g); } };
-      const sh = document.createElement('div'); sh.className = 'shade';
-      el.append(img); (g.stickers || []).forEach(st => { const src = stickerSrc(st.sid); if (!src) return; const im = document.createElement('img'); im.className = 'stl'; im.alt = ''; im.draggable = false; im.src = src; applyStk(im, st); el.append(im); }); el.append(sh); el._img = img; el._sh = sh; el._loaded = false; el.style.display = 'none';
+      el.append(img);
+      (g.stickers || []).forEach(st => { const src = stickerSrc(st.sid); if (!src) return; const im = new Image(); im.className = 'stl'; im.draggable = false; im.src = src; applyStk(im, st); el.append(im); });
+      const sh = document.createElement('div'); sh.className = 'shade'; el.append(sh);
+      el._img = img; el._sh = sh; el._loaded = false;
       track.appendChild(el); row.els.push(el);
     });
     if (shelvesOn) {
-            const l = document.createElement('div'); l.className = 'rlabel'; l.style.display = 'none';
+      const l = document.createElement('div'); l.className = 'rlabel'; l.style.display = 'none';
       l.innerHTML = esc(row.name) + ' <small>' + row.items.length + '</small>';
       track.appendChild(l); row.label = l;
     }
@@ -553,71 +496,68 @@ function build() {
 function metrics() {
   const vw = stage.clientWidth || innerWidth, vh = stage.clientHeight || innerHeight;
   if (!vw || !vh) { requestAnimationFrame(metrics); return; }  // iOS can report 0 size at first load
-  const land = vw > vh, sh = shelvesVisible();
+  const land = vw > vh, sh = shelvesOn;
   ch = Math.round(Math.min(vh * (land ? .74 : .6), vw * .66 * 1.5) * (sh ? (land ? .66 : .86) : 1));
   cw = Math.round(ch * 2 / 3); px = cw * .32;
-  const r = document.documentElement.style;
-  r.setProperty('--cw', cw + 'px'); r.setProperty('--ch', ch + 'px'); const cyPct = land ? 46 + (sh ? 4 : 0) : 41 + (sh ? 3 : 0); r.setProperty('--cy', cyPct + '%');
-  const cyPx = vh * cyPct / 100, offMax = Math.min(cyPx - .08 * vh, .92 * vh - cyPx);
-  pitchK = sh ? clamp(offMax / (.625 * ch), 1.05, 1.5) : 1.5;
+  const cyPct = land ? 46 + (sh ? 4 : 0) : 41 + (sh ? 3 : 0), cyPx = vh * cyPct / 100;
+  const st = document.documentElement.style;
+  st.setProperty('--cw', cw + 'px'); st.setProperty('--ch', ch + 'px'); st.setProperty('--cy', cyPct + '%');
+  pitchK = sh ? clamp(Math.min(cyPx - .08 * vh, .92 * vh - cyPx) / (.625 * ch), 1.05, 1.5) : 1.5;
   stage.style.perspective = Math.round(cw * 5) + 'px';
   layout();
 }
-
 function kick() { // WebKit can leave 3D + reflected layers unpainted until something forces a repaint
   requestAnimationFrame(() => { track.style.visibility = 'hidden'; void track.offsetHeight; track.style.visibility = ''; layout(); });
 }
+const refresh = () => { metrics(); kick(); };
+
 function layout() {
   const CG = cw * .58, SG = cw * .19, ANG = 64, DEPTH = cw * .55, RZ = cw * 3, PITCH = ch * pitchK;
-  for (let r = 0; r < rows.length; r++) {
-    const row = rows[r], rd = r - rpos, ard = Math.abs(rd), ra = clamp(rd, -1, 1);
+  rows.forEach((row, r) => {
+    const rd = r - rpos, ard = Math.abs(rd), ra = clamp(rd, -1, 1);
     const ry = ra * PITCH + (rd - ra) * PITCH * .9, rz = -Math.abs(ra) * RZ;
     const rowHide = ard > 1.6, lim = ard < .5 ? 9 : 5;
-    for (let i = 0; i < row.els.length; i++) {
-      const el = row.els[i], d = i - row.pos, ad = Math.abs(d);
-      if (rowHide || ad > lim) { if (el.style.display !== 'none') el.style.display = 'none'; continue; }
+    row.els.forEach((el, i) => {
+      const d = i - row.pos, ad = Math.abs(d);
+      if (rowHide || ad > lim) { if (el.style.display !== 'none') el.style.display = 'none'; return; }
       if (el.style.display === 'none') el.style.display = '';
       if (!el._loaded) { el._loaded = true; el._img.src = coverSrc(row.items[i]); }
       const a = clamp(d, -1, 1);
       el.style.transform = `translate3d(${a * CG + (d - a) * SG}px,${ry}px,${rz - Math.abs(a) * DEPTH}px) rotateY(${-a * ANG}deg)`;
       el.style.zIndex = 1000 - Math.round(ard * 400) - Math.round(ad * 20);
       el._sh.style.opacity = Math.min(.62, Math.min(.5, ad * .4) + Math.min(1, ard) * .08).toFixed(3);
+    });
+    const l = row.label;
+    if (l) {
+      l.style.display = rowHide ? 'none' : '';
+      if (!rowHide) { l.style.transform = `translate3d(0,${ry}px,${rz}px)`; l.style.zIndex = 1500 - Math.round(ard * 400); l.style.opacity = (1 - Math.min(1, ard) * .5).toFixed(2); }
     }
-    if (row.label) {
-      row.label.style.display = rowHide ? 'none' : '';
-      if (!rowHide) {
-        row.label.style.transform = `translate3d(0,${ry}px,${rz}px)`;
-        row.label.style.zIndex = 1500 - Math.round(ard * 400);
-        row.label.style.opacity = (1 - Math.min(1, ard) * .5).toFixed(2);
-      }
-    }
-  }
+  });
   const nri = clamp(Math.round(rpos), 0, Math.max(0, rows.length - 1)), nrow = rows[nri];
   const nc = nrow ? clamp(Math.round(nrow.pos), 0, Math.max(0, nrow.items.length - 1)) : 0;
-  if (nri !== ri || nc !== cur) { ri = nri; view = nrow ? nrow.items : []; cur = nc; onCurrent(); }
+  if (nri !== ri || nc !== cur) { const first = ri < 0; ri = nri; view = nrow ? nrow.items : []; cur = nc; onCurrent(); if (!first) tick(); }
 }
 
 let raf = 0, lastTs = 0;
 function step(ts) {
-  const dt = Math.min(50, ts - lastTs); lastTs = ts;
-  const k = 1 - Math.exp(-dt / 85); let busy = false;
-  rows.forEach(r => { const d = r.target - r.pos; if (Math.abs(d) < .0008) r.pos = r.target; else { r.pos += d * k; busy = true; } });
-  const d = rtarget - rpos; if (Math.abs(d) < .0008) rpos = rtarget; else { rpos += d * k; busy = true; }
+  const k = 1 - Math.exp(-Math.min(50, ts - lastTs) / 85); lastTs = ts; let busy = false;
+  const ease = (o, key, t) => { const d = t - o[key]; if (Math.abs(d) < .0008) o[key] = t; else { o[key] += d * k; busy = true; } };
+  rows.forEach(r => ease(r, 'pos', r.target));
+  const rp = { v: rpos }; ease(rp, 'v', rtarget); rpos = rp.v;
   layout(); raf = busy ? requestAnimationFrame(step) : 0;
 }
 function run() { if (!raf) { lastTs = performance.now(); raf = requestAnimationFrame(step); } }
-function goIn(row, t) { if (!row) return; row.target = clamp(Math.round(t), 0, Math.max(0, row.items.length - 1)); run(); }
-function go(t) { goIn(rows[ri], t); }
-function goRow(t) { if (!rows.length) return; rtarget = clamp(Math.round(t), 0, rows.length - 1); run(); }
+function goIn(row, t) { if (row) { row.target = clamp(Math.round(t), 0, Math.max(0, row.items.length - 1)); run(); } }
+const go = t => goIn(rows[ri], t);
+function goRow(t) { if (rows.length) { rtarget = clamp(Math.round(t), 0, rows.length - 1); run(); } }
 
 /* ---- touch / mouse: horizontal moves along a shelf, vertical changes shelf ---- */
 let dragging = false, sx = 0, sy = 0, spos = 0, srp = 0, lastX = 0, lastY = 0, lastT = 0, vel = 0, vy = 0, moved = 0, tapEl = null, axis = '', dragRow = null;
 stage.addEventListener('pointerdown', e => {
-  if (e.target.closest('#back')) return;
-  if (!rows.length) return;
+  if (e.target.closest('#back') || !rows.length) return;
   dragging = true; moved = 0; axis = ''; sx = lastX = e.clientX; sy = lastY = e.clientY; lastT = e.timeStamp; vel = vy = 0;
   dragRow = rows[ri]; spos = dragRow.pos; srp = rpos;
-  tapEl = (document.elementsFromPoint(e.clientX, e.clientY).find(n => n.classList && n.classList.contains('cv') && n.style.display !== 'none')) || e.target.closest('.cv');
+  tapEl = document.elementsFromPoint(e.clientX, e.clientY).find(n => n.classList?.contains('cv') && n.style.display !== 'none') || e.target.closest('.cv');
   if (raf) { cancelAnimationFrame(raf); raf = 0; }
   rows.forEach(r => { r.target = r.pos; }); rtarget = rpos;
   stage.setPointerCapture(e.pointerId); stage.style.cursor = 'grabbing';
@@ -644,11 +584,9 @@ const endDrag = e => {
     const r = +tapEl.dataset.r, i = +tapEl.dataset.i;
     if (r === ri) { if (i === cur && Math.abs(dragRow.pos - cur) < .15) launch(view[i]); else goIn(dragRow, i); }
     else if (rows[r]) { rows[r].target = i; goRow(r); }
-  } else if (axis === 'y') {
-    goRow(rpos + clamp(vy * 200, -1.5, 1.5));
-  } else if (axis === 'x') {
-    goIn(dragRow, dragRow.pos + clamp(vel * 240, -6, 6));
-  } else { goIn(dragRow, dragRow.pos); }
+  } else if (axis === 'y') goRow(rpos + clamp(vy * 200, -1.5, 1.5));
+  else if (axis === 'x') goIn(dragRow, dragRow.pos + clamp(vel * 240, -6, 6));
+  else goIn(dragRow, dragRow.pos);
   tapEl = null;
 };
 stage.addEventListener('pointerup', endDrag);
@@ -659,51 +597,89 @@ stage.addEventListener('wheel', e => {
   if (shelvesOn && Math.abs(e.deltaY) > Math.abs(e.deltaX)) { if (e.deltaY) goRow(rtarget + Math.sign(e.deltaY)); return; }
   const d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY; if (d) go(tgt() + Math.sign(d));
 }, { passive: false });
+let kbd = false; // true while the last input was from the keyboard
+addEventListener('keydown', () => { kbd = true; }, true);
+addEventListener('pointerdown', () => { kbd = false; }, true);
+function focusables(root) {
+  return [...root.querySelectorAll('button,input,select,[tabindex="0"]')]
+    .filter(n => !n.disabled && n.type !== 'file' && n.type !== 'hidden' && n.offsetParent !== null);
+}
+function trapTab(e, root) {
+  const f = focusables(root); if (!f.length) return;
+  const i = f.indexOf(document.activeElement);
+  if (e.shiftKey && i <= 0) { e.preventDefault(); f[f.length - 1].focus(); }
+  else if (!e.shiftKey && (i === -1 || i === f.length - 1)) { e.preventDefault(); f[0].focus(); }
+}
 addEventListener('keydown', e => {
-  if (webOpen) { if (e.key === 'Escape') closeWeb(); return; }
-  if (/INPUT|TEXTAREA/.test(document.activeElement.tagName) || $('#veil').classList.contains('on')) { if (e.key === 'Escape') closeSheet(); return; }
-  if (e.key === 'ArrowLeft') go(tgt() - 1);
-  else if (e.key === 'ArrowRight') go(tgt() + 1);
-  else if (e.key === 'ArrowUp') goRow(rtarget - 1);
-  else if (e.key === 'ArrowDown') goRow(rtarget + 1);
-  else if (e.key === 'Enter' && view[cur]) launch(view[cur]);
-  else if (e.key === 'Escape') closeBack();
+  if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || $('#dlgBack')) return; // dialogs handle their own keys
+  const k = e.key;
+  if (webOpen) { if (k === 'Escape') closeWeb(); else if (k === 'Tab') trapTab(e, $('#web')); return; }
+  if (veil.classList.contains('on')) {
+    if (k === 'Tab') { const s = $('.sheet.open'); if (s) trapTab(e, s); }
+    else if (k === 'Escape') closeSheet();
+    return;
+  }
+  const t = document.activeElement, tag = t ? t.tagName : '';
+  if (t === $('#q')) {
+    if (k === 'Escape') toggleSearch(false);
+    else if (k === 'Enter' || k === 'ArrowDown') { e.preventDefault(); t.blur(); }
+    return;
+  }
+  if (/^(INPUT|TEXTAREA|SELECT)$/.test(tag)) return;
+  const g = view[cur], key = k.length === 1 ? k.toLowerCase() : k;
+  if (k === 'ArrowLeft') go(tgt() - 1);
+  else if (k === 'ArrowRight') go(tgt() + 1);
+  else if (k === 'ArrowUp') goRow(rtarget - 1);
+  else if (k === 'ArrowDown') goRow(rtarget + 1);
+  else if (k === 'PageUp') go(tgt() - 5);
+  else if (k === 'PageDown') go(tgt() + 5);
+  else if (k === 'Home') go(0);
+  else if (k === 'End') go(view.length - 1);
+  else if (k === 'Enter') { if (tag !== 'BUTTON' && g) launch(g); else return; } // a focused button handles Enter itself
+  else if (k === 'Escape') { if (backOpen) closeBack(); else if ($('#q').classList.contains('on')) toggleSearch(false); else return; }
+  else if (key === '/' || key === 'f') toggleSearch(true);
+  else if (key === 'n') openEdit(null);
+  else if (key === 'e') { if (g) { closeBack(); openEdit(g); } else return; }
+  else if (key === 'i') { if (!g) return; if (backOpen) closeBack(); else { openBack(); $('#back .btn')?.focus(); } }
+  else if (key === 'r') shuffle();
+  else if (key === 's' || key === ',') openSettings();
+  else return;
+  e.preventDefault();
 });
 
 /* ---- caption, details, achievements ---- */
-function raLine(g) { return g.ra && g.ra.total ? `🏆 ${g.ra.earned}/${g.ra.total} achievements (${Math.round(g.ra.earned / g.ra.total * 100)}%)` : ''; }
+const raLine = g => g.ra?.total ? `🏆 ${g.ra.earned}/${g.ra.total} achievements (${Math.round(g.ra.earned / g.ra.total * 100)}%)` : '';
 function updateCaption() {
-  const g = view[cur], has = !!g;
-  $('#caption').style.visibility = has || S.games.length ? '' : 'hidden';
-  $('#btnPlay').disabled = $('#btnInfo').disabled = !has;
-  $('#empty').classList.toggle('hidden', S.games.length > 0);
-  if (!has) { if (S.games.length) { $('#caption .l1').textContent = 'Nothing here'; $('#caption .l2').textContent = 'No games match this shelf or search'; $('#caption .l3').textContent = ''; } return; }
-  $('#caption .l1').textContent = g.title;
-  $('#caption .l2').textContent = g.platform || '\u00a0';
-  $('#caption .l3').textContent = raLine(g) || launchLabel(g);
+  const g = view[cur], any = S.games.length, c = $('#caption');
+  c.style.visibility = g || any ? '' : 'hidden';
+  $('#btnPlay').disabled = $('#btnInfo').disabled = !g; $('#btnShuffle').disabled = !any;
+  $('#empty').classList.toggle('hidden', any > 0);
+  const [l1, l2, l3] = c.children;
+  if (!g) { if (any) { l1.textContent = 'Nothing here'; l2.textContent = 'No games match this shelf or search'; l3.textContent = ''; } return; }
+  l1.textContent = g.title; l2.textContent = g.platform || '\u00a0'; l3.textContent = raLine(g) || launchLabel(g);
 }
 let raT;
 function onCurrent() {
   closeBack(); updateCaption();
   const g = view[cur]; if (!g) return;
-  setSel(g.id);
-  clearTimeout(raT); raT = setTimeout(() => refreshRA(g), 600);
+  setSel(g.id); clearTimeout(raT); raT = setTimeout(() => refreshRA(g), 600);
 }
 
 let backOpen = false;
 function openBack() {
   const g = view[cur]; if (!g) return;
-  const pct = g.ra && g.ra.total ? Math.round(g.ra.earned / g.ra.total * 100) : null;
-  const b = $('#back');
+  const pct = g.ra?.total ? Math.round(g.ra.earned / g.ra.total * 100) : null, b = $('#back');
   b.innerHTML = `<h3>${esc(g.title)}</h3><div class="sub">${esc(g.platform || '')}</div>
     <div class="kv">${esc(launchLabel(g))}</div>
-    ${pct !== null ? `<div class="kv">🏆 ${g.ra.earned}/${g.ra.total}${g.ra.hc ? ` · ${g.ra.hc} hardcore` : ''}</div><div class="bar2"><i style="width:${pct}%"></i></div>` : (g.ra && g.ra.id ? '<div class="kv">RetroAchievements linked. Add your API key to see progress.</div>' : '')}
+    ${pct !== null ? `<div class="kv">🏆 ${g.ra.earned}/${g.ra.total}${g.ra.hc ? ` · ${g.ra.hc} hardcore` : ''}</div><div class="bar2"><i style="width:${pct}%"></i></div>` : (g.ra?.id ? '<div class="kv">RetroAchievements linked. Add your API key to see progress.</div>' : '')}
     <div class="btns"><button class="btn pri" data-a="launch">Launch</button><button class="btn" data-a="edit">Edit</button></div>`;
   b.classList.remove('hidden'); backOpen = true;
-  const el = elOf(cur); if (el) el.classList.add('hide');
+  elOf(cur)?.classList.add('hide');
 }
 function closeBack() {
-  if (!backOpen) return; backOpen = false; $('#back').classList.add('hidden');
+  if (!backOpen) return; backOpen = false;
+  if ($('#back').contains(document.activeElement)) document.activeElement.blur();
+  $('#back').classList.add('hidden');
   allEls().forEach(e => e.classList.remove('hide'));
 }
 $('#back').addEventListener('click', e => {
@@ -713,8 +689,8 @@ $('#back').addEventListener('click', e => {
 $('#btnInfo').onclick = () => backOpen ? closeBack() : openBack();
 $('#btnPlay').onclick = () => view[cur] && launch(view[cur]);
 
-let q = '';
 /* ---- shelves (optional, never created automatically) ---- */
+let q = '';
 const AUTO_OTHER = '__other', NO_SHELF = '__none';
 const sortMode = () => S.set.sortMode || 'none';
 const autoKey = g => (g.platform || '').trim().toLowerCase() || AUTO_OTHER;
@@ -728,7 +704,7 @@ function makeRows(list) {
   }
   if (m === 'custom' && S.shelves.length) {
     const out = S.shelves.map(s => ({ id: s.id, name: s.name, items: [] })), loose = { id: NO_SHELF, name: 'Unsorted', items: [] };
-    list.forEach(g => { const r = out.find(x => x.id === g.shelf); (r || loose).items.push(g); });
+    list.forEach(g => (out.find(x => x.id === g.shelf) || loose).items.push(g));
     if (loose.items.length) out.push(loose);
     return out.filter(r => r.items.length);
   }
@@ -740,10 +716,8 @@ function applyView(keepId) {
   rows.forEach(r => { rowMem[r.id] = Math.round(r.pos); });
   const f = q.trim().toLowerCase(), m = sortMode();
   let list = S.games.slice();
-  if (m === 'auto') {
-    list.sort((a, b) => { const ka = autoKey(a), kb = autoKey(b); if (ka !== kb) return ka === AUTO_OTHER ? 1 : kb === AUTO_OTHER ? -1 : ka.localeCompare(kb); return (a.title || '').localeCompare(b.title || ''); });
-  }
-  list = list.filter(g => !f || ((g.title || '') + ' ' + (g.platform || '')).toLowerCase().includes(f));
+  if (m === 'auto') list.sort((a, b) => { const ka = autoKey(a), kb = autoKey(b); return ka !== kb ? (ka === AUTO_OTHER ? 1 : kb === AUTO_OTHER ? -1 : ka.localeCompare(kb)) : (a.title || '').localeCompare(b.title || ''); });
+  if (f) list = list.filter(g => ((g.title || '') + ' ' + (g.platform || '')).toLowerCase().includes(f));
   closeBack();
   rows = makeRows(list);
   shelvesOn = rows.length > 0 && (m === 'auto' || (m === 'custom' && S.shelves.length > 0));
@@ -752,15 +726,13 @@ function applyView(keepId) {
   if (keepId) rows.forEach((r, i) => { const j = r.items.findIndex(g => g.id === keepId); if (j >= 0) { kr = i; ki = j; } });
   rows.forEach((r, i) => { r.pos = r.target = i === kr ? ki : clamp(rowMem[r.id] || 0, 0, r.items.length - 1); });
   rpos = rtarget = Math.max(0, kr);
-  ri = -1; cur = -1; view = [];
-  metrics(); updateCaption(); kick();
+  ri = cur = -1; view = [];
+  refresh(); updateCaption();
 }
+const reapply = () => applyView(view[cur]?.id);
 
 /* ================= RetroAchievements ================= */
-const fx = (url, opt) => {
-  const p = (S.set.proxy || '').trim();
-  return fetch(p ? p + encodeURIComponent(url) : url, opt);
-};
+const fx = (url, opt) => { const p = (S.set.proxy || '').trim(); return fetch(p ? p + encodeURIComponent(url) : url, opt); };
 function needRA() {
   if (!S.set.raUser || !S.set.raKey) { toast('Add your RetroAchievements username and API key in Settings.'); return false; }
   return true;
@@ -774,8 +746,7 @@ async function raGet(ep, params) {
   return r.json();
 }
 async function refreshRA(g) {
-  if (!g.ra?.id || !S.set.raUser || !S.set.raKey) return;
-  if (g.ra.t && Date.now() - g.ra.t < 36e5) return;
+  if (!g.ra?.id || !S.set.raUser || !S.set.raKey || (g.ra.t && Date.now() - g.ra.t < 36e5)) return;
   try {
     const j = await raGet('API_GetGameInfoAndUserProgress.php', { u: S.set.raUser, g: g.ra.id });
     if (typeof j.NumAchievements !== 'number') return;
@@ -791,18 +762,21 @@ async function sgdb(path) {
   try { r = await fx('https://www.steamgriddb.com/api/v2' + path, { headers: { Authorization: 'Bearer ' + S.set.sgdb } }); }
   catch { throw new Error('Request blocked by the browser (CORS). Set up the proxy from cors-worker.js in Settings.'); }
   const j = await r.json().catch(() => ({}));
-  if (!r.ok || j.success === false) throw new Error((j.errors && j.errors.join(', ')) || 'SteamGridDB error ' + r.status);
+  if (!r.ok || j.success === false) throw new Error(j.errors?.join(', ') || 'SteamGridDB error ' + r.status);
   return j.data;
 }
 
 /* ================= image helpers ================= */
-async function blobToCover(blob) {
-  const bm = await createImageBitmap(blob);
-  const W = 400, H = 600, c = document.createElement('canvas'); c.width = W; c.height = H;
-  const x = c.getContext('2d'), s = Math.max(W / bm.width, H / bm.height), w = bm.width * s, h = bm.height * s;
-  x.drawImage(bm, (W - w) / 2, (H - h) / 2, w, h);
-  return c.toDataURL('image/jpeg', .86);
+function drawBlob(blob, fit, w, h, type, quality) {
+  return createImageBitmap(blob).then(bm => {
+    const s = fit(bm), c = document.createElement('canvas'); c.width = w(bm, s); c.height = h(bm, s);
+    c.getContext('2d').drawImage(bm, (c.width - bm.width * s) / 2, (c.height - bm.height * s) / 2, bm.width * s, bm.height * s);
+    return c.toDataURL(type, quality);
+  });
 }
+const blobToCover = b => drawBlob(b, bm => Math.max(400 / bm.width, 600 / bm.height), () => 400, () => 600, 'image/jpeg', .86);
+const blobToSticker = b => drawBlob(b, bm => Math.min(1, 200 / Math.max(bm.width, bm.height)), (bm, s) => Math.max(1, Math.round(bm.width * s)), (bm, s) => Math.max(1, Math.round(bm.height * s)), 'image/png');
+const blobToWall = b => drawBlob(b, bm => Math.min(1, 1400 / Math.max(bm.width, bm.height)), (bm, s) => Math.round(bm.width * s), (bm, s) => Math.round(bm.height * s), 'image/jpeg', .82);
 async function cacheCover(u) {
   if (!u || !/^https?:/i.test(u)) return u;
   try {
@@ -813,57 +787,66 @@ async function cacheCover(u) {
 }
 
 /* ================= sheets ================= */
-const veil = $('#veil');
-function openSheet(id) { $$('.sheet').forEach(s => s.classList.toggle('open', '#' + s.id === id)); veil.classList.add('on'); }
-function closeSheet() { veil.classList.remove('on'); $$('.sheet').forEach(s => s.classList.remove('open')); kick(); }
+let sheetReturn = null;
+const openSheet = id => {
+  if (!veil.classList.contains('on')) sheetReturn = document.activeElement;
+  $$('.sheet').forEach(s => s.classList.toggle('open', '#' + s.id === id)); veil.classList.add('on');
+  if (kbd) (id === '#sSetup' ? $('#suNext') : focusables($(id))[0])?.focus();
+};
+function closeSheet() {
+  veil.classList.remove('on'); $$('.sheet').forEach(s => s.classList.remove('open')); kick();
+  if (kbd && sheetReturn?.isConnected) sheetReturn.focus();
+  sheetReturn = null;
+}
 veil.addEventListener('pointerdown', e => { if (e.target === veil) closeSheet(); });
-const msg = (id, t) => { const m = $(id); m.textContent = t || ''; m.classList.toggle('hidden', !t); if (id === '#eMsg') { const c = $('#cvMsg'); if (c) { c.textContent = t || ''; c.classList.toggle('hidden', !t); } } };
+const msg = (id, t) => {
+  const ids = id === '#eMsg' ? ['#eMsg', '#cvMsg'] : [id];  // editor + cover sheet share one message
+  ids.forEach(i => { const m = $(i); m.textContent = t || ''; m.classList.toggle('hidden', !t); });
+};
 
 /* ---- add / edit ---- */
-let editing = null, eType = 'shortcut', eSgdb = null;
+let editing = null, eType = 'shortcut', eSgdb = null, eLocalCover = null, eStk = [], eSel = -1;
 const HINTS = {
-  shortcut: ['Shortcut name', 'Runs shortcuts://run-shortcut?name=… Use the exact name from the Shortcuts app. The shortcut can open any emulator or launcher.'],
-  scheme: ['URL scheme or deep link', 'Any URL an app understands, e.g. provenance://… or ppsspp://… Check your emulator for its game-launch URL format.'],
-  web: ['Web link', 'Opens a web page, e.g. a cloud gaming URL or store page.']
+  shortcut: ['Shortcut name', 'Runs shortcuts://run-shortcut?name=… Use the exact name from the Shortcuts app. The shortcut can open any emulator or launcher.', 'e.g. Launch Chrono Trigger'],
+  scheme: ['URL scheme or deep link', 'Any URL an app understands, e.g. provenance://… or ppsspp://… Check your emulator for its game-launch URL format.', 'e.g. provenance://open?title=…'],
+  web: ['Web link', 'Opens a web page, e.g. a cloud gaming URL or store page.', 'https://…']
 };
 function setType(t) {
   eType = t;
   $$('#eType button').forEach(b => b.classList.toggle('on', b.dataset.v === t));
-  $('#eTLabel').textContent = HINTS[t][0]; $('#eHelp').textContent = HINTS[t][1];
+  [$('#eTLabel').textContent, $('#eHelp').textContent, $('#eTarget').placeholder] = HINTS[t];
   $('#eInWrap').classList.toggle('hidden', t !== 'shortcut');
-  $('#eTarget').placeholder = t === 'shortcut' ? 'e.g. Launch Chrono Trigger' : t === 'scheme' ? 'e.g. provenance://open?title=…' : 'https://…';
 }
 $$('#eType button').forEach(b => b.onclick = () => setType(b.dataset.v));
-const thumb = () => { const v = eLocalCover || $('#eCover').value.trim(); $('#eThumb').src = v || placeholder({ title: $('#eTitle').value || '?', platform: $('#ePlat').value }); };
-$('#eCover').addEventListener('input', () => { eLocalCover = null; thumb(); }); $('#eTitle').addEventListener('input', thumb);
+const thumb = () => { $('#eThumb').src = eLocalCover || $('#eCover').value.trim() || placeholder({ title: $('#eTitle').value || '?', platform: $('#ePlat').value }); };
+on('#eCover', 'input', () => { eLocalCover = null; thumb(); });
+on('#eTitle', 'input', thumb);
 $('#eThumb').onerror = () => { $('#eThumb').onerror = null; $('#eThumb').src = placeholder({ title: $('#eTitle').value || '?', platform: $('#ePlat').value }); };
 
+function fillShelfSelect(val) {
+  $('#eShelfWrap').classList.toggle('hidden', sortMode() !== 'custom');
+  $('#eShelf').innerHTML = '<option value="">No shelf</option>' + S.shelves.map(s => `<option value="${esc(s.id)}">${esc(s.name)}</option>`).join('') + '<option value="__new">+ New shelf…</option>';
+  $('#eShelf').value = S.shelves.some(s => s.id === val) ? val : '';
+}
 function openEdit(g) {
   editing = g || null; const d = g || {};
   $('#eHead').textContent = g ? 'Edit game' : 'Add game';
   $('#eTitle').value = d.title || ''; $('#ePlat').value = d.platform || '';
   $('#eTarget').value = d.target || ''; $('#eInput').value = d.input || '';
-  $('#eCover').value = d.cover && !d.cover.startsWith('data:') ? d.cover : '';
-  $('#eRa').value = d.ra?.id || ''; eSgdb = d.sgdb || null; eLocalCover = d.cover && d.cover.startsWith('data:') ? d.cover : null;
-  fillShelfSelect(d.shelf || (!g && sortMode() === 'custom' && rows[ri] && rows[ri].id && rows[ri].id !== NO_SHELF ? rows[ri].id : ''));
+  const local = d.cover?.startsWith('data:');
+  $('#eCover').value = d.cover && !local ? d.cover : '';
+  $('#eRa').value = d.ra?.id || ''; eSgdb = d.sgdb || null; eLocalCover = local ? d.cover : null;
+  fillShelfSelect(d.shelf || (!g && sortMode() === 'custom' && rows[ri]?.id && rows[ri].id !== NO_SHELF ? rows[ri].id : ''));
   setType(d.type || 'shortcut'); msg('#eMsg', '');
   $('#eDel').classList.toggle('hidden', !g); thumb();
-  if (eLocalCover) $('#eThumb').src = eLocalCover;
-  eStk = (d.stickers || []).map(x => Object.assign({}, x)); eSel = -1; stkRender();
+  eStk = (d.stickers || []).map(x => ({ ...x })); eSel = -1; stkRender();
   openSheet('#sEdit');
-}
-let eLocalCover = null;
-function fillShelfSelect(val) {
-  $('#eShelfWrap').classList.toggle('hidden', sortMode() !== 'custom');
-  $('#eShelf').innerHTML = '<option value="">No shelf</option>' + S.shelves.map(s => `<option value="${esc(s.id)}">${esc(s.name)}</option>`).join('') + '<option value="__new">+ New shelf…</option>';
-  $('#eShelf').value = S.shelves.some(s => s.id === val) ? val : '';
 }
 $('#eShelf').onchange = async e => {
   if (e.target.value !== '__new') return;
   const n = ((await uiPrompt('New Shelf', 'Name for the new shelf', '', 'Shelf name')) || '').trim();
   if (n) { const s = { id: uid(), name: n }; S.shelves.push(s); save(); fillShelfSelect(s.id); } else e.target.value = '';
 };
-$('#eCover').addEventListener('input', () => { eLocalCover = null; });
 $('#eCancel').onclick = closeSheet;
 $('#eDel').onclick = async () => {
   if (!editing || !(await uiConfirm('Delete Game', 'Remove "' + editing.title + '" from your library?', 'Delete', true))) return;
@@ -873,14 +856,12 @@ $('#eSave').onclick = async () => {
   const title = $('#eTitle').value.trim();
   if (!title) { msg('#eMsg', 'Give the game a title.'); return; }
   const btn = $('#eSave'); btn.textContent = 'Saving…'; btn.disabled = true;
-  let cover = eLocalCover || $('#eCover').value.trim();
-  if (cover && !eLocalCover) cover = await cacheCover(cover);
-  const raId = parseInt($('#eRa').value, 10) || null;
-  const g = editing || { id: uid() };
+  const url = $('#eCover').value.trim(), cover = eLocalCover || (url && await cacheCover(url)) || '';
+  const raId = parseInt($('#eRa').value, 10) || null, g = editing || { id: uid() };
   Object.assign(g, { title, platform: $('#ePlat').value.trim(), type: eType, target: $('#eTarget').value.trim(), input: $('#eInput').value.trim(), cover, sgdb: eSgdb });
   if (sortMode() === 'custom') { const v = $('#eShelf').value; if (v) g.shelf = v; else delete g.shelf; }
-  if (raId) { if (!g.ra || g.ra.id !== raId) g.ra = { id: raId, earned: 0, total: 0, t: 0 }; } else delete g.ra;
-  if (eStk.length) g.stickers = eStk.map(x => Object.assign({}, x)); else delete g.stickers;
+  if (raId) { if (g.ra?.id !== raId) g.ra = { id: raId, earned: 0, total: 0, t: 0 }; } else delete g.ra;
+  if (eStk.length) g.stickers = eStk.map(x => ({ ...x })); else delete g.stickers;
   if (!editing) S.games.push(g);
   save(); btn.textContent = 'Save'; btn.disabled = false; closeSheet(); applyView(g.id);
 };
@@ -889,7 +870,7 @@ $('#eSave').onclick = async () => {
 $('#bPhoto').onclick = () => $('#file').click();
 $('#file').onchange = async e => {
   const f = e.target.files[0]; e.target.value = ''; if (!f) return;
-  try { eLocalCover = await blobToCover(f); $('#eCover').value = ''; $('#eThumb').src = eLocalCover; } catch { msg('#eMsg', 'Could not read that image.'); }
+  try { eLocalCover = await blobToCover(f); $('#eCover').value = ''; thumb(); } catch { msg('#eMsg', 'Could not read that image.'); }
 };
 
 /* RA box art */
@@ -900,7 +881,7 @@ $('#bRaArt').onclick = async () => {
   msg('#eMsg', 'Fetching…');
   try {
     const j = await raGet('API_GetGame.php', { i: id });
-    if (!j || !j.Title) throw new Error('Game not found.');
+    if (!j?.Title) throw new Error('Game not found.');
     if (j.ImageBoxArt) { $('#eCover').value = MEDIA + j.ImageBoxArt; eLocalCover = null; thumb(); }
     if (!$('#eTitle').value.trim()) $('#eTitle').value = j.Title;
     if (!$('#ePlat').value.trim() && j.ConsoleName) $('#ePlat').value = j.ConsoleName;
@@ -912,20 +893,18 @@ $('#bRaArt').onclick = async () => {
 const pk = { games: [], gid: null, name: '', page: 0 };
 $('#bSgdb').onclick = () => {
   if (!S.set.sgdb) { toast('Add your SteamGridDB API key in Settings first.'); return; }
-  $('#pkQ').value = $('#eTitle').value.trim(); $('#pkGrid').innerHTML = ''; $('#pkChips').innerHTML = ''; msg('#pkMsg', '');
+  $('#pkQ').value = $('#eTitle').value.trim(); $('#pkGrid').innerHTML = $('#pkChips').innerHTML = ''; msg('#pkMsg', '');
   $('#pkMore').classList.add('hidden'); openSheet('#sPick'); if ($('#pkQ').value) pkSearch();
 };
 $('#pkBack').onclick = () => openSheet('#sCover');
 $('#pkGo').onclick = pkSearch;
-$('#pkQ').addEventListener('keydown', e => { if (e.key === 'Enter') pkSearch(); });
+on('#pkQ', 'keydown', e => { if (e.key === 'Enter') pkSearch(); });
 $('#pkStrict').onchange = () => pk.gid && pkLoad(pk.gid, pk.name, 0);
 async function pkSearch() {
   const term = $('#pkQ').value.trim(); if (!term) return;
-  msg('#pkMsg', 'Searching…'); $('#pkGrid').innerHTML = ''; $('#pkChips').innerHTML = '';
+  msg('#pkMsg', 'Searching…'); $('#pkGrid').innerHTML = $('#pkChips').innerHTML = '';
   try {
-    let games;
-    if (/^\d+$/.test(term)) games = [await sgdb('/games/steam/' + term)];
-    else games = (await sgdb('/search/autocomplete/' + encodeURIComponent(term))).slice(0, 10);
+    const games = /^\d+$/.test(term) ? [await sgdb('/games/steam/' + term)] : (await sgdb('/search/autocomplete/' + encodeURIComponent(term))).slice(0, 10);
     pk.games = games.filter(Boolean);
     if (!pk.games.length) { msg('#pkMsg', 'No games found.'); return; }
     $('#pkChips').innerHTML = pk.games.map((g, i) => `<button class="chip" data-i="${i}">${esc(g.name)}</button>`).join('');
@@ -934,7 +913,7 @@ async function pkSearch() {
 }
 $('#pkChips').onclick = e => { const b = e.target.closest('.chip'); if (b) { const g = pk.games[+b.dataset.i]; pkLoad(g.id, g.name, 0); } };
 async function pkLoad(gid, name, page) {
-  pk.gid = gid; pk.name = name; pk.page = page;
+  Object.assign(pk, { gid, name, page });
   $$('#pkChips .chip').forEach((c, i) => c.classList.toggle('on', pk.games[i]?.id === gid));
   msg('#pkMsg', 'Loading covers…');
   if (!page) $('#pkGrid').innerHTML = '';
@@ -944,8 +923,8 @@ async function pkLoad(gid, name, page) {
     msg('#pkMsg', !data.length && !page ? 'No 2:3 covers for this game. Untick the filter or try another match.' : '');
     const frag = document.createDocumentFragment();
     data.forEach(it => {
-      const b = document.createElement('button'); const im = document.createElement('img');
-      im.src = it.thumb || it.url; im.loading = 'lazy'; im.alt = ''; b.appendChild(im);
+      const b = document.createElement('button'), im = new Image();
+      im.src = it.thumb || it.url; im.loading = 'lazy'; b.appendChild(im);
       b.onclick = () => {
         $('#eCover').value = it.url; eLocalCover = null; eSgdb = gid; thumb();
         if (!$('#eTitle').value.trim()) $('#eTitle').value = name;
@@ -961,6 +940,8 @@ $('#pkMore').onclick = () => pkLoad(pk.gid, pk.name, pk.page + 1);
 
 /* ---- RA import ---- */
 let raRes = [];
+const raChecked = () => $$('#raList input:checked').map(i => raRes[+i.dataset.i]);
+const raCount = () => { $('#raGo').textContent = 'Import' + (raChecked().length ? ' (' + raChecked().length + ')' : ''); };
 $('#sRaImport').onclick = async () => {
   if (!needRA()) return;
   $('#raList').innerHTML = ''; msg('#raMsg', 'Loading your library…'); openSheet('#sRA');
@@ -973,10 +954,8 @@ $('#sRaImport').onclick = async () => {
     raCount();
   } catch (e) { msg('#raMsg', e.message || 'Could not load your library. Check your key and proxy.'); }
 };
-const raChecked = () => $$('#raList input:checked').map(i => raRes[+i.dataset.i]);
-const raCount = () => { $('#raGo').textContent = 'Import' + (raChecked().length ? ' (' + raChecked().length + ')' : ''); };
 $('#raList').onchange = raCount;
-$('#raAll').onclick = () => { const all = $$('#raList input'); const on = all.some(i => !i.checked); all.forEach(i => i.checked = on); raCount(); };
+$('#raAll').onclick = () => { const all = $$('#raList input'), v = all.some(i => !i.checked); all.forEach(i => i.checked = v); raCount(); };
 $('#raBack').onclick = () => openSheet('#sSet');
 $('#raGo').onclick = async () => {
   const picks = raChecked(); if (!picks.length) return;
@@ -1007,70 +986,129 @@ function renderShelvesSheet() {
     ? S.shelves.map(s => `<div class="shrow" data-id="${esc(s.id)}"><span>${esc(s.name)} <small>${S.games.filter(g => g.shelf === s.id).length}</small></span><button class="btn" data-a="ren">Rename</button><button class="btn danger" data-a="del">Delete</button></div>`).join('')
     : '<div class="shrow"><span style="color:#8e8e93">No shelves yet. Add one below.</span></div>';
 }
-$('#btnShelves').onclick = () => { renderShelvesSheet(); openSheet('#sShelves'); };
-$$('#shMode button').forEach(b => b.onclick = () => { S.set.sortMode = b.dataset.v; save(); renderShelvesSheet(); applyView(view[cur]?.id); });
+$('#sShelvesBtn').onclick = () => { renderShelvesSheet(); openSheet('#sShelves'); };
+$$('#shMode button').forEach(b => b.onclick = () => { S.set.sortMode = b.dataset.v; save(); renderShelvesSheet(); reapply(); });
 $('#shList').onclick = async e => {
   const a = e.target.closest('[data-a]'); if (!a) return;
   const id = a.closest('.shrow').dataset.id, s = S.shelves.find(x => x.id === id); if (!s) return;
   if (a.dataset.a === 'ren') { const n = ((await uiPrompt('Rename Shelf', '', s.name, 'Shelf name')) || '').trim(); if (n) { s.name = n; save(); } }
   else if (await uiConfirm('Delete Shelf', 'Delete the shelf "' + s.name + '"? Your games stay in the library.', 'Delete', true)) {
-    S.shelves = S.shelves.filter(x => x !== s); S.games.forEach(g => { if (g.shelf === id) delete g.shelf; });
-    save();
+    S.shelves = S.shelves.filter(x => x !== s); S.games.forEach(g => { if (g.shelf === id) delete g.shelf; }); save();
   }
-  renderShelvesSheet(); applyView(view[cur]?.id);
+  renderShelvesSheet(); reapply();
 };
 $('#shAdd').onclick = () => {
   const n = $('#shNew').value.trim(); if (!n) return;
-  S.shelves.push({ id: uid(), name: n }); $('#shNew').value = ''; save(); renderShelvesSheet(); applyView(view[cur]?.id);
+  S.shelves.push({ id: uid(), name: n }); $('#shNew').value = ''; save(); renderShelvesSheet(); reapply();
 };
-$('#shNew').addEventListener('keydown', e => { if (e.key === 'Enter') $('#shAdd').click(); });
-$('#shDone').onclick = closeSheet;
+on('#shNew', 'keydown', e => { if (e.key === 'Enter') $('#shAdd').click(); });
+$('#shDone').onclick = openSettings;
 
 /* ---- settings ---- */
+const SET_FIELDS = { '#sKey': 'sgdb', '#sRaU': 'raUser', '#sRaK': 'raKey', '#sProxy': 'proxy' };
 function openSettings() {
-  $('#sKey').value = S.set.sgdb; $('#sRaU').value = S.set.raUser; $('#sRaK').value = S.set.raKey; $('#sProxy').value = S.set.proxy; openSheet('#sSet');
+  for (const id in SET_FIELDS) $(id).value = S.set[SET_FIELDS[id]];
+  $('#sSound').checked = !!S.set.sound; $('#sVol').value = S.set.vol ?? 50; $('#sVol').disabled = !S.set.sound;
+  openSheet('#sSet');
 }
-const bindSet = (id, k) => $(id).addEventListener('change', e => { S.set[k] = e.target.value.trim(); save(); });
-bindSet('#sKey', 'sgdb'); bindSet('#sRaU', 'raUser'); bindSet('#sRaK', 'raKey'); bindSet('#sProxy', 'proxy');
-$('#sDone').onclick = () => { ['#sKey', '#sRaU', '#sRaK', '#sProxy'].forEach(i => $(i).dispatchEvent(new Event('change'))); closeSheet(); };
+for (const id in SET_FIELDS) on(id, 'change', e => { S.set[SET_FIELDS[id]] = e.target.value.trim(); save(); });
+$('#sDone').onclick = () => { for (const id in SET_FIELDS) $(id).dispatchEvent(new Event('change')); closeSheet(); };
 $('#sExport').onclick = async () => {
-  const json = JSON.stringify({ app: 'gameflow', games: S.games, shelves: S.shelves, stickers: S.stickers }, null, 1);
-  const file = new File([json], 'gameflow-library.json', { type: 'application/json' });
-  try {
-    if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file] }); return; }
-  } catch { return; }
+  const file = new File([JSON.stringify({ app: 'gameflow', games: S.games, shelves: S.shelves, stickers: S.stickers }, null, 1)], 'gameflow-library.json', { type: 'application/json' });
+  try { if (navigator.canShare?.({ files: [file] })) { await navigator.share({ files: [file] }); return; } } catch { return; }
   const a = document.createElement('a'); a.href = URL.createObjectURL(file); a.download = file.name; a.click();
 };
 $('#sImport').onclick = () => $('#sFile').click();
 $('#sFile').onchange = async e => {
   const f = e.target.files[0]; e.target.value = ''; if (!f) return;
   try {
-    const j = JSON.parse(await f.text()); (j.shelves || []).forEach(s => { if (s && s.id && s.name && !S.shelves.some(x => x.id === s.id)) S.shelves.push({ id: s.id, name: s.name }); }); (j.stickers || []).forEach(x => { if (x && x.id && x.src && !S.stickers.some(y => y.id === x.id)) S.stickers.push({ id: x.id, src: x.src }); }); const have = new Set(S.games.map(g => g.id)); let n = 0;
-    (j.games || []).forEach(g => { if (g && g.title && !have.has(g.id)) { S.games.push(Object.assign({ id: uid() }, g)); n++; } });
+    const j = JSON.parse(await f.text());
+    (j.shelves || []).forEach(s => { if (s?.id && s.name && !S.shelves.some(x => x.id === s.id)) S.shelves.push({ id: s.id, name: s.name }); });
+    (j.stickers || []).forEach(x => { if (x?.id && x.src && !S.stickers.some(y => y.id === x.id)) S.stickers.push({ id: x.id, src: x.src }); });
+    const have = new Set(S.games.map(g => g.id)); let n = 0;
+    (j.games || []).forEach(g => { if (g?.title && !have.has(g.id)) { S.games.push({ id: uid(), ...g }); n++; } });
     save(); closeSheet(); applyView(getSel()); toast(`Imported ${n} game${n === 1 ? '' : 's'}.`);
   } catch { toast('That file is not a GameFlow library.'); }
 };
 
+/* ================= sound ================= */
+let actx = null, lastTick = 0;
+function audio() {
+  if (!actx) {
+    const C = window.AudioContext || window.webkitAudioContext; if (!C) return null;
+    try { actx = new C(); } catch { return null; }
+  }
+  if (actx.state === 'suspended') actx.resume().catch(() => {});
+  return actx;
+}
+// browsers only allow audio after a gesture, so wake it up on the first tap or key press
+['pointerdown', 'touchend', 'keydown'].forEach(t => addEventListener(t, () => { if (S.set.sound) audio(); }, true));
+function tick() {
+  const vol = (S.set.vol ?? 50) / 100;
+  if (!S.set.sound || vol <= 0) return;
+  const now = performance.now(); if (now - lastTick < 45) return; lastTick = now;
+  const a = audio(); if (!a || a.state !== 'running') return;
+  const t = a.currentTime, o = a.createOscillator(), g = a.createGain();
+  o.type = 'triangle';
+  o.frequency.setValueAtTime(1900, t); o.frequency.exponentialRampToValueAtTime(650, t + .035);
+  g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(Math.max(.0002, vol * .45), t + .003); g.gain.exponentialRampToValueAtTime(.0001, t + .06);
+  o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + .07);
+}
+on('#sSound', 'change', e => { S.set.sound = e.target.checked; $('#sVol').disabled = !S.set.sound; save(); if (S.set.sound) { audio(); lastTick = 0; tick(); } });
+on('#sVol', 'input', e => { S.set.vol = +e.target.value; save(); });
+on('#sVol', 'change', () => { lastTick = 0; tick(); });
+
+/* ================= shuffle ================= */
+function shuffle() {
+  const pool = [];
+  rows.forEach((r, rr) => r.items.forEach((g, i) => { if (!g.noShuffle) pool.push({ r: rr, i, g }); }));
+  if (!pool.length) { toast(S.games.length ? 'No games available to shuffle. Check Settings › Shuffle exclusions.' : 'Add a game first.'); return; }
+  const here = view[cur], opts = pool.length > 1 ? pool.filter(p => p.g !== here) : pool;
+  const p = opts[Math.floor(Math.random() * opts.length)];
+  closeBack(); goIn(rows[p.r], p.i); goRow(p.r);
+}
+$('#btnShuffle').onclick = shuffle;
+function renderShuf() {
+  const on_ = S.games.filter(g => !g.noShuffle).length;
+  $('#shufCount').textContent = S.games.length ? `${on_} of ${S.games.length} games included` : '';
+  $('#shufList').innerHTML = S.games.length
+    ? S.games.map(g => `<label><input type="checkbox" data-id="${esc(g.id)}"${g.noShuffle ? '' : ' checked'}><span>${esc(g.title)}<small>${esc(g.platform || '')}</small></span></label>`).join('')
+    : '<div class="shrow"><span style="color:#8e8e93">No games yet.</span></div>';
+}
+$('#sShufBtn').onclick = () => { renderShuf(); openSheet('#sShuf'); };
+$('#shufList').onchange = e => {
+  const g = S.games.find(x => x.id === e.target.dataset.id); if (!g) return;
+  if (e.target.checked) delete g.noShuffle; else g.noShuffle = true;
+  save(); $('#shufCount').textContent = `${S.games.filter(x => !x.noShuffle).length} of ${S.games.length} games included`;
+};
+$('#shufAll').onclick = () => { S.games.forEach(g => { delete g.noShuffle; }); save(); renderShuf(); };
+$('#shufNone').onclick = () => { S.games.forEach(g => { g.noShuffle = true; }); save(); renderShuf(); };
+$('#shufBack').onclick = openSettings;
+
 /* ================= stickers ================= */
-let eStk = [], eSel = -1, stkDrag = null;
-function stickerSrc(sid) { const t = S.stickers.find(x => x.id === sid); return t ? t.src : ''; }
-function applyStk(el, st) { el.style.left = st.x * 100 + '%'; el.style.top = st.y * 100 + '%'; el.style.width = st.s * 100 + '%'; el.style.transform = `translate(-50%,-50%) rotate(${st.r}deg)`; }
+let stkDrag = null;
+const stickerSrc = sid => S.stickers.find(x => x.id === sid)?.src || '';
+function applyStk(el, st) { Object.assign(el.style, { left: st.x * 100 + '%', top: st.y * 100 + '%', width: st.s * 100 + '%', transform: `translate(-50%,-50%) rotate(${st.r}deg)` }); }
 function stkRender() {
   const p = $('#stkPrev'); p.querySelectorAll('.st').forEach(n => n.remove());
-  eStk.forEach((st, i) => { const im = document.createElement('img'); im.className = 'st' + (i === eSel ? ' sel' : ''); im.src = stickerSrc(st.sid); im.dataset.i = i; im.draggable = false; applyStk(im, st); p.appendChild(im); });
-  const on = eSel >= 0 && eStk[eSel];
-  $('#stkDel').disabled = $('#stkSize').disabled = $('#stkRot').disabled = !on;
-  if (on) { $('#stkSize').value = Math.round(eStk[eSel].s * 100); $('#stkRot').value = Math.round(eStk[eSel].r); }
+  eStk.forEach((st, i) => { const im = new Image(); im.className = 'st' + (i === eSel ? ' sel' : ''); im.src = stickerSrc(st.sid); im.dataset.i = i; im.draggable = false; applyStk(im, st); p.appendChild(im); });
+  const sel = eSel >= 0 && eStk[eSel];
+  $('#stkDel').disabled = $('#stkSize').disabled = $('#stkRot').disabled = !sel;
+  if (sel) { $('#stkSize').value = Math.round(sel.s * 100); $('#stkRot').value = Math.round(sel.r); }
   $('#stkLib').innerHTML = S.stickers.length
     ? S.stickers.map(t => `<button class="stkchip" data-id="${esc(t.id)}"><img src="${esc(t.src)}" alt=""></button>`).join('')
     : '<span class="help" style="margin:8px 0 0">No stickers yet. Add an image to start.</span>';
-  if ($('#eThumb').src) { $('#stkBase').src = $('#eThumb').src; $('#eMiniImg').src = $('#eThumb').src; }
+  if ($('#eThumb').src) $('#stkBase').src = $('#eMiniImg').src = $('#eThumb').src;
   const m = $('#eMini'); m.querySelectorAll('.stl').forEach(n => n.remove());
-  eStk.forEach(st => { const src = stickerSrc(st.sid); if (!src) return; const im = document.createElement('img'); im.className = 'stl'; im.alt = ''; im.src = src; applyStk(im, st); m.appendChild(im); });
+  eStk.forEach(st => { const src = stickerSrc(st.sid); if (!src) return; const im = new Image(); im.className = 'stl'; im.src = src; applyStk(im, st); m.appendChild(im); });
   $('#eCvInfo').textContent = eStk.length ? eStk.length + ' sticker' + (eStk.length === 1 ? '' : 's') : 'No stickers';
 }
-function stkApplySel() { const n = $('#stkPrev').querySelector('.st[data-i="' + eSel + '"]'); if (n && eStk[eSel]) applyStk(n, eStk[eSel]); const mm = $('#eMini').querySelectorAll('.stl')[eSel]; if (mm && eStk[eSel]) applyStk(mm, eStk[eSel]); }
-$('#eThumb').addEventListener('load', () => { $('#stkBase').src = $('#eThumb').src; $('#eMiniImg').src = $('#eThumb').src; });
+function stkApplySel() {
+  const st = eStk[eSel]; if (!st) return;
+  const n = $('#stkPrev').querySelector(`.st[data-i="${eSel}"]`), mm = $('#eMini').querySelectorAll('.stl')[eSel];
+  if (n) applyStk(n, st); if (mm) applyStk(mm, st);
+}
+on('#eThumb', 'load', () => { $('#stkBase').src = $('#eMiniImg').src = $('#eThumb').src; });
 $('#stkLib').onclick = e => {
   const b = e.target.closest('.stkchip'); if (!b) return;
   if (eStk.length >= 12) { toast('Up to 12 stickers per cover.'); return; }
@@ -1088,8 +1126,7 @@ $('#stkFile').onchange = async e => {
   const files = [...e.target.files]; e.target.value = '';
   for (const f of files) {
     try {
-      const src = await blobToSticker(f), sid = uid();
-      S.stickers.push({ id: sid, src });
+      const sid = uid(); S.stickers.push({ id: sid, src: await blobToSticker(f) });
       if (eStk.length < 12) { eStk.push({ sid, x: .5, y: .5, s: .35, r: 0 }); eSel = eStk.length - 1; }
     } catch { toast('Could not read that image.'); }
   }
@@ -1098,28 +1135,40 @@ $('#stkFile').onchange = async e => {
 $('#stkDel').onclick = () => { if (eSel < 0) return; eStk.splice(eSel, 1); eSel = -1; stkRender(); };
 $('#stkSize').oninput = e => { if (eSel >= 0) { eStk[eSel].s = +e.target.value / 100; stkApplySel(); } };
 $('#stkRot').oninput = e => { if (eSel >= 0) { eStk[eSel].r = +e.target.value; stkApplySel(); } };
-$('#stkPrev').addEventListener('pointerdown', e => {
+const prev = $('#stkPrev');
+prev.addEventListener('pointerdown', e => {
   const n = e.target.closest('.st');
   if (!n) { if (eSel !== -1) { eSel = -1; stkRender(); } return; }
-  eSel = +n.dataset.i; const r = $('#stkPrev').getBoundingClientRect(), st = eStk[eSel];
+  eSel = +n.dataset.i; const r = prev.getBoundingClientRect(), st = eStk[eSel];
   stkDrag = { dx: e.clientX - (r.left + st.x * r.width), dy: e.clientY - (r.top + st.y * r.height), r };
-  stkRender(); $('#stkPrev').setPointerCapture(e.pointerId);
+  stkRender(); prev.setPointerCapture(e.pointerId);
 });
-$('#stkPrev').addEventListener('pointermove', e => {
-  if (!stkDrag || eSel < 0) return; const r = stkDrag.r, st = eStk[eSel];
-  st.x = clamp((e.clientX - stkDrag.dx - r.left) / r.width, 0, 1); st.y = clamp((e.clientY - stkDrag.dy - r.top) / r.height, 0, 1); stkApplySel();
+prev.addEventListener('pointermove', e => {
+  if (!stkDrag || eSel < 0) return; const { r, dx, dy } = stkDrag, st = eStk[eSel];
+  st.x = clamp((e.clientX - dx - r.left) / r.width, 0, 1); st.y = clamp((e.clientY - dy - r.top) / r.height, 0, 1); stkApplySel();
 });
-const stkEnd = () => { stkDrag = null; };
-$('#stkPrev').addEventListener('pointerup', stkEnd); $('#stkPrev').addEventListener('pointercancel', stkEnd);
-async function blobToSticker(blob) {
-  const bm = await createImageBitmap(blob), k = Math.min(1, 200 / Math.max(bm.width, bm.height));
-  const c = document.createElement('canvas'); c.width = Math.max(1, Math.round(bm.width * k)); c.height = Math.max(1, Math.round(bm.height * k));
-  c.getContext('2d').drawImage(bm, 0, 0, c.width, c.height); return c.toDataURL('image/png');
-}
+['pointerup', 'pointercancel'].forEach(t => prev.addEventListener(t, () => { stkDrag = null; }));
+prev.addEventListener('keydown', e => {
+  if (e.altKey || e.ctrlKey || e.metaKey) return;
+  const k = e.key, st = eStk[eSel], d = e.shiftKey ? .05 : .01;
+  if (k === 'Enter' || k === ' ') { if (!eStk.length) return; eSel = (eSel + 1) % eStk.length; }
+  else if (!st) return;
+  else if (k === 'ArrowLeft') st.x = clamp(st.x - d, 0, 1);
+  else if (k === 'ArrowRight') st.x = clamp(st.x + d, 0, 1);
+  else if (k === 'ArrowUp') st.y = clamp(st.y - d, 0, 1);
+  else if (k === 'ArrowDown') st.y = clamp(st.y + d, 0, 1);
+  else if (k === '+' || k === '=') st.s = clamp(st.s + d, .1, 1);
+  else if (k === '-' || k === '_') st.s = clamp(st.s - d, .1, 1);
+  else if (k === '[') st.r = clamp(st.r - (e.shiftKey ? 15 : 5), -180, 180);
+  else if (k === ']') st.r = clamp(st.r + (e.shiftKey ? 15 : 5), -180, 180);
+  else if (k === 'Delete' || k === 'Backspace') { eStk.splice(eSel, 1); eSel = -1; }
+  else return;
+  e.preventDefault(); stkRender();
+});
 $('#sStkClean').onclick = () => {
-  const used = new Set(); S.games.forEach(g => (g.stickers || []).forEach(t => used.add(t.sid)));
-  const n = S.stickers.length; S.stickers = S.stickers.filter(t => used.has(t.id)); save();
-  toast(`Removed ${n - S.stickers.length} unused sticker${n - S.stickers.length === 1 ? '' : 's'}.`);
+  const used = new Set(S.games.flatMap(g => (g.stickers || []).map(t => t.sid))), n = S.stickers.length;
+  S.stickers = S.stickers.filter(t => used.has(t.id)); save();
+  const d = n - S.stickers.length; toast(`Removed ${d} unused sticker${d === 1 ? '' : 's'}.`);
 };
 
 /* ================= wallpaper ================= */
@@ -1132,36 +1181,29 @@ const WP = {
   slate: { n: 'Slate', css: '#2b2c30' },
   black: { n: 'Black', css: '#000' }
 };
-let wpImg = ''; try { wpImg = localStorage.getItem(KEY + '.wpimg') || ''; } catch {}
+let wpImg = ls.get(KEY + '.wpimg') || '';
 const cssUrl = u => "url('" + String(u).replace(/'/g, '%27') + "')";
 function applyWallpaper() {
-  const b = document.body.style, k = S.set.wp || 'default';
-  if (k === 'custom' && wpImg) b.background = '#000 ' + cssUrl(wpImg) + ' center/cover no-repeat';
-  else if (WP[k] && k !== 'default') b.background = WP[k].css;
-  else b.background = '';
+  const k = S.set.wp || 'default';
+  document.body.style.background = k === 'custom' && wpImg ? '#000 ' + cssUrl(wpImg) + ' center/cover no-repeat' : WP[k] && k !== 'default' ? WP[k].css : '';
   $('#wpdim').style.opacity = ((S.set.wpDim || 0) / 100).toFixed(2);
 }
 function wpPicker(box) {
-  const k = S.set.wp || 'default';
-  box.innerHTML = `<div class="wpgrid">${Object.keys(WP).map(id => `<button class="wpt${id === k ? ' on' : ''}" data-id="${id}" style="background:${WP[id].css}"><span>${WP[id].n}</span></button>`).join('')}${wpImg ? `<button class="wpt${k === 'custom' ? ' on' : ''}" data-id="custom" style="background:#000 ${cssUrl(wpImg)} center/cover"><span>Custom</span></button>` : ''}</div>
+  const k = S.set.wp || 'default', tile = (id, n, bg) => `<button class="wpt${id === k ? ' on' : ''}" data-id="${id}" style="background:${bg}"><span>${n}</span></button>`;
+  box.innerHTML = `<div class="wpgrid">${Object.keys(WP).map(id => tile(id, WP[id].n, WP[id].css)).join('')}${wpImg ? tile('custom', 'Custom', '#000 ' + cssUrl(wpImg) + ' center/cover') : ''}</div>
     <div class="row"><button class="btn" data-a="photo">Choose photo…</button><button class="btn" data-a="url">From URL…</button></div>
     <label>Dim wallpaper<input type="range" min="0" max="70" value="${S.set.wpDim || 0}" data-a="dim"></label>`;
   box.onclick = e => {
     const t = e.target.closest('.wpt'), a = e.target.closest('[data-a]')?.dataset.a;
     if (t) { S.set.wp = t.dataset.id; save(); applyWallpaper(); wpPicker(box); }
     else if (a === 'photo') $('#wpFile').click();
-    else if (a === 'url') wpFromUrl(box);
+    else if (a === 'url') wpFromUrl();
   };
   box.oninput = e => { if (e.target.dataset.a === 'dim') { S.set.wpDim = +e.target.value; save(); applyWallpaper(); } };
 }
-async function blobToWall(blob) {
-  const bm = await createImageBitmap(blob), k = Math.min(1, 1400 / Math.max(bm.width, bm.height));
-  const c = document.createElement('canvas'); c.width = Math.round(bm.width * k); c.height = Math.round(bm.height * k);
-  c.getContext('2d').drawImage(bm, 0, 0, c.width, c.height); return c.toDataURL('image/jpeg', .82);
-}
 function setWall(src) {
   wpImg = src; S.set.wp = 'custom';
-  try { localStorage.setItem(KEY + '.wpimg', src); } catch { toast('Wallpaper is too big to keep after a reload. Try a smaller image.', 4000); }
+  if (!ls.set(KEY + '.wpimg', src)) toast('Wallpaper is too big to keep after a reload. Try a smaller image.', 4000);
   save(); applyWallpaper(); $$('.wpbox').forEach(wpPicker);
 }
 $('#wpFile').onchange = async e => {
@@ -1174,21 +1216,16 @@ async function wpFromUrl() {
   catch { setWall(u); toast('Using the link directly. It may not work offline.'); }
 }
 $('#sWallBtn').onclick = () => { wpPicker($('#sWall .wpbox')); openSheet('#sWall'); };
-$('#wpDone').onclick = () => openSettings();
+$('#wpDone').onclick = openSettings;
 
 /* ================= first-run setup ================= */
-const setupSeen = () => { try { return localStorage.getItem(KEY + '.setup') === '1'; } catch { return true; } };
-const markSetup = () => { try { localStorage.setItem(KEY + '.setup', '1'); } catch {} };
 let suStep = 0;
+const suField = (k, label, type, extra = '') => `<label>${label}<input data-k="${k}" type="${type}" value="${esc(S.set[k])}" autocomplete="off" autocapitalize="off" spellcheck="false" ${extra}></label>`;
 const SU = [
   { h: 'Welcome to GameFlow', b: () => `<p class="help" style="margin-top:0;font-size:14px;color:#d8d8da">A cover-flow launcher. Tap a cover to run a Shortcut, open an app's URL scheme or a web link.</p><p class="help">This takes about a minute. Every step is optional and everything can be changed later in Settings.</p>` },
   { h: 'Wallpaper', b: () => '<div class="wpbox"></div>' },
   { h: 'Shelves', b: () => `<div class="seg suseg">${[['none', 'No sort'], ['auto', 'Auto sort'], ['custom', 'My shelves']].map(([v, n]) => `<button data-v="${v}" class="${sortMode() === v ? 'on' : ''}">${n}</button>`).join('')}</div><p class="help">${MODE_HELP[sortMode()]}</p>` },
-  { h: 'Artwork and achievements', b: () => `<p class="help" style="margin-top:0">Optional. Only needed for SteamGridDB covers and RetroAchievements progress.</p>
-    <label>SteamGridDB API key<input data-k="sgdb" type="password" value="${esc(S.set.sgdb)}" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
-    <label>RetroAchievements username<input data-k="raUser" type="text" value="${esc(S.set.raUser)}" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
-    <label>RetroAchievements web API key<input data-k="raKey" type="password" value="${esc(S.set.raKey)}" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
-    <label>CORS proxy (see cors-worker.js)<input data-k="proxy" type="url" value="${esc(S.set.proxy)}" placeholder="https://your-worker.workers.dev/?url=" autocapitalize="off" autocorrect="off" spellcheck="false"></label>` },
+  { h: 'Artwork and achievements', b: () => `<p class="help" style="margin-top:0">Optional. Only needed for SteamGridDB covers and RetroAchievements progress.</p>${suField('sgdb', 'SteamGridDB API key', 'password')}${suField('raUser', 'RetroAchievements username', 'text')}${suField('raKey', 'RetroAchievements web API key', 'password')}${suField('proxy', 'CORS proxy (see cors-worker.js)', 'url', 'placeholder="https://your-worker.workers.dev/?url="')}` },
   { h: 'Add your first game', b: () => `<p class="help" style="margin-top:0;font-size:14px;color:#d8d8da">Give it a title, a launch action and a cover. In the editor you can also decorate covers with your own stickers.</p><div class="row"><button class="btn pri" id="suAdd">Add a game</button></div>` }
 ];
 function renderSetup() {
@@ -1199,6 +1236,7 @@ function renderSetup() {
   $('#suStep').setAttribute('aria-label', `Step ${suStep + 1} of ${SU.length}`);
   $('#suBack').disabled = suStep === 0; $('#suNext').textContent = suStep === SU.length - 1 ? 'Finish' : 'Next';
 }
+const markSetup = () => ls.set(KEY + '.setup', '1');
 function openSetup() { suStep = 0; markSetup(); renderSetup(); openSheet('#sSetup'); }
 function finishSetup() { markSetup(); closeSheet(); applyView(getSel()); }
 $('#suNext').onclick = () => { if (suStep >= SU.length - 1) finishSetup(); else { suStep++; renderSetup(); } };
@@ -1206,8 +1244,8 @@ $('#suBack').onclick = () => { if (suStep > 0) { suStep--; renderSetup(); } };
 $('#suSkip').onclick = finishSetup;
 $('#suBody').addEventListener('click', e => {
   const b = e.target.closest('.suseg button');
-  if (b) { S.set.sortMode = b.dataset.v; save(); renderSetup(); return; }
-  if (e.target.id === 'suAdd') { finishSetup(); openEdit(null); }
+  if (b) { S.set.sortMode = b.dataset.v; save(); renderSetup(); }
+  else if (e.target.id === 'suAdd') { finishSetup(); openEdit(null); }
 });
 $('#suBody').addEventListener('input', e => { const k = e.target.dataset.k; if (k) { S.set[k] = e.target.value.trim(); save(); } });
 $('#sSetupBtn').onclick = openSetup;
@@ -1216,38 +1254,51 @@ $('#sSetupBtn').onclick = openSetup;
 function dlg(o) {
   return new Promise(res => {
     const back = document.createElement('div'); back.id = 'dlgBack';
-    back.innerHTML = `<div class="dlg" role="alertdialog"><h3>${esc(o.title)}</h3>${o.msg ? `<p>${esc(o.msg)}</p>` : ''}${o.input ? `<input id="dlgIn" autocomplete="off" autocapitalize="off" spellcheck="false" value="${esc(o.value || '')}" placeholder="${esc(o.placeholder || '')}">` : ''}<div class="dbtns"><button class="dbtn" data-r="0">${esc(o.cancel || 'Cancel')}</button><button class="dbtn ${o.danger ? 'danger' : 'pri'}" data-r="1">${esc(o.ok || 'OK')}</button></div></div>`;
+    back.innerHTML = `<div class="dlg" role="alertdialog"><h3>${esc(o.title)}</h3>${o.msg ? `<p>${esc(o.msg)}</p>` : ''}${o.input ? `<input id="dlgIn" autocomplete="off" autocapitalize="off" spellcheck="false" value="${esc(o.value || '')}" placeholder="${esc(o.placeholder || '')}">` : ''}<div class="dbtns"><button class="dbtn" data-r="0">Cancel</button><button class="dbtn ${o.danger ? 'danger' : 'pri'}" data-r="1">${esc(o.ok || 'OK')}</button></div></div>`;
     document.body.appendChild(back);
-    const inp = back.querySelector('#dlgIn');
-    const done = ok => { document.removeEventListener('keydown', key, true); back.remove(); res(ok ? (inp ? inp.value : true) : (inp ? null : false)); };
-    const key = e => { if (e.key === 'Escape') { e.stopPropagation(); e.preventDefault(); done(false); } else if (e.key === 'Enter') { e.stopPropagation(); e.preventDefault(); done(true); } };
+    const inp = back.querySelector('#dlgIn'), prevFocus = document.activeElement;
+    const done = ok => {
+      document.removeEventListener('keydown', key, true); back.remove(); prevFocus?.isConnected && prevFocus.focus?.();
+      res(ok ? (inp ? inp.value : true) : (inp ? null : false));
+    };
+    const key = e => {
+      if (e.key === 'Tab') { trapTab(e, back); return; }
+      if (e.key === 'Escape' || e.key === 'Enter') {
+        e.stopPropagation(); e.preventDefault();
+        const f = document.activeElement, cancelFocused = f?.dataset?.r === '0';
+        done(e.key === 'Enter' && !cancelFocused);
+      }
+    };
     document.addEventListener('keydown', key, true);
     back.addEventListener('click', e => { const b = e.target.closest('.dbtn'); if (b) done(b.dataset.r === '1'); });
-    if (inp) { inp.focus(); inp.select(); }
+    if (inp) { inp.focus(); inp.select(); } else back.querySelector('[data-r="1"]').focus();
   });
 }
 const uiConfirm = (title, msg, ok, danger) => dlg({ title, msg, ok, danger });
 const uiPrompt = (title, msg, value, placeholder) => dlg({ title, msg, input: true, value, placeholder, ok: 'Save' });
 
 /* ---- top bar ---- */
-$('#btnAdd').onclick = () => openEdit(null);
-$('#bEmptyAdd').onclick = () => openEdit(null);
+$('#btnAdd').onclick = $('#bEmptyAdd').onclick = () => openEdit(null);
 $('#btnSet').onclick = openSettings;
-$('#btnSearch').onclick = () => {
-  const i = $('#q'); const on = !i.classList.contains('on'); i.classList.toggle('on', on); $('.bar').classList.toggle('searching', on);
-  if (on) i.focus(); else { i.value = ''; i.blur(); if (q) { q = ''; applyView(view[cur]?.id); } }
-};
-$('#q').addEventListener('input', e => { q = e.target.value; applyView(view[cur]?.id); });
+function toggleSearch(open = !$('#q').classList.contains('on')) {
+  const i = $('#q');
+  i.classList.toggle('on', open); i.tabIndex = open ? 0 : -1; $('.bar').classList.toggle('searching', open);
+  if (open) i.focus(); else { i.value = ''; i.blur(); if (q) { q = ''; reapply(); } }
+}
+$('#btnSearch').onclick = () => toggleSearch();
+on('#q', 'input', e => { q = e.target.value; reapply(); });
 
 /* ================= controller support ================= */
 let padRaf = 0, prevBtn = [], lastDir = 0, lastDirY = 0, nextAt = 0, comboAt = 0;
-function havePad() { return !!(navigator.getGamepads && [...navigator.getGamepads()].some(Boolean)); }
+const getPads = () => [...(navigator.getGamepads?.() || [])].filter(Boolean);
+const havePad = () => getPads().length > 0;
+const axisOf = (pads, i) => pads.reduce((m, p) => Math.abs(p.axes[i] || 0) > Math.abs(m) ? p.axes[i] : m, 0);
 function padLoop(ts) {
-  const pads = [...navigator.getGamepads()].filter(Boolean);
+  const pads = getPads();
   if (!pads.length) { padRaf = 0; return; }
   padRaf = requestAnimationFrame(padLoop);
   if (document.hidden || $('#dlgBack')) return;
-  const now = []; for (let i = 0; i < 17; i++) now[i] = pads.some(p => p.buttons[i] && p.buttons[i].pressed);
+  const now = Array.from({ length: 17 }, (_, i) => pads.some(p => p.buttons[i]?.pressed));
   const edge = i => now[i] && !prevBtn[i];
   const was = prevBtn; prevBtn = now;
   if (webOpen) { // the web game needs the controller, so only Select + Start held together exits
@@ -1256,23 +1307,22 @@ function padLoop(ts) {
   }
   comboAt = 0;
   if (veil.classList.contains('on')) { if (edge(1)) closeSheet(); return; }
-  let ax = 0; pads.forEach(p => { const a = p.axes[0] || 0; if (Math.abs(a) > Math.abs(ax)) ax = a; });
-  const dir = (now[14] || ax < -.5) ? -1 : (now[15] || ax > .5) ? 1 : 0;
+  const ax = axisOf(pads, 0), dir = (now[14] || ax < -.5) ? -1 : (now[15] || ax > .5) ? 1 : 0;
   if (dir) {
     if (dir !== lastDir) { go(tgt() + dir); nextAt = ts + 380; }
     else if (ts >= nextAt) { go(tgt() + dir); nextAt = ts + 120; }
   }
   lastDir = dir;
-  let ay = 0; pads.forEach(p => { const a = p.axes[1] || 0; if (Math.abs(a) > Math.abs(ay)) ay = a; });
-  const dirY = (now[12] || ay < -.5) ? -1 : (now[13] || ay > .5) ? 1 : 0;
+  const ay = axisOf(pads, 1), dirY = (now[12] || ay < -.5) ? -1 : (now[13] || ay > .5) ? 1 : 0;
   if (dirY && dirY !== lastDirY && shelvesOn) goRow(rtarget + dirY);
   lastDirY = dirY;
-  if (edge(5)) { if (shelvesVisible()) goRow(rtarget + 1); else go(tgt() + 5); }
-  if (edge(4)) { if (shelvesVisible()) goRow(rtarget - 1); else go(tgt() - 5); }
+  if (edge(5)) { if (shelvesOn) goRow(rtarget + 1); else go(tgt() + 5); }
+  if (edge(4)) { if (shelvesOn) goRow(rtarget - 1); else go(tgt() - 5); }
   if (edge(0) && view[cur]) launch(view[cur]);
   if (edge(1)) closeBack();
   if (edge(3) && view[cur]) { backOpen ? closeBack() : openBack(); }
   if (edge(2) && view[cur]) { closeBack(); openEdit(view[cur]); }
+  if (edge(7)) shuffle();
   if (edge(9)) openSettings();
 }
 addEventListener('gamepadconnected', () => {
@@ -1284,27 +1334,24 @@ if (havePad()) padRaf = requestAnimationFrame(padLoop);
 /* ---- home-screen icon + lifecycle ---- */
 (function icon() {
   const c = document.createElement('canvas'); c.width = c.height = 180; const x = c.getContext('2d');
-  const g = x.createLinearGradient(0, 0, 0, 180); g.addColorStop(0, '#4c4d4f'); g.addColorStop(.5, '#b2b2b2'); g.addColorStop(1, '#828284');
-  x.fillStyle = g; x.fillRect(0, 0, 180, 180);
+  const lin = (y0, y1, ...stops) => { const g = x.createLinearGradient(0, y0, 0, y1); stops.forEach(([o, col]) => g.addColorStop(o, col)); return g; };
+  x.fillStyle = lin(0, 180, [0, '#4c4d4f'], [.5, '#b2b2b2'], [1, '#828284']); x.fillRect(0, 0, 180, 180);
   const quad = (p, col) => { x.beginPath(); x.moveTo(...p[0]); p.slice(1).forEach(q => x.lineTo(...q)); x.closePath(); x.fillStyle = col; x.fill(); };
   quad([[16, 48], [58, 62], [58, 120], [16, 134]], '#27406e'); quad([[164, 48], [122, 62], [122, 120], [164, 134]], '#6e2747');
   quad([[2, 40], [14, 46], [14, 136], [2, 142]], '#1c1c1e'); quad([[178, 40], [166, 46], [166, 136], [178, 142]], '#1c1c1e');
-  const cg = x.createLinearGradient(0, 36, 0, 120); cg.addColorStop(0, '#ffd45c'); cg.addColorStop(1, '#e0562b');
-  x.fillStyle = cg; x.fillRect(64, 34, 52, 78);
-  const rg = x.createLinearGradient(0, 114, 0, 156); rg.addColorStop(0, 'rgba(0,0,0,.35)'); rg.addColorStop(1, 'rgba(0,0,0,0)');
-  x.fillStyle = rg; x.fillRect(64, 114, 52, 42);
+  x.fillStyle = lin(36, 120, [0, '#ffd45c'], [1, '#e0562b']); x.fillRect(64, 34, 52, 78);
+  x.fillStyle = lin(114, 156, [0, 'rgba(0,0,0,.35)'], [1, 'rgba(0,0,0,0)']); x.fillRect(64, 114, 52, 42);
   const l = document.createElement('link'); l.rel = 'apple-touch-icon'; l.href = c.toDataURL('image/png'); document.head.appendChild(l);
 })();
 addEventListener('resize', metrics);
 if (window.ResizeObserver) new ResizeObserver(metrics).observe(stage);
-addEventListener('pageshow', () => { metrics(); kick(); });
-addEventListener('load', () => { metrics(); kick(); });
-setTimeout(() => { metrics(); kick(); }, 300); setTimeout(() => { metrics(); kick(); }, 1000);
+['pageshow', 'load'].forEach(t => addEventListener(t, refresh));
+[300, 1000].forEach(ms => setTimeout(refresh, ms));
 addEventListener('orientationchange', () => setTimeout(metrics, 200));
-document.addEventListener('visibilitychange', () => { if (!document.hidden) els.forEach(e => e.classList.remove('launching')); });
+document.addEventListener('visibilitychange', () => { if (!document.hidden) allEls().forEach(e => e.classList.remove('launching')); });
 
 applyWallpaper(); metrics(); applyView(getSel());
-if (!setupSeen() && !S.games.length) setTimeout(openSetup, 400);
+if (ls.get(KEY + '.setup') !== '1' && !S.games.length) setTimeout(openSetup, 400);
 })();
 </script>
 </body>
